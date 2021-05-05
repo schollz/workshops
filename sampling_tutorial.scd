@@ -4,12 +4,11 @@
 
 (
 //b=Buffer.read(s,"/home/zns/Documents/sampletutorial/boombap.wav");
-b=Buffer.read(s,"/home/zns/Documents/sampletutorial/pianochords.wav");
+b=Buffer.read(s,"C:\\Users\\zacks\\Documents\\monosampler\\sounds\\pianochords.wav");
 )
 
 
 // a simple player using PlayBuf
-// unfortunately this is not ideal since it doesn't allow setting an endpoint
 (
 SynthDef("PlayBufPlayer", {
 	arg out = 0, bufnum = 0;
@@ -19,34 +18,154 @@ SynthDef("PlayBufPlayer", {
 }).play(s, [\out, 0, \bufnum, b]);
 )
 
+// the problem with above is that it does not allow you to set the end point!
 
-// a better solution is to use BufRd
+
+// solution: use BufRd
 // we can control playback precisely using an index of sample position
 (
-SynthDef("PlayBufPlayer", {
-	arg out = 0, bufnum = 0;
-	var snd,pos;
+x=SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1;
+	var snd,pos,rate,frames;
+
+	rate = rate*BufRateScale.kr(bufnum);
+	frames = BufFrames.kr(bufnum);
+
 	pos=Phasor.ar(
-		trig:0, 
-		rate:BufRateScale.kr(bufnum), 
-		start:0, 
-		end:BufFrames.kr(bufnum),
+		rate:rate,
+		start:start*frames,
+		end:end*frames,
+		resetPost:start*frames,
 	);
+
 	snd=BufRd.ar(
-		numChannels:2, 
-		bufnum:bufnum, 
+		numChannels:2,
+		bufnum:bufnum,
 		phase:pos,
+		loop:0,
 		interpolation:4,
 	);
     Out.ar(out,snd)
 }).play(s, [\out, 0, \bufnum, b]);
 )
 
+
 // the Phasor is like a sawtooth that increments at a specific rate
 // and returns to the beginning at the end OR if it receives a trigger.
 // afaik there is no other UGen that is triggerable, loopable, and has start+end points.
-{ Phasor.ar(0,1,0,1) }.plot(2)
-{ Phasor.ar(0,1,0.5,0.6) }.plot(2)
+{ Phasor.kr(0,0.5,0,100) }.plot(1)
+{ Phasor.ar(0,0.005,50,90) }.plot(1)
+
+// try it
+// note: start and endpoints are denoting by fractional position (0 = start, 1 = end)
+x.set(\start,0,\end,1)
+x.set(\start,0,\end,0.1)
+x.set(\start,0.5,\end,1.0)
+
+
+// problem: it doesn't reset!
+// solution: use triggers to reset it
+(
+x=SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0;
+	var snd,pos,rate,frames;
+
+	rate = rate*BufRateScale.kr(bufnum);
+	frames = BufFrames.kr(bufnum);
+
+	pos=Phasor.ar(
+		trig:t_trig,
+		rate:rate,
+		start:start*frames,
+		end:end*frames,
+		resetPost:start*frames,
+	);
+
+	snd=BufRd.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		phase:pos,
+		loop:0,
+		interpolation:4,
+	);
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
+
+// this will abruptly restart it!
+x.set(\t_trig,1,\start,0,\end,1)
+x.set(\t_trig,1,\start,0.5,\end,1)
+
+
+// problem: it loops infinitely! lets have it loop just once.
+// solution: use an envelope to clamp the loop.
+(
+SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0,
+	loops=1;
+	var snd,pos,rate,frames,duration,env;
+
+	rate = rate*BufRateScale.kr(bufnum);
+	frames = BufFrames.kr(bufnum);
+	duration = frames/rate/s.sampleRate*loops;
+
+	// envelope to clamp looping
+	env=EnvGen.ar(
+		Env.new(
+			levels: [0,1,1,0],
+			times: [0,duration,0],
+		),
+		gate:t_trig,
+	);
+
+	pos=Phasor.ar(
+		trig:t_trig,
+		rate:rate,
+		start:start*frames,
+		end:end*frames,
+		resetPost:start*frames,
+	);
+
+	snd=BufRd.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		phase:pos,
+		interpolation:4,
+	);
+
+	snd = snd * env;
+
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
+
+
+// envelope of one second
+(
+{ EnvGen.ar(
+		Env.new(
+			levels: [0,1,1,0],
+			times: [0,1,0],
+		),
+	)
+}.plot(2);
+)
+
+// with fancier fadeout
+(
+{ EnvGen.ar(
+		Env.new(
+			levels: [0,1,1,0],
+			times: [0,1-0.05,0.05],
+		    curve:\sine,
+		),
+	)
+}.plot(2);
+)
+
+// problem: negative rates don't start at the end!
+// solution: add in logic to flip start and end points on reverse
+
 
 
 // 2. then run this!
