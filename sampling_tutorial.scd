@@ -1,10 +1,52 @@
-// 1. first run this!
-// it will load in the buffer
-(
+// 1. load a buffer
+// (everything here assumes you have a STEREO file, but its possible to do this with mono too)
 // tested using this file: https://op1.fun/users/3sleeves/patches/boombap1
+
+(
 //b=Buffer.read(s,"/home/zns/Documents/sampletutorial/boombap.wav");
 b=Buffer.read(s,"/home/zns/Documents/sampletutorial/pianochords.wav");
 )
+
+
+// a simple player using PlayBuf
+// unfortunately this is not ideal since it doesn't allow setting an endpoint
+(
+SynthDef("PlayBufPlayer", {
+	arg out = 0, bufnum = 0;
+	var snd;
+	snd=PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum), doneAction: Done.freeSelf);
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
+
+
+// a better solution is to use BufRd
+// we can control playback precisely using an index of sample position
+(
+SynthDef("PlayBufPlayer", {
+	arg out = 0, bufnum = 0;
+	var snd,pos;
+	pos=Phasor.ar(
+		trig:0, 
+		rate:BufRateScale.kr(bufnum), 
+		start:0, 
+		end:BufFrames.kr(bufnum),
+	);
+	snd=BufRd.ar(
+		numChannels:2, 
+		bufnum:bufnum, 
+		phase:pos,
+		interpolation:4,
+	);
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
+
+// the Phasor is like a sawtooth that increments at a specific rate
+// and returns to the beginning at the end OR if it receives a trigger.
+// afaik there is no other UGen that is triggerable, loopable, and has start+end points.
+{ Phasor.ar(0,1,0,1) }.plot(2)
+{ Phasor.ar(0,1,0.5,0.6) }.plot(2)
 
 
 // 2. then run this!
