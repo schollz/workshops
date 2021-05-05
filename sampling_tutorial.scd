@@ -139,6 +139,11 @@ SynthDef("PlayBufPlayer", {
 }).play(s, [\out, 0, \bufnum, b]);
 )
 
+x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,2)
+x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,1)
+// next problem
+x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
+
 
 // envelope of one second
 (
@@ -165,7 +170,47 @@ SynthDef("PlayBufPlayer", {
 
 // problem: negative rates don't start at the end!
 // solution: add in logic to flip start and end points on reverse
+(
+SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0,
+	loops=1;
+	var snd,pos,rate,frames,duration,env;
 
+	rate = rate*BufRateScale.kr(bufnum);
+	frames = BufFrames.kr(bufnum);
+	duration = frames/rate.abs/s.sampleRate*loops; // use rate.abs instead now
+
+	// envelope to clamp looping
+	env=EnvGen.ar(
+		Env.new(
+			levels: [0,1,1,0],
+			times: [0,duration,0],
+		),
+		gate:t_trig,
+	);
+
+	pos=Phasor.ar(
+		trig:t_trig,
+		rate:rate,
+		start:(((rate>0)*start)+((rate<0)*end))*frames,
+		end:(((rate>0)*end)+((rate<0)*start))*frames,
+		resetPost:(((rate>0)*start)+((rate<0)*end))*frames,
+	);
+
+	snd=BufRd.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		phase:pos,
+		interpolation:4,
+	);
+
+	snd = snd * env;
+
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
+
+x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
 
 
 // 2. then run this!
