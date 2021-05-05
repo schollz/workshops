@@ -26,7 +26,7 @@ SynthDef("PlayBufPlayer", {
 (
 x=SynthDef("PlayBufPlayer", {
 	arg out=0, bufnum=0, rate=1, start=0, end=1;
-	var snd,pos,rate,frames;
+	var snd,pos,frames;
 
 	rate = rate*BufRateScale.kr(bufnum);
 	frames = BufFrames.kr(bufnum);
@@ -35,7 +35,7 @@ x=SynthDef("PlayBufPlayer", {
 		rate:rate,
 		start:start*frames,
 		end:end*frames,
-		resetPost:start*frames,
+		resetPos:start*frames,
 	);
 
 	snd=BufRd.ar(
@@ -68,7 +68,7 @@ x.set(\start,0.5,\end,1.0)
 (
 x=SynthDef("PlayBufPlayer", {
 	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0;
-	var snd,pos,rate,frames;
+	var snd,pos,frames;
 
 	rate = rate*BufRateScale.kr(bufnum);
 	frames = BufFrames.kr(bufnum);
@@ -78,7 +78,7 @@ x=SynthDef("PlayBufPlayer", {
 		rate:rate,
 		start:start*frames,
 		end:end*frames,
-		resetPost:start*frames,
+		resetPos:start*frames,
 	);
 
 	snd=BufRd.ar(
@@ -100,20 +100,21 @@ x.set(\t_trig,1,\start,0.5,\end,1)
 // problem: it loops infinitely! lets have it loop just once.
 // solution: use an envelope to clamp the loop.
 (
-SynthDef("PlayBufPlayer", {
-	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0,
+x=SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
 	loops=1;
-	var snd,pos,rate,frames,duration,env;
+	var snd,pos,frames,duration,env;
 
 	rate = rate*BufRateScale.kr(bufnum);
 	frames = BufFrames.kr(bufnum);
-	duration = frames/rate/s.sampleRate*loops;
+	duration = frames*(end-start)/rate/s.sampleRate*loops;
 
 	// envelope to clamp looping
 	env=EnvGen.ar(
 		Env.new(
 			levels: [0,1,1,0],
-			times: [0,duration,0],
+			times: [0,duration-0.01,0.01],
+			curve:\sine,
 		),
 		gate:t_trig,
 	);
@@ -123,7 +124,7 @@ SynthDef("PlayBufPlayer", {
 		rate:rate,
 		start:start*frames,
 		end:end*frames,
-		resetPost:start*frames,
+		resetPos:start*frames,
 	);
 
 	snd=BufRd.ar(
@@ -141,8 +142,10 @@ SynthDef("PlayBufPlayer", {
 
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,2)
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,1)
-// next problem
+// but now this won't play!
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
+// we have to change start and positions manually...?
+x.set(\t_trig,1,\start,0.6,\end,0.5,\loops,3,\rate,-1)
 
 
 // envelope of one second
@@ -171,14 +174,14 @@ x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
 // problem: negative rates don't start at the end!
 // solution: add in logic to flip start and end points on reverse
 (
-SynthDef("PlayBufPlayer", {
-	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0,
+x=SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
 	loops=1;
-	var snd,pos,rate,frames,duration,env;
+	var snd,pos,frames,duration,env;
 
 	rate = rate*BufRateScale.kr(bufnum);
 	frames = BufFrames.kr(bufnum);
-	duration = frames/rate.abs/s.sampleRate*loops; // use rate.abs instead now
+	duration = frames*(end-start)/rate.abs/s.sampleRate*loops; // use rate.abs instead now
 
 	// envelope to clamp looping
 	env=EnvGen.ar(
@@ -194,7 +197,7 @@ SynthDef("PlayBufPlayer", {
 		rate:rate,
 		start:(((rate>0)*start)+((rate<0)*end))*frames,
 		end:(((rate>0)*end)+((rate<0)*start))*frames,
-		resetPost:(((rate>0)*start)+((rate<0)*end))*frames,
+		resetPos:(((rate>0)*start)+((rate<0)*end))*frames,
 	);
 
 	snd=BufRd.ar(
@@ -211,6 +214,63 @@ SynthDef("PlayBufPlayer", {
 )
 
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
+
+
+// problem: lets remove the "pop" when changing samples fast"
+// solution: cross-fade automatically between two loopers
+(
+x=SynthDef("PlayBufPlayer", {
+	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
+	loops=1;
+	var snd,pos,frames,duration,env;
+
+	rate = rate*BufRateScale.kr(bufnum);
+	frames = BufFrames.kr(bufnum);
+	duration = frames*(end-start)/rate.abs/s.sampleRate*loops; // use rate.abs instead now
+
+	// envelope to clamp looping
+	env=EnvGen.ar(
+		Env.new(
+			levels: [0,1,1,0],
+			times: [0,duration,0],
+		),
+		gate:t_trig,
+	);
+
+	pos=Phasor.ar(
+		trig:t_trig,
+		rate:rate,
+		start:(((rate>0)*startA)+((rate<0)*endA))*frames,
+		end:(((rate>0)*endA)+((rate<0)*startA))*frames,
+		resetPos:(((rate>0)*startA)+((rate<0)*endA))*frames,
+	);
+	snd=BufRd.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		phase:pos,
+		interpolation:4,
+	);
+
+	// add a second reader
+	pos2=Phasor.ar(
+		trig:t_trig,
+		rate:rate,
+		start:(((rate>0)*startB)+((rate<0)*endB))*frames,
+		end:(((rate>0)*endB)+((rate<0)*startB))*frames,
+		resetPos:(((rate>0)*startB)+((rate<0)*endB))*frames,
+	);
+	snd=BufRd.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		phase:pos2,
+		interpolation:4,
+	);
+
+	snd = snd * env;
+
+    Out.ar(out,snd)
+}).play(s, [\out, 0, \bufnum, b]);
+)
 
 
 // 2. then run this!
