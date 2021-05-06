@@ -38,7 +38,7 @@ Engine_SimpleSample : CroneEngine {
 			// You'll hear percussive "ticks" whenever an onset is detected
 			pips = WhiteNoise.ar(EnvGen.kr(Env.perc(0.001, 0.1, 0.2), onsets));
 			SendTrig.kr(onsets,0,Clip.kr((pos-300)/BufFrames.kr(bufnum),0,1));
-			Out.ar(out,0.25*Pan2.ar(sig, -0.75, 0.2) + Pan2.ar(pips, 0.75, 1));
+			Out.ar(out,Pan2.ar(sig, -0.75, 0.2) + Pan2.ar(pips, 0.75, 1));
 		}).add;
 
 		osfun = OSCFunc({ 
@@ -118,7 +118,9 @@ Engine_SimpleSample : CroneEngine {
         this.addCommand("loadwav","sf", { arg msg;
             sampleBuff.free;
             sampleBuff = Buffer.read(context.server,msg[1],action:{
-	            Synth("OnsetDetection",[\out,0,\bufnum,sampleBuff.bufnum,\threshold,msg[2]],target:context.xg);
+            	if (msg[2]>0,{
+		            Synth("OnsetDetection",[\out,0,\bufnum,sampleBuff.bufnum,\threshold,msg[2]],target:context.xg);
+        		},{});
             });
         });
 
