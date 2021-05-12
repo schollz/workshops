@@ -394,35 +394,36 @@ t = Task({
 		curtick.postln;
 
 		// random lock in to the actual beat
-		if (16.rand>13,{
+		if (64.rand>60,{
 			"locking".postln;
 			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,1,\loops,1000);
 		},{});
 		// randomly break the beat
-		if (16.rand>12,{
+		if (64.rand>58,{
 			"breaking".postln;
-			x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision),\rate,(2.rand*2-1),\loops,1000);
+            x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
 		},{});
 
-		// randomly reverse
-		if (32.rand>30,{
-			"reversing?".postln;
-			x.set(\rate,(2.rand*2-1));
-		},{});
-		// randomly slow
-		if (32.rand>30,{
-			"slowdown".postln;
-			x.set(\rate,(2.rand*2-1)*0.5);
-		},{});
-		// randomly speed
-		if (32.rand>30,{
-			"speedup".postln;
-			x.set(\rate,(2.rand*2-1)*2);
-		},{});
+        // // randomly reverse
+        // if (128.rand>120,{
+        //     "reversing?".postln;
+        //     x.set(\rate,(2.rand*2-1));
+        // },{});
+        // // randomly slow
+        // if (128.rand>125,{
+        //     "slowdown".postln;
+        //     x.set(\rate,(2.rand*2-1)*0.5);
+        // },{});
+        // // randomly speed
+        // if (128.rand>125,{
+        //     "speedup".postln;
+        //     x.set(\rate,(2.rand*2-1)*2);
+        // },{});
     });
 }).play;
 )
 // stop it
 t.stop;x.set(\rate,0);
+
 
 
