@@ -149,8 +149,17 @@ x = SynthDef("basic_w_overtones_varsaw_modulation",
 (
 x = SynthDef("dreamcrusher",
     {
-        arg hz=131.81, amp=0.5;
-        var local, ampcheck, sig;
+        arg hz=131.81, amp=0.5,t_trig=0;
+        var local, ampcheck, sig, env;
+
+		// envelope to clamp looping
+		env=EnvGen.ar(
+			Env.new(
+				levels: [0,1,1,0],
+				times: [0.5,1,0.5],
+			),
+			gate:t_trig,
+		);
 
         // the oscillator part
         sig = Mix.ar(

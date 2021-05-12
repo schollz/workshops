@@ -226,17 +226,19 @@ x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,1)
 // 7. crossfade loops
 (
 x=SynthDef("PlayBufPlayer", {
-    arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0,
+    arg out=0, bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
     loops=1;
     var snd,snd2,pos,pos2,frames,duration,env;
-    var startA,endA,startB,endB,crossfade,aOrB;
+    var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
 
     // latch to change trigger between the two
     aOrB=ToggleFF.kr(t_trig);
     startA=Latch.kr(start,aOrB);
     endA=Latch.kr(end,aOrB);
+	resetA=Latch.kr(reset,aOrB);
     startB=Latch.kr(start,1-aOrB);
     endB=Latch.kr(end,1-aOrB);
+    resetB=Latch.kr(reset,1-aOrB);
     crossfade=Lag.ar(K2A.ar(aOrB),0.05);
 
 
@@ -258,7 +260,7 @@ x=SynthDef("PlayBufPlayer", {
         rate:rate,
         start:(((rate>0)*startA)+((rate<0)*endA))*frames,
         end:(((rate>0)*endA)+((rate<0)*startA))*frames,
-        resetPos:(((rate>0)*startA)+((rate<0)*endA))*frames,
+        resetPos:(((rate>0)*resetA)+((rate<0)*endA))*frames,
     );
     snd=BufRd.ar(
         numChannels:2,
@@ -273,7 +275,7 @@ x=SynthDef("PlayBufPlayer", {
         rate:rate,
         start:(((rate>0)*startB)+((rate<0)*endB))*frames,
         end:(((rate>0)*endB)+((rate<0)*startB))*frames,
-        resetPos:(((rate>0)*startB)+((rate<0)*endB))*frames,
+        resetPos:(((rate>0)*resetB)+((rate<0)*endB))*frames,
     );
     snd2=BufRd.ar(
         numChannels:2,
@@ -375,25 +377,52 @@ t.stop;
 
 // breakbeats
 (
-b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm.wav");
+b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm_4beats.wav");
 )
 
 (
+t.stop;x.set(\rate,0);
 t = Task({
 	var bpm=160;
-	var subdivision=16;
+	var beats=4;
+	var subdivision=4;
+	x.set(\t_trig,1,\start,0,\end,1,\rate,1,\loops,1000);
     inf.do({ arg i;
-		var curbeat=i%subdivision;
-		(60/bpm/4).wait;
-		if (10.rand>7,{
-			x.set(\t_trig,1,\start,curbeat/subdivision,\end,1,\rate,1,\loops,1000);
+		var curtick;
+		(60/bpm/(subdivision)).wait;
+		curtick=i%(beats*subdivision);
+		curtick.postln;
+
+		// random lock in to the actual beat
+		if (16.rand>13,{
+			"locking".postln;
+			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,1,\loops,1000);
 		},{});
-		if (7.rand>5,{
-			x.set(\t_trig,1,\start,curbeat/subdivision,\end,(curbeat+(subdivision-curbeat).rand)/subdivision,\rate,(2.rand*2-1),\loops,1000);
+		// randomly break the beat
+		if (16.rand>12,{
+			"breaking".postln;
+			x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision),\rate,(2.rand*2-1),\loops,1000);
+		},{});
+
+		// randomly reverse
+		if (32.rand>30,{
+			"reversing?".postln;
+			x.set(\rate,(2.rand*2-1));
+		},{});
+		// randomly slow
+		if (32.rand>30,{
+			"slowdown".postln;
+			x.set(\rate,(2.rand*2-1)*0.5);
+		},{});
+		// randomly speed
+		if (32.rand>30,{
+			"speedup".postln;
+			x.set(\rate,(2.rand*2-1)*2);
 		},{});
     });
 }).play;
 )
-t.stop;
+// stop it
+t.stop;x.set(\rate,0);
 
 
