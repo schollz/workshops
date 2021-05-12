@@ -371,3 +371,29 @@ t = Task({
 )
 
 t.stop;
+
+
+// breakbeats
+(
+b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm.wav");
+)
+
+(
+t = Task({
+	var bpm=160;
+	var subdivision=16;
+    inf.do({ arg i;
+		var curbeat=i%subdivision;
+		(60/bpm/4).wait;
+		if (10.rand>7,{
+			x.set(\t_trig,1,\start,curbeat/subdivision,\end,1,\rate,1,\loops,1000);
+		},{});
+		if (7.rand>5,{
+			x.set(\t_trig,1,\start,curbeat/subdivision,\end,(curbeat+(subdivision-curbeat).rand)/subdivision,\rate,(2.rand*2-1),\loops,1000);
+		},{});
+    });
+}).play;
+)
+t.stop;
+
+
