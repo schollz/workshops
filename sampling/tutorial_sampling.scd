@@ -383,10 +383,11 @@ b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm_4beats
 (
 t.stop;x.set(\rate,0);
 t = Task({
-	var bpm=160;
+	var bpm=140;
+	var bpm_source=160;
 	var beats=4;
 	var subdivision=4;
-	x.set(\t_trig,1,\start,0,\end,1,\rate,1,\loops,1000);
+	x.set(\t_trig,1,\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
     inf.do({ arg i;
 		var curtick;
 		(60/bpm/(subdivision)).wait;
@@ -396,7 +397,7 @@ t = Task({
 		// random lock in to the actual beat
 		if (64.rand>60,{
 			"locking".postln;
-			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,1,\loops,1000);
+			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
 		},{});
 		// randomly break the beat
 		if (64.rand>58,{
@@ -405,20 +406,20 @@ t = Task({
 		},{});
 
         // // randomly reverse
-        // if (128.rand>120,{
-        //     "reversing?".postln;
-        //     x.set(\rate,(2.rand*2-1));
-        // },{});
-        // // randomly slow
-        // if (128.rand>125,{
-        //     "slowdown".postln;
-        //     x.set(\rate,(2.rand*2-1)*0.5);
-        // },{});
-        // // randomly speed
-        // if (128.rand>125,{
-        //     "speedup".postln;
-        //     x.set(\rate,(2.rand*2-1)*2);
-        // },{});
+        if (128.rand>120,{
+            "reversing?".postln;
+            x.set(\rate,bpm/bpm_source*(2.rand*2-1));
+        },{});
+		// // randomly slow
+		// if (128.rand>125,{
+		// 	"slowdown".postln;
+		// 	x.set(\rate,bpm/bpm_source*(2.rand*2-1)*0.5);
+		// },{});
+		// // randomly speed
+		// if (128.rand>125,{
+		// 	"speedup".postln;
+		// 	x.set(\rate,bpm/bpm_source*(2.rand*2-1)*2);
+		// },{});
     });
 }).play;
 )
