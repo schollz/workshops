@@ -26,6 +26,18 @@
 
 
 //////// 4 ////////
+// disorder of operations!
+// there is no order of operations in SuperCollider!
+// beware beware beware beware
+(
+ (100+2/2).postln; // what does this equal?
+ (100+(2/2)).postln; // force order of operations using parentheses
+)
+
+
+
+
+//////// 5 ////////
 // semicolons make functions
 // you can assign variables using letters a-z or with ~variableName
 (
@@ -40,7 +52,7 @@ a.value; // .value evaluates the function stored in "a"
 
 
 
-//////// 5 ////////
+//////// 6 ////////
 // functions can have arguments and variables!
 (
 a={
@@ -55,7 +67,7 @@ a.value("zack");
 
 
 
-//////// 6 ////////
+//////// 7 ////////
 // let's get into the music now!
 // we need to boot the server to start music making:
 // goto Server -> Boot Server
@@ -65,7 +77,7 @@ a.value("zack");
 
 
 
-//////// 7 ////////
+//////// 8 ////////
 // lets make a function that generates a Sine wave
 // SuperCollider generates things with a "UGen"
 // the UGen for Sine waves is called "SinOsc"
@@ -81,7 +93,7 @@ a.value("zack");
 
 
 
-//////// 8 ////////
+//////// 9 ////////
 // finally lets make a sound!
 // just add .play to our function
 (
@@ -90,12 +102,6 @@ a.value("zack");
 }.play; // .play will play it
 )
 // stop it using <Ctl>+.
-
-
-
-
-//////// 9 ////////
-// lets celebrate...
 // you just made a synth!
 // it makes one sound and only one sound,
 // but who cares!? you did it!
@@ -103,7 +109,7 @@ a.value("zack");
 
 
 
-//////// 10 ////////
+//////// 10  ////////
 // lets have the synth make another sound
 // by adding an argument (see 5)
 // and also save it to a variable (see 4)
@@ -254,3 +260,43 @@ x.free;
 y.free;
 z.free;
 )
+
+
+
+
+//////// 17 ////////
+// you can treat UGens like numbers
+// lets add them together and make a new oscillator
+// famous oscillators to play with:
+// SinOsc, LFSaw, Tri
+(
+SynthDef("oscillator",{ 
+	arg freq=220, amp=0.1;
+	var snd;
+        // you can directly Mix 
+	snd=Mix.ar(SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/8]));
+        // lets add some harmonic from a saw wave
+	snd=snd+(0.5*Mix.ar(LFSaw.ar(freq:[freq,freq*2],mul:[amp,amp/2])));
+        // note: the following doesn't work, why not?
+	// snd=snd+0.5*Mix.ar(Saw.ar(freq:[freq,freq*2],mul:[amp,amp/2]));
+	snd=Splay.ar(snd);
+	Out.ar(0,snd);
+}).add;
+)
+
+// play it
+(
+x = Synth("coolsynth",[\freq,60.midicps]);
+)
+
+
+
+
+//////// 18 ////////
+// discovery time!
+// use 17 and try making your own oscillator by
+// using multichannel expansion with different frequencies / amplitude
+// or by combining different oscillators
+// famous oscillators:
+// SinOsc, Saw, Pulse
+
