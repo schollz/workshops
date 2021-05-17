@@ -2,11 +2,17 @@
 // this is a comment! it is valid code but doesn't do anything
 
 
+
+
 //////// 2 ////////
-// this is a line of code! it prints something in the window over there ->
-// run any line of code by putting your cursor on it and pressing
-// <Ctl>+<Enter>
+// now, this is a line of code that does something!
+// this line prints something in the window over there ->
+// run any line of code by putting your cursor on it and then
+// press <Ctl>+<Enter>
 "I love SuperCollider".postln; // <- make sure to always have a ";" after code
+
+
+
 
 //////// 3 ////////
 // parentheses make it easy to
@@ -15,6 +21,9 @@
 "I love SuperCollider".postln;
 "SuperCollider loves me".postln;
 )
+
+
+
 
 //////// 4 ////////
 // semicolons make functions
@@ -28,6 +37,9 @@ a.value; // .value evaluates the function stored in "a"
 ~someVariable.value;
 )
 
+
+
+
 //////// 5 ////////
 // functions can have arguments and variables!
 (
@@ -40,11 +52,18 @@ a={
 a.value("zack");
 )
 
+
+
+
 //////// 6 ////////
 // let's get into the music now!
 // we need to boot the server to start music making:
 // goto Server -> Boot Server
 // or press <Ctl>+B (windows)
+
+
+
+
 
 //////// 7 ////////
 // lets make a function that generates a Sine wave
@@ -59,21 +78,28 @@ a.value("zack");
 }.plot(0.02); // .plot(x) will plot it for x seconds
 )
 
+
+
+
 //////// 8 ////////
 // finally lets make a sound!
 // just add .play to our function
-// stop it using <Ctl>+.
 (
 {
 	SinOsc.ar(freq:220);
 }.play; // .play will play it
 )
+// stop it using <Ctl>+.
+
+
+
 
 //////// 9 ////////
-// hell yeah!
+// lets celebrate...
 // you just made a synth!
 // it makes one sound and only one sound,
 // but who cares!? you did it!
+
 
 
 
@@ -94,6 +120,8 @@ x.set(\freq,60.midicps); // .midicps converts midi note to frequency (cycles per
 x.free; // we can stop the synth running this line
 
 
+
+
 //////// 11 ////////
 // UGens constantly generate numbers
 // but they can also be treated like numbers,
@@ -112,6 +140,9 @@ x.set(\amp,0.7,\freq,440);
 // free the synths!
 x.free;
 
+
+
+
 //////// 12 ////////
 // UGens have all sorts of parameters
 // SinOsc happens to have one that gets multiplied, call "mul".
@@ -124,6 +155,8 @@ x={
 )
 // note: this is exactly the same as in 11
 // in SuperCollider there are always many ways to do the same thing
+
+
 
 
 //////// 13 ////////
@@ -139,15 +172,19 @@ x={
 }.play;
 )
 x.free;
+// note: this is exactly the same as 11 and 12
+// in 11 and 12, SuperCollider assumed this is what
+// we wanted
+
 
 
 
 //////// 14 ////////
-// "multichannel expansion" is SuperCollider's secret sauce
-// "multichannel expansion" also sounds cool to drop in conversation
+// "multichannel expansion" is SuperCollider's secret sauce.
+// "multichannel expansion" also sounds cool to drop in conversation.
 // "multichannel expansion" means that SuperCollider automatically
 // will generate multiple UGens for you when a parameter has an array
-// and assign each UGen to an audio channel (e.g. left and right speakers)
+// and assign each UGen to an audio channel (e.g. left and right speakers).
 (
 x={
 	arg freq=220, amp=0.5;
@@ -160,6 +197,9 @@ x={
 // lower frequency at higher volume in left ear
 // higher frequency at lower volume in right ear
 x.free;
+
+
+
 
 //////// 15 ////////
 // sometimes you don't want multichannel expansion
@@ -179,9 +219,10 @@ x={
 
 
 
+
 //////// 16 ////////
-// lets make it official and define a synth definition,
-// a SynthDef, if you will.
+// lets define a synth to use multiple times
+// using a "SynthDef"
 (
 SynthDef("coolsynth",{ // add SynthDef here, with a name
 	arg freq=220, amp=0.1;
@@ -191,8 +232,10 @@ SynthDef("coolsynth",{ // add SynthDef here, with a name
 	snd=Splay.ar(snd);
 	Out.ar(0,snd);
 }).add; // use "add" instead of play
+)
 
 // now you can create multiple instances of them!
+(
 x = Synth("coolsynth",[\freq,60.midicps]);
 y = Synth("coolsynth",[\freq,62.midicps]);
 z = Synth("coolsynth",[\freq,65.midicps]);
