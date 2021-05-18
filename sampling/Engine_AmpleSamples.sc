@@ -118,6 +118,7 @@ Engine_AmpleSamples : CroneEngine {
         this.addCommand("loadwav","sf", { arg msg;
             sampleBuff.free;
             sampleBuff = Buffer.read(context.server,msg[1],action:{
+            	"sample loaded".postln;
             	if (msg[2]>0,{
 		            Synth("OnsetDetection",[\out,0,\bufnum,sampleBuff.bufnum,\threshold,msg[2]],target:context.xg);
         		},{});
