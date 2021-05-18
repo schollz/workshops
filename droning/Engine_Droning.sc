@@ -19,7 +19,9 @@ Engine_Droning : CroneEngine {
 		SynthDef("TheDrone", {
 			arg amp=0,freq=220;
 			var snd;
-			snd=SinOsc.ar(freq:freq,mul:amp);
+			snd=Saw.ar(freq:[freq,freq/2],mul:[amp,amp/10]);
+			snd=Mix.ar(snd);
+			snd=Splay.ar(snd);
 			Out.ar(0,snd);
 		}).add;
 
