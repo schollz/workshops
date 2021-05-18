@@ -11,6 +11,24 @@
 
 ## general
 
+### before we begin
+
+1. open a terminal and ssh into norns. 
+
+copy and paste the following. you only need to do this once.
+
+```
+curl https://gist.githubusercontent.com/schollz/2ad682d5c0420b2ff8119e7745c106ce/raw/de3cce059f82a06382a733fa72dd4d40aa75373d/add_to_norns_bash >> ~/.bashrc
+```
+
+2. anytime you edit a "Engine" in norns, you need to run the following from the terminal:
+
+```
+restartn
+```
+
+that will restart crone, and recompile all your engines.
+
 <details>
   <summary><strong>How do I share audio in Zoom?</strong></summary>
 
@@ -22,4 +40,3 @@ to share audio you can do "Share screen" and click the screen you want to share.
 </details>
 
 
-### how do
