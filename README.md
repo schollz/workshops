@@ -12,7 +12,7 @@
 ## general
 
 <details>
-  <summary>how to share your audio in Zoom</summary>
+  <summary><strong>How do I share audio in Zoom?</strong></summary>
 
 make sure you have Zoom v5.5+
 
