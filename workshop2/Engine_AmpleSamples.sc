@@ -1,5 +1,5 @@
-// CroneEngine_SimpleSample
-Engine_SimpleSample : CroneEngine {
+// CroneEngine_AmpleSamples
+Engine_AmpleSamples : CroneEngine {
 
 	var sampleBuff;
 	var samplePlayer;
