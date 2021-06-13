@@ -1,3 +1,6 @@
+//////// -- first steps + tones -- ////////
+
+
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
 
@@ -81,9 +84,6 @@ a.value("zack");
 // lets make a function that generates a Sine wave
 // SuperCollider generates things with a "UGen"
 // the UGen for Sine waves is called "SinOsc"
-// there are two ways to use a UGen - with .ar or .kr
-// you can use either, but .ar takes more CPU
-// so better to use for .ar for audio and .kr for modulation
 (
 {
 	SinOsc.ar(freq:220);
@@ -270,33 +270,43 @@ z.free;
 // famous oscillators to play with:
 // SinOsc, LFSaw, Tri
 (
-SynthDef("oscillator",{ 
-	arg freq=220, amp=0.1;
+SynthDef("coolsynth",{
+	arg freq=110, amp=0.1;
 	var snd;
-        // you can directly Mix 
-	snd=Mix.ar(SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/8]));
-        // lets add some harmonic from a saw wave
-	snd=snd+(0.5*Mix.ar(LFSaw.ar(freq:[freq,freq*2],mul:[amp,amp/2])));
-        // note: the following doesn't work, why not?
+     // you can directly Mix
+	snd=Mix.ar(SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/4]));
+    // lets add some harmonic from a saw wave
+	snd=snd+(0.1*Mix.ar(Saw.ar(freq:[freq,freq*2,freq*3,freq*4],mul:[amp,amp/2,amp/3,amp/4])));
+     // note: the following doesn't work, why not?
 	// snd=snd+0.5*Mix.ar(Saw.ar(freq:[freq,freq*2],mul:[amp,amp/2]));
 	snd=Splay.ar(snd);
 	Out.ar(0,snd);
-}).add;
+}).play;
 )
-
-// play it
-(
-x = Synth("coolsynth",[\freq,60.midicps]);
-)
-
 
 
 
 //////// 18 ////////
+// fancy multiexpansion
+// use Array.fill(<num>,{arg i; <code>})
+// to easily create an additive synth
+// this is same as 17
+(
+SynthDef("coolsynth",{
+	arg freq=110, amp=0.1;
+	var snd;
+     // you can directly Mix
+	snd=Mix.ar(Array.fill(2,{arg i; SinOsc.ar(freq:freq*(2**i),mul:amp/(2**i))}));
+    // lets add some harmonic from a saw wave
+	snd=snd+(0.1*Mix.ar(Array.fill(4,{arg i; Saw.ar(freq:freq*(i+1),mul:amp/(i+1))})));
+	snd=Splay.ar(snd);
+	Out.ar(0,snd);
+}).play;
+)
+
+
+
 // discovery time!
-// use 17 and try making your own oscillator by
-// using multichannel expansion with different frequencies / amplitude
-// or by combining different oscillators
-// famous oscillators:
-// SinOsc, Saw, Pulse
+// use any of thee examples above and change one or two or more things!
+// change oscillator
 
