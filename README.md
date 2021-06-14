@@ -1,4 +1,4 @@
-# music.hackspace
+# SuperCollider workshops
 
 ## installing SuperCollider
 
@@ -60,7 +60,23 @@ s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; 
 
 ![img](https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg)
 
-## workshop 2 - ample samples
+in this workshop we will start at the very beginning of SuperCollider. after [installing SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) you are ready to start this workshop. we will go through all the basics of SuperCollider in a practical way, to build up from a single tone all the way to make a [space drone](https://raw.githubusercontent.com/schollz/ambulation/main/droning/55hz_spacedrone.mp3)!
 
-![img](https://user-images.githubusercontent.com/6550035/118573658-da63f400-b737-11eb-9308-e3310a184b9b.jpg)
+### part 1
 
+open [part1.scd](https://github.com/schollz/ambulation/blob/main/droning/part1.scd).
+
+this part will teach the basics of SuperCollider and making sounds. by the end of this part you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
+
+### part 2
+
+open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.scd).
+
+this part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
+
+
+### part 3
+
+open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
+
+this part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
