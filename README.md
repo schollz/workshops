@@ -26,7 +26,7 @@ Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.s
 This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
-### Part 3: how to effect the sound
+### Part 3: how to sculpt the sound
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
 
