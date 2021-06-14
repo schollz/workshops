@@ -56,26 +56,32 @@ Once you are done sharing, you can run this line of code to get your default out
 s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; s.reboot;
 ```
 
-## workshop 1 - tone to drone
+## workshop 1: tone to drone
 
 ![img](https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg)
 
-in this workshop we will start at the very beginning of SuperCollider. after [installing SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) you are ready to start this workshop. we will go through all the basics of SuperCollider in a practical way, to build up from a single tone all the way to make a [space drone](https://raw.githubusercontent.com/schollz/ambulation/main/droning/55hz_spacedrone.mp3)!
+in this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
 
-### part 1
+we will start by making simple sounds, then learn how to modulate those sounds, and then learn how to add effects to those sounds. we will go through all the basics of SuperCollider in a practical way, to build up from a single tone all the way to make a [space drone](https://raw.githubusercontent.com/schollz/ambulation/main/droning/55hz_spacedrone.mp3)!
+
+### part 0: before you begin
+
+[install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
+
+### part 1: how to make a sound
 
 open [part1.scd](https://github.com/schollz/ambulation/blob/main/droning/part1.scd).
 
 this part will teach the basics of SuperCollider and making sounds. by the end of this part you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
 
-### part 2
+### part 2: how to modulate the sound
 
 open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.scd).
 
 this part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
-### part 3
+### part 3: how to effect the sound
 
 open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
 
