@@ -1,6 +1,6 @@
 # SuperCollider workshops
 
-This repo is designed to teach SuperCollider to beginners through two self-styled workshops. Both are offered as workshops at [Music Hackspace](https://musichackspace.org/events/tone-to-drone-introduction-to-supercollider-for-monome-norns-live-session/) but all the materials are included here and can be used as a self-guided workshop as well.
+This repo is designed to teach SuperCollider to beginners through two self-styled workshops. The theme of these workshops is *ambulation* - getting you to take your first steps to walk on your own with SuperCollider. Both are offered as workshops at [Music Hackspace](https://musichackspace.org/events/tone-to-drone-introduction-to-supercollider-for-monome-norns-live-session/) but all the materials are included here and can be used as a self-guided workshop as well.
 
 What is SuperCollider? SuperCollider is a free platform for audio synthesis and algorithm composition. It really excels at real-time analysis, synthesis, sampling, and processing and provides a framework for seamless combination of audio techniques like additive and subtractive synthesis. 
 
