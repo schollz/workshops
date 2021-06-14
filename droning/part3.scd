@@ -5,230 +5,275 @@
 
 
 //////// 1 ////////
-// advanced multichannel expansion
-// we can use rrand to generate random numbers on initialization
-(
-{
-	Array.fill(2,{arg i; SinOsc.kr(1+rrand(0,100))});
-	// shorthand version:
-	// {SinOsc.kr(1+rrand(0,100))}!2
-}.plot(1)
-)
-
-(
-{
-	{SinOsc.kr(LFNoise0.kr(rrand(2,10)).range(2,10))}!2
-}.plot(1)
-)
-
-//////// 2 ////////
-
+// lets start from where we left off, with our modulated Pulse synth
 (
 x={
-	arg freq=55, amp=0.5;
+	arg freq=110, amp=0.5;
 	var snd;
 	snd=Array.fill(3,{arg i;
 		var snd2;
-		// lots of modulation sources we can use for anything (each one unique)
-		var modsrc={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!7;
 		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
 		var midinote=freq2.cpsmidi;
-		var modFreq=modsrc[0].range(midinote-0.5,midinote+0.5).midicps;
-		var modWidth=modsrc[1].range(0.3,0.6);
-		var modAmp=modsrc[2].range(0.2,0.5);
-		var modPan=modsrc[3].range(-1,1);
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
+			width:modWidth,
+		);
+	});
+	snd=Mix.ar(snd);
+	snd=Splay.ar(snd);
+	Out.ar(0,snd*amp);
+}.play;
+)
 
+//////// 2 ////////
+// envelopes!
+// lets give the synth a better introduction by using an envelope to open it
+// envelopes are defined in many many ways.
+({
+	// a very simple envelope with slow attack
+	EnvGen.kr(Env.asr(rrand(0.1,10)))
+}.plot(1))
+
+(
+x={
+	arg freq=110, amp=0.5;
+	var snd;
+	snd=Array.fill(3,{arg i;
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		var midinote=freq2.cpsmidi;
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
 		snd2=PulseDPW.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
 		);
 
-		// add filter!
-		snd2=RLPF.ar(snd2,
-			freq:LinExp.kr(modsrc[4],-1,1,freq,20000),
-			rq:modsrc[5].range(0.01,1)
+		// each voice comes in slowly, at different speeds using rrand(lo,hi)
+		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
+	});
+	snd=Mix.ar(snd);
+	snd=Splay.ar(snd);
+	Out.ar(0,snd*amp);
+}.play;
+)
+
+//////// 3 ////////
+// filters!
+// next lets add a filter to each of the voices
+// lots of filters to choose from: LPF, HPF, RHPF, RLPF, MoogFF
+(
+x={
+	arg freq=110, amp=0.5;
+	var snd;
+	snd=Array.fill(3,{arg i;
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		var midinote=freq2.cpsmidi;
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
+			width:modWidth,
 		);
 
-		// add envelope
-		snd2=snd2*EnvGen.ar(Env.asr(rrand(4,10)));
+		// the envelope
+		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
 
-		// add pan!
-		snd2=Pan2.ar(snd2,modsrc[6].range(-0.5,0.5));
+		// add filter, a resonant lpf
+		// each part of it is modulated
+		snd2=RLPF.ar(snd2,
+			freq:LinExp.kr(modBank[4],-1,1,freq,20000),
+			rq:modBank[5].range(0.01,1)
+		);
+	});
+	snd=Mix.ar(snd);
+	snd=Splay.ar(snd);
+	Out.ar(0,snd*amp);
+}.play;
+)
+
+
+//////// 4 ////////
+// panning!
+// next lets add random panning to each voice
+// lots of pans to choose from, Pan2, Rotate2, Balance2
+(
+x={
+	arg freq=110, amp=0.5;
+	var snd;
+	snd=Array.fill(3,{arg i;
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		var midinote=freq2.cpsmidi;
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
+			width:modWidth,
+		);
+
+		// the envelope
+		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
+
+		// add filter, a resonant lpf
+		// each part of it is modulated
+		snd2=RLPF.ar(snd2,
+			freq:LinExp.kr(modBank[4],-1,1,freq,20000),
+			rq:modBank[5].range(0.01,1)
+		);
+
+		// add panning
+		snd2=Pan2.ar(snd2,modBank[6].range(-0.5,0.5));
+
+	});
+	snd=Mix.ar(snd);
+	snd=Splay.ar(snd);
+	Out.ar(0,snd*amp);
+}.play;
+)
+
+
+
+
+//////// 5 ////////
+// delay!
+// finally, lets add delay. there are many delays: AllpassC, CombC, DelayC
+// each one is a little different and they can be used to make
+// delays as well as flangers and phasers and reverb-ish things
+(
+x={
+	arg freq=110, amp=0.5;
+	var snd;
+	snd=Array.fill(3,{arg i;
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		var midinote=freq2.cpsmidi;
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
+			width:modWidth,
+		);
+
+		// the envelope
+		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
+
+		// add filter, a resonant lpf
+		// each part of it is modulated
+		snd2=RLPF.ar(snd2,
+			freq:LinExp.kr(modBank[4],-1,1,freq,20000),
+			rq:modBank[5].range(0.01,1)
+		);
+
+		// add panning
+		snd2=Pan2.ar(snd2,modBank[6].range(-0.5,0.5));
 
 		// add delay!
 		snd2 = snd2 + CombC.ar(snd2,
 			maxdelaytime:0.5,
-			delaytime:rrand(0.2,0.5)+VarLag.kr(LFNoise0.kr(1/30),1/2,warp:\sine).range(-0.2,0),
+			delaytime:rrand(0.2,0.5)+VarLag.kr(LFNoise0.kr(rrand(1/60,1/3)),1/2,warp:\sine).range(-0.2,0),
 			decaytime:rrand(5,15),
 		);
 		snd2=LeakDC.ar(snd2); // remove DC bias JIC
-
 	});
 	snd=Mix.ar(snd);
 	snd=Splay.ar(snd);
 	Out.ar(0,snd*amp);
 }.play;
 )
-
-
-// record it
-
-Server.default.record; // Start recording
-
-Server.default.stopRecording; // Stop recording.
-
-
-// lets add a resonant low-pass filter and modulate both frequency and q
-(
-x={
-	arg freq=220, amp=0.5;
-	var snd;
-	snd=Array.fill(3,{arg i;
-		var modFreq=freq*0.02*LFNoise0.kr(rrand(5,15));
-		var modAmp=SinOsc.kr(LFNoise0.kr(rrand(5,15))).range(0.1,1);
-		var modWidth=VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.3,0.8);
-		VarSaw.ar(
-			freq:freq+modFreq,
-			mul:amp/(2**i)*modAmp,
-			width:modWidth,
-		)
-	});
-	snd=Mix.ar(snd);
-	snd=Splay.ar(snd);
-
-	// add filter!
-	snd=RLPF.ar(snd,
-		freq:LinExp.kr(LFTri.kr(0.24),-1,1,freq,20000),
-		rq:SinOsc.kr(0.23).range(0.1,1)
-	);
-
-
-	Out.ar(0,snd*amp);
-}.play;
-)
-
-
-//////// 3 ////////
-// lets add delay! there are many delays: https://doc.sccode.org/Browse.html#UGens%3EDelays
-// CombC, DelayC
-(
-x={
-	arg freq=220, amp=0.5;
-	var snd;
-	snd=Array.fill(3,{arg i;
-		var freq2=freq*(2**i);
-		var modFreq=freq2*0.02*LFNoise0.kr(rrand(5,15));
-		var modAmp=SinOsc.kr(LFNoise0.kr(rrand(5,15))).range(0.1,1);
-		var modWidth=VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.3,0.8);
-		VarSaw.ar(
-			freq:freq2+modFreq,
-			mul:amp*modAmp,
-			width:modWidth,
-		)
-	});
-	snd=Mix.ar(snd);
-	snd=Splay.ar(snd);
-
-	// add filter!
-	snd=RLPF.ar(snd,
-		freq:LinExp.kr(LFTri.kr(0.24),-1,1,freq,20000),
-		rq:SinOsc.kr(0.23).range(0.1,1)
-	);
-
-	// add delay!
-	snd = snd + CombC.ar(snd,
-		maxdelaytime:0.5,
-		delaytime:VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.48,0.5),
-		decaytime:5,
-	);
-	snd=LeakDC.ar(snd); // remove DC bias JIC
-
-
-	Out.ar(0,snd*amp);
-}.play;
-)
-
-//////// 4 ////////
-// lets add distortion
-// multiple ways to do this
-// snd = (snd * X).tanhl
-// snd = CrossoverDistortion.ar(snd);
-(
-x={
-	arg freq=220, amp=0.5;
-	var snd;
-	snd=Array.fill(3,{arg i;
-		var freq2=freq*(2**i);
-		var modFreq=freq2*0.02*LFNoise0.kr(rrand(5,15));
-		var modAmp=SinOsc.kr(LFNoise0.kr(rrand(5,15))).range(0.1,1);
-		var modWidth=VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.3,0.8);
-		VarSaw.ar(
-			freq:freq2+modFreq,
-			mul:amp*modAmp,
-			width:modWidth,
-		)
-	});
-	snd=Mix.ar(snd);
-	snd=Splay.ar(snd);
-
-	// add filter!
-	snd=RLPF.ar(snd,
-		freq:LinExp.kr(LFTri.kr(0.24),-1,1,freq,20000),
-		rq:SinOsc.kr(0.23).range(0.1,1)
-	);
-
-	// add delay!
-	snd = snd + CombC.ar(snd,
-		maxdelaytime:0.5,
-		delaytime:VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.48,0.5),
-		decaytime:3,
-	);
-	snd=LeakDC.ar(snd); // remove DC bias JIC
-
-	// UGen for distortion
-	// snd = CrossoverDistortion.ar(snd);
-	// simple tanh
-	snd = (snd*4).tanh;
-
-	Out.ar(0,snd*amp*0.5);
-}.play;
-)
-
 
 
 //////// 6 ////////
-// lets rearrange!
-// what if the filter applied to each synth?
+// distortion!
+// lets add distortion and a global filter
+// distortion can be as simple as ().tanh
+// or you can use things like CrossoverDistortion, or SineShaper
 (
 x={
-	arg freq=220, amp=0.5;
+	arg freq=110, amp=0.25;
 	var snd;
 	snd=Array.fill(3,{arg i;
-		var modFreq=freq*0.001*LFNoise0.kr(rrand(10,20));
-		var modAmp=SinOsc.kr(LFNoise0.kr(freq:rrand(5,20))).range(0.1,1);
-		var modWidth=VarLag.kr(LFNoise0.kr(rrand(1,3)),1/2,warp:\sine).range(0.0,1.0);
-		var snd2=Pulse.ar(
-			freq:freq*(2**(i-1))+(modFreq*i),
-			mul:amp*modAmp,
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/60,1/3)).range(1/60,1/3))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		var midinote=freq2.cpsmidi;
+		var detune=0.5;
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
 			width:modWidth,
 		);
+
+		// the envelope
+		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
+
+		// add filter, a resonant lpf
+		// each part of it is modulated
 		snd2=RLPF.ar(snd2,
-			freq:LinExp.kr(LFTri.kr(rrand(0.1,1)),-1,1,freq/2,20000),
-			rq:SinOsc.kr(rrand(0.1,1)).range(0.2,1)
+			freq:LinExp.kr(modBank[4],-1,1,freq,20000),
+			rq:modBank[5].range(0.01,1)
 		);
+
+		// add panning
+		snd2=Pan2.ar(snd2,modBank[6].range(-0.5,0.5));
+
+		// add delay!
+		snd2 = snd2 + CombC.ar(snd2,
+			maxdelaytime:0.5,
+			delaytime:rrand(0.2,0.5)+VarLag.kr(LFNoise0.kr(rrand(1/60,1/3)),1/2,warp:\sine).range(-0.2,0),
+			decaytime:rrand(5,15),
+		);
+		snd2=LeakDC.ar(snd2); // remove DC bias JIC
 	});
 	snd=Mix.ar(snd);
 	snd=Splay.ar(snd);
 
-	// add delay!
-	snd = snd + CombC.ar(snd,
-		maxdelaytime:0.5,
-		delaytime:VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.14,0.15),
-		decaytime:8,
-	);
-	snd=LeakDC.ar(snd); // remove DC bias JIC
-
+	// global moog filter
+	snd=MoogFF.ar(snd,LinExp.kr(MouseX.kr(),0,1,200,20000),1)*8;
+	// distortion
+	snd=(snd*(1+LinExp.kr(MouseY.kr(),0,1,0.0001,10))).tanh*0.5;
 	Out.ar(0,snd*amp);
 }.play;
 )
+
+
+//////// 6 ////////
+// your turn!
+// take the synth in #5 or #6 and try changing things, including:
+// - try changing the main oscillator (try VarSaw, SinOsc, LFTri, ..)
+// - try changing the frequency
+// - try changing the number of oscillators (instead of 3, do 1, 2, ..)
+// - try changing the numbers in the .range(..) functions
+// - try changing type of modulation (instead of LFTri, use SinOsc, Pulse, ..)
+// - try changing a "rrand(..)" function into a source of modulation, e.g. rrand(5,15) => modBank[7].range(5,15)
+// - try making the "detune" parameter an argument and set it while its playing
+// - try making the "delaytime" and "decaytime" parameter in the delay
+// - change a modBank[x] into your own modulator (see previous)
+// - make into a SynthDef and play a chord (see #16 of part 1)
+
