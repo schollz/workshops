@@ -26,11 +26,11 @@ Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.s
 This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
-### part 3: how to effect the sound
+### Part 3: how to effect the sound
 
-open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
+Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
 
-this part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+This part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
 
 
 
