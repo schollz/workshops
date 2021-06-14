@@ -18,7 +18,7 @@ C:\Users\<yourname>\AppData\Local\SuperCollider\Extensions\
 
 Share your screen, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
 
-![Screen+Shot+2021-06-13+at+10.25.26+AM.png](/uploads/sha256-cf1fbf7435887111d5afca4c3b4a7885dd492d7889f02acf5104ec09c0360736?filename=Screen+Shot+2021-06-13+at+10.25.26+AM.png)
+![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
 
 That's it! There shouldn't be any other steps to share your SuperCollider audio over Zoom on Windows.
 
@@ -39,7 +39,7 @@ Then, [click here](https://github.com/supercollider/sc3-plugins/releases/downloa
 
 Share your screen, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
 
-![Screen+Shot+2021-06-13+at+10.25.26+AM.png](/uploads/sha256-cf1fbf7435887111d5afca4c3b4a7885dd492d7889f02acf5104ec09c0360736?filename=Screen+Shot+2021-06-13+at+10.25.26+AM.png)
+![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
 
 
 In Mac OS it seems there is an extra step to share audio in Zoom. Once you are sharing your screen, you need to restart the SuperCollider audio server to use the Zoom playback. Simply run this line of code and then restart your synthdefs:
@@ -63,36 +63,4 @@ s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; 
 ## workshop 2 - ample samples
 
 ![img](https://user-images.githubusercontent.com/6550035/118573658-da63f400-b737-11eb-9308-e3310a184b9b.jpg)
-
-
-## general
-
-### before we begin
-
-1. open a terminal and ssh into norns. 
-
-copy and paste the following. you only need to do this once.
-
-```
-curl https://gist.githubusercontent.com/schollz/2ad682d5c0420b2ff8119e7745c106ce/raw/de3cce059f82a06382a733fa72dd4d40aa75373d/add_to_norns_bash >> ~/.bashrc
-```
-
-2. anytime you edit a "Engine" in norns, you need to run the following from the terminal:
-
-```
-restartn
-```
-
-that will restart crone, and recompile all your engines.
-
-<details>
-  <summary><strong>How do I share audio in Zoom?</strong></summary>
-
-make sure you have Zoom v5.5+
-
-to share audio you can do "Share screen" and click the screen you want to share. then at the bottom click "Share sound" and click the menu next to it to change it from "Mono" to "Stereo (High-fidelisty)".
-
-![zoom](https://user-images.githubusercontent.com/6550035/118572448-50b32700-b735-11eb-94c3-3de4d7776f10.jpg)
-</details>
-
 
