@@ -15,20 +15,20 @@ We will start by making simple sounds, then learn how to modulate those sounds, 
 
 ### Part 1: how to make a sound
 
-Open [part1.scd](https://github.com/schollz/ambulation/blob/main/droning/part1.scd).
+Open [part1.scd](https://github.com/schollz/ambulation/blob/main/droning/part1.scd) in SuperCollider.
 
 This part will teach the basics of SuperCollider and making sounds. by the end of this part you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
 
 ### Part 2: how to modulate the sound
 
-Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.scd).
+Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.scd) in SuperCollider.
 
 This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
 ### Part 3: how to sculpt the sound
 
-Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd).
+Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd) in SuperCollider.
 
 This part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
 
