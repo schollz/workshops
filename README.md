@@ -1,6 +1,7 @@
 # SuperCollider workshops
 
-## installing SuperCollider
+<details>
+  <summary><h2>Installing SuperCollider</h2></summary>
 
 ### Windows
 
@@ -55,6 +56,8 @@ Once you are done sharing, you can run this line of code to get your default out
 // run this line when *not* sharing
 s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; s.reboot;
 ```
+
+</details>
 
 ## workshop 1: tone to drone
 
