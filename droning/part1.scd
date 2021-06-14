@@ -253,6 +253,11 @@ x.set(\freq,58.midicps);
 y.set(\freq,62.midicps);
 z.set(\freq,67.midicps);
 )
+(
+x.set(\freq,60.midicps);
+y.set(\freq,62.midicps);
+z.set(\freq,65.midicps);
+)
 
 // set them all free!
 (
@@ -274,9 +279,13 @@ SynthDef("coolsynth",{
 	arg freq=110, amp=0.1;
 	var snd;
      // you can directly Mix
-	snd=Mix.ar(SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/4]));
+	snd=Mix.ar(
+		SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/4])
+	);
     // lets add some harmonic from a saw wave
-	snd=snd+(0.1*Mix.ar(Saw.ar(freq:[freq,freq*2,freq*3,freq*4],mul:[amp,amp/2,amp/3,amp/4])));
+	snd=snd+(0.1*Mix.ar(
+		Saw.ar(freq:[freq,freq*2,freq*3,freq*4],mul:[amp,amp/2,amp/3,amp/4]))
+	);
      // note: the following doesn't work, why not?
 	// snd=snd+0.5*Mix.ar(Saw.ar(freq:[freq,freq*2],mul:[amp,amp/2]));
 	snd=Splay.ar(snd);
@@ -296,9 +305,13 @@ SynthDef("coolsynth",{
 	arg freq=110, amp=0.1;
 	var snd;
      // you can directly Mix
-	snd=Mix.ar(Array.fill(2,{arg i; SinOsc.ar(freq:freq*(2**i),mul:amp/(2**i))}));
+	snd=Mix.ar(
+		Array.fill(2,{arg i; SinOsc.ar(freq:freq*(2**i),mul:amp/(2**i))})
+	);
     // lets add some harmonic from a saw wave
-	snd=snd+(0.1*Mix.ar(Array.fill(4,{arg i; Saw.ar(freq:freq*(i+1),mul:amp/(i+1))})));
+	snd=snd+(0.1*Mix.ar(
+		Array.fill(4,{arg i; Saw.ar(freq:freq*(i+1),mul:amp/(i+1))}))
+	);
 	snd=Splay.ar(snd);
 	Out.ar(0,snd);
 }).play;
@@ -306,7 +319,10 @@ SynthDef("coolsynth",{
 
 
 
-// discovery time!
-// use any of thee examples above and change one or two or more things!
-// change oscillator
+//////// 19 ////////
+// your turn!
+// take the synth in #18 and try changing things, including:
+// - try changing the oscillators (try VarSaw, SinOsc, Pulse, LFTri, Saw, ..)
+// - try changing the frequency
+// - try changing the number of oscillators (instead of 3, do 1, 2, ..)
 

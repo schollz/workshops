@@ -16,7 +16,7 @@
 (
 {
 	// use .ar for playing sound, and .kr for parameters
-	SinOsc.ar(220+SinOsc.kr(1,mul:20))
+	SinOsc.ar(220+SinOsc.kr(1,mul:20)).dup*0.1
 }.play
 )
 
@@ -26,14 +26,16 @@
 //////// 2 ////////
 // stepped randomness
 // using LFNoise0 to generate steps
-({
+(
+{
 	LFNoise0.kr(freq:10)
-}.plot(1))
+}.plot(1)
+)
 
 (
 {
 	var mod=LFNoise0.kr(freq:10,mul:20);
-	SinOsc.ar(220+mod);
+	SinOsc.ar(220+mod).dup*0.1;
 }.play
 )
 
@@ -41,15 +43,17 @@
 //////// 3 ////////
 // random oscillations
 // you can modulate modulations! put LFNoise into a SinOsc!
-({
+(
+{
 	SinOsc.kr(freq:LFNoise0.kr(freq:3)*6)
-}.plot(1))
+}.plot(1)
+)
 
 
 (
 {
 	var mod=SinOsc.kr(freq:LFNoise0.kr(freq:3)*6,mul:20);
-	SinOsc.ar(220+mod);
+	SinOsc.ar(220+mod).dup*0.1;
 }.play
 )
 
@@ -63,8 +67,8 @@
 
 (
 {
-	var mod=20*VarLag.kr(LFNoise0.kr(20),1/20,warp:\sine);
-	SinOsc.ar(220+mod);
+	var mod=20*VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine);
+	SinOsc.ar(220+mod).dup*0.1;
 }.play
 )
 
@@ -95,64 +99,62 @@
 
 //////// 6 ////////
 // lets modulate!
-// take the synth from step #15 and modulate frequency
+// lets use the following as the starting synth
+// it is a Pulse waveform with 3 oscillators at frequencies
+// spaced across three octaves
 (
 x={
-	arg freq=220, amp=0.5;
+	arg freq=110, amp=0.1;
 	var snd;
 	snd=Array.fill(3,{arg i;
-		var modFreq=freq*0.02*LFNoise0.kr(5);
-		VarSaw.ar(
-			freq:freq+modFreq,
-			mul:amp/(2**i),
-		)
+		var snd2;
+		var freq2=freq*(2**i);
+		snd2=PulseDPW.ar(
+			freq:freq2,
+			mul:1/(2**i),
+			width:0.5,
+		);
 	});
-	snd=Mix.ar(snd); // mixes the three channels into 1
+	snd=Mix.ar(snd);
 	snd=Splay.ar(snd);
-	Out.ar(0,snd*amp);
-}.play;
-)
 
-//////// 7 ////////
-// take the synth from step #15 and modulate frequency
-// and modulate amplitude
-(
-x={
-	arg freq=220, amp=0.5;
-	var snd;
-	snd=Array.fill(3,{arg i;
-		var modFreq=freq*0.02*LFNoise0.kr(10);
-		var modAmp=SinOsc.kr(LFNoise0.kr(freq:10)).range(0.1,1);
-		VarSaw.ar(
-			freq:freq+modFreq,
-			mul:amp/(2**i)*modAmp,
-		)
-	});
-	snd=Mix.ar(snd); // mixes the three channels into 1
-	snd=Splay.ar(snd);
+	snd=MoogFF.ar(snd,LinExp.kr(MouseX.kr(),0,1,100,12000));
 	Out.ar(0,snd*amp);
 }.play;
 )
 
 
 //////// 7 ////////
-// take the synth from step #15 and modulate frequency
-// and modulate amplitude and modulate pulse width
+// bank of modulators
+// lets use a bank of modulators
+// rrand(lo,hi) will generate an unique value on initialization
+(
+{
+	{
+		LFTri.kr(LFNoise0.kr(rrand(10/60,100/3)).range(10/60,100/3))
+	}!4;
+}.plot(1)
+)
+// and use the first one in the bank to do pulse width and volume modulation
+// each time you run this it will sound a little different, because rrand
+// initializes differently each time
 (
 x={
-	arg freq=220, amp=0.5;
+	arg freq=110, amp=0.1;
 	var snd;
 	snd=Array.fill(3,{arg i;
-		var modFreq=freq*0.02*LFNoise0.kr(10);
-		var modAmp=SinOsc.kr(LFNoise0.kr(freq:10)).range(0.1,1);
-		var modWidth=VarLag.kr(LFNoise0.kr(2),1/2,warp:\sine).range(0.3,0.8);
-		VarSaw.ar(
-			freq:freq+modFreq,
-			mul:amp/(2**i)*modAmp,
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/10,1)).range(1/10,1))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		snd2=PulseDPW.ar(
+			freq:freq2,
+			mul:modAmp/(2**i),
 			width:modWidth,
-		)
+		);
 	});
-	snd=Mix.ar(snd); // mixes the three channels into 1
+	snd=Mix.ar(snd);
 	snd=Splay.ar(snd);
 	Out.ar(0,snd*amp);
 }.play;
@@ -160,7 +162,46 @@ x={
 
 
 //////// 8 ////////
+// modulating frequency
+// we can use .midicps and .cpsmidi to convert between midi notes and frequency
+(
+x={
+	arg freq=110, amp=0.1;
+	var snd;
+	snd=Array.fill(3,{arg i;
+		var snd2;
+		var freq2=freq*(2**i);
+		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/10,1)).range(1/10,1))}!8;
+		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
+		var modWidth=modBank[1].range(0.2,0.8);
+		// get midi note
+		var midinote=freq2.cpsmidi;
+		// detune by 1/2 of note
+		var detune=0.5;
+		// convert the range of one of the modulators in the bank
+		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
+		snd2=PulseDPW.ar(
+			freq:modFreq,
+			mul:modAmp/(2**i),
+			width:modWidth,
+		);
+	});
+	snd=Mix.ar(snd);
+	snd=Splay.ar(snd);
+	Out.ar(0,snd*amp);
+}.play;
+)
+
+
+
+
+//////// 9 ////////
 // your turn!
-// try changing the modulation of modFreq, modAmp, or modWidth
-// try changing the number of oscillators, e.g. Array.fill(<your favorite number>...
-// try changing the oscillator type: https://doc.sccode.org/Browse.html#UGens%3EGenerators%3EDeterministic
+// take the synth in #8 and try changing things, including:
+// - try changing the main oscillator (try VarSaw, SinOsc, LFTri, ..)
+// - try changing the frequency
+// - try changing the number of oscillators (instead of 3, do 1, 2, ..)
+// - try changing the numbers in the .range(..) functions
+// - try changing the amount of detuning
+// - try changing type of modulation (instead of LFTri, use SinOsc, Pulse, ..)
+// - try making the "detune" parameter an argument and set it while its playing
