@@ -2,22 +2,30 @@
 --
 -- play a drone!
 
--- //////// 1 ////////
 -- we will define the engine
+-- "engine" is a special variable
+-- engine.name="X" will look for Engine_X.scd in all the folders
 engine.name="Droning"
 
--- we will import a library
+-- we will import the "musicutil" library
 -- https://monome.org/docs/norns/api/modules/lib.MusicUtil.html
+-- useful for converting midi to note names
 musicutil=require "musicutil"
 
--- //////// 2 ////////
--- this variable keeps track of if we are playing
+-- this is a variable we will use
+-- to keep track if a drone is playing or not
 play_sound=false
 
+
+-- we will define the "init()" function, 
+-- a special function that runs when the script starts
 function init()
-  -- //////// 3 ////////
-  -- add some parameters (easy to save, use, etc.)
+
+  -- lets add some parameters
   params:add{type="control",id="amp",name="amp",
+    -- controlspec is the control
+    -- this one goes from 0-1, linearly, default is 0.5 and the
+    -- step size is 0.01 and it shows the word "amp" next to it
     controlspec=controlspec.new(0,1.0,'lin',0,0.5,'amp',0.01/0.5),
     action=function(v)
       print("new amp: "..v)
@@ -35,17 +43,12 @@ function init()
   }
 
 
-  setup_midi()
-
-  -- update drawing
-  clock.run(redrawer)
-end
-
-function setup_midi()
-  -- connect to every midi device :)
+  -- this block of code looks at the connected
+  -- midi devices (midi.devices) and connects to all of them
   for _,dev in pairs(midi.devices) do
     print("connected to "..dev.name)
     m=midi.connect(dev.port)
+    -- m.event is a special function that runs on incoming midi msgs
     m.event=function(data)
       local d=midi.to_msg(data)
       if d.type=="note_on" then
@@ -53,7 +56,11 @@ function setup_midi()
       end
     end
   end
+
+  -- update drawing
+  clock.run(redrawer)
 end
+
 
 function key(k,z)
   if z==1 then
