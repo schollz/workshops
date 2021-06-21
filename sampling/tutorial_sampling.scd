@@ -6,6 +6,9 @@
   b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/pianochords.wav");
 )
 
+// properties of the buffer
+// BufRateScale
+// Buf.... etc etc
 
 // 2. a simple player using PlayBuf
 (
