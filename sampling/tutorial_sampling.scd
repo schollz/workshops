@@ -427,4 +427,5 @@ t = Task({
 t.stop;x.set(\rate,0);
 
 
-
+// add info about Eli's reverb effect
+// add audio engraver's LFPar effect with XLine
