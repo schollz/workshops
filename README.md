@@ -35,14 +35,29 @@ Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.s
 This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
-### Part 3: how to sculpt the sound
+### Part 3: how to sculpt the sound 
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd) in SuperCollider.
 
-This part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+This part will teach about using the non-tonal components of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+
+### Part 4: how to manipulate sounds from norns
+
 
 
 ## Workshop 2: ample samples
+
+### Part 0: before you begin
+
+[Install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
+
+### Part 1: building a playback engine
+
+### Part 2: adding fx to playback engine
+
+### Part 3: splicing samples in SuperCollider or  norns
+
+### Part 4: quantized playback in SuperCollider or norns
 
 ### TODO
 
