@@ -15,7 +15,9 @@ Why this workshop on SuperCollider? This workshop is entirely goal-oriented. In 
 
 ## Workshop 1: tone to drone
 
-![img](https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg)
+<p align="center">
+  <img width=400 style="max-width:100%" src="https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg">
+</p>
 
 In this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
 
