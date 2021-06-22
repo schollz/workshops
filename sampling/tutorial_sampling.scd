@@ -388,6 +388,35 @@ t = Task({
 t.stop;
 
 
+"file_120.wav".split($_);
+"/ehoasd/ma/sdf/file_120.wav".splitext[0].split($_)[1].asInteger
+
+
+(
+x=Array.fill(4,{arg i;
+	Synth("PlayBufPlayer");
+});
+i=0;
+y={
+	arg filename, bpm;
+	b=Buffer.read(s,filename,action:{
+		arg buffer;
+		var bpm_source=filename.splitext[0].split($_)[1].asInteger;
+		x[i]=Synth("PlayBufPlayer", [\out,0,\bufnum, buffer,\rate,(bpm/bpm_source).postln,\t_trig,1,\start,0,\end,1,\loops,1000]);
+		i=i+1;
+		if (i>3,{
+			i=0;
+		});
+	});
+}
+);
+i
+y.(thisProcess.nowExecutingPath.dirname++"/piano-cm_70.wav",120);
+y.(thisProcess.nowExecutingPath.dirname++"/breakbeat_165.wav",120);
+
+x[0].set(\t_trig,1,\start,0,\end,1,\rate,1,\loops,1000);
+x[i]=Synth("PlayBufPlayer", [\out, 0, \bufnum, b,\rate,1]);
+
 // breakbeats
 (
 b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeat_165bpm.wav");
