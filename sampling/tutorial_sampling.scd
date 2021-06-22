@@ -15,21 +15,22 @@ b.sampleRate;
 
 // 2. a simple player using PlayBuf
 (
-SynthDef("PlayBufPlayer", {
+SynthDef("samplePlayer1", {
     arg out = 0, bufnum = 0;
     var snd;
-    snd=PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum), doneAction: Done.freeSelf);
+    snd=PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum));
     Out.ar(out,snd)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
+
+x=Synth("samplePlayer1", [\bufnum, b]); // will start playing
 
 
 // the problem with above is that it does not allow you to set the end point!
-
 // solution:
 // 3. use BufRd + Phasor for precise playback
 (
-x=SynthDef("PlayBufPlayer", {
+x=SynthDef("samplePlayer2", {
     arg out=0, bufnum=0, rate=1, start=0, end=1;
     var snd,pos,frames;
 
@@ -51,7 +52,7 @@ x=SynthDef("PlayBufPlayer", {
         interpolation:4,
     );
     Out.ar(out,snd)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
 
 // the Phasor is like a sawtooth that increments at a specific rate
@@ -62,6 +63,7 @@ x=SynthDef("PlayBufPlayer", {
 
 // try it
 // note: start and endpoints are denoting by fractional position (0 = start, 1 = end)
+x=Synth("samplePlayer2", [\bufnum, b]); // will start playing
 x.set(\start,0,\end,1)
 x.set(\start,0,\end,0.1)
 x.set(\start,0.5,\end,0.6)
@@ -71,7 +73,7 @@ x.set(\start,0.5,\end,0.6)
 // solution:
 // 4. use trigger to allow resetting sample
 (
-x=SynthDef("PlayBufPlayer", {
+x=SynthDef("samplePlayer3", {
     arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=0;
     var snd,pos,frames;
 
@@ -94,10 +96,11 @@ x=SynthDef("PlayBufPlayer", {
         interpolation:4,
     );
     Out.ar(out,snd)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
 
 // this will abruptly restart it!
+x=Synth("samplePlayer3", [\bufnum, b]); // will start playing
 x.set(\t_trig,1,\start,0,\end,1)
 x.set(\t_trig,1,\start,0.3,\end,1)
 
@@ -106,7 +109,7 @@ x.set(\t_trig,1,\start,0.3,\end,1)
 // solution:
 // 5. use an Envelope to control looping
 (
-x=SynthDef("PlayBufPlayer", {
+x=SynthDef("samplePlayer4", {
     arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
     loops=1;
     var snd,pos,frames,duration,env;
@@ -143,9 +146,10 @@ x=SynthDef("PlayBufPlayer", {
     snd = snd * env;
 
     Out.ar(out,snd)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
 
+x=Synth("samplePlayer4", [\bufnum, b]); // will start playing
 x.set(\t_trig,1,\start,0.0,\end,0.15,\loops,1)
 x.set(\t_trig,1,\start,0.5,\end,0.52,\loops,6)
 
@@ -184,7 +188,7 @@ x.set(\t_trig,1,\start,0.6,\end,0.5,\loops,3,\rate,-1)
 // solution:
 // 6. automatically detect reversing and swap start/end points
 (
-x=SynthDef("PlayBufPlayer", {
+x=SynthDef("samplePlayer5", {
     arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
     loops=1;
     var snd,pos,frames,duration,env;
@@ -220,8 +224,9 @@ x=SynthDef("PlayBufPlayer", {
     snd = snd * env;
 
     Out.ar(out,snd)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
+x=Synth("samplePlayer5", [\bufnum, b]); // will start playing
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,1)
 
@@ -231,7 +236,7 @@ x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,1)
 // solution:
 // 7. crossfade loops
 (
-SynthDef("PlayBufPlayer", {
+SynthDef("samplePlayer6", {
     arg out=0, bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
     loops=1;
     var snd,snd2,pos,pos2,frames,duration,env;
