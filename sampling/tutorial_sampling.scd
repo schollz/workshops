@@ -6,6 +6,9 @@
   b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/pianochords.wav");
 )
 
+b.plot;
+b.sampleRate;
+
 // properties of the buffer
 // BufRateScale
 // Buf.... etc etc
@@ -96,7 +99,7 @@ x=SynthDef("PlayBufPlayer", {
 
 // this will abruptly restart it!
 x.set(\t_trig,1,\start,0,\end,1)
-x.set(\t_trig,1,\start,0.5,\end,1)
+x.set(\t_trig,1,\start,0.3,\end,1)
 
 // the problem with above is that it won't let you change the size of loop!
 
@@ -329,17 +332,18 @@ SynthDef("OnsetDetection", {
 
     // You'll hear percussive "ticks" whenever an onset is detected
     pips = WhiteNoise.ar(EnvGen.kr(Env.perc(0.001, 0.1, 0.2), onsets));
-    SendTrig.kr(onsets,0,Clip.kr((pos-1000)/BufFrames.kr(bufnum),0,1));
+    SendTrig.kr(onsets,0,Clip.kr((pos-100)/BufFrames.kr(bufnum),0,1));
     Out.ar(out,Pan2.ar(sig, -0.75, 0.2) + Pan2.ar(pips, 0.75, 1*0));
 }).add;
 )
 
 (
+// b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/pianochords.wav",
 b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/yelidek.wav",
     action:{
 		~pos1=List.new();
 		~pos1.add(0);
-        y=Synth("OnsetDetection",[\out,0,\speedup,1,\bufnum,b.bufnum,\threshold,0.1,\mingap,5]); // CHANGE THRESHOLD TO SOMETHING THAT WORKS
+        y=Synth("OnsetDetection",[\out,0,\speedup,1,\bufnum,b.bufnum,\threshold,0.25,\mingap,50]); // CHANGE THRESHOLD TO SOMETHING THAT WORKS
 });
 )
 
@@ -360,7 +364,7 @@ f.(5);
 
 // visualize splices
 g = {arg i; b.loadToFloatArray(~pos1[i]*b.numFrames,(~pos1[i+1]-~pos1[i])*b.numFrames,{arg array; a=array; {~temp=a.plot;~temp.setProperties(\gridOnX,false,\gridOnY,false)}.defer; })};
-g.value(2);
+g.value(1);
 g.value(3); // visualize it
 
 // sequence the splices
@@ -386,18 +390,19 @@ t.stop;
 
 // breakbeats
 (
-b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm_4beats.wav");
+b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeat_165bpm.wav");
 )
 
+(b.numFrames/b.sampleRate/(60/165)).round
 b.plot;
 
 (
 x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b,\rate,0]);
 t.stop;
 t = Task({
-	var bpm=140;
-	var bpm_source=160;
-	var beats=4;
+	var bpm=160;
+	var bpm_source=165;
+	var beats=(b.numFrames/b.sampleRate/(60/bpm_source)).round;
 	var subdivision=4;
 	x.set(\t_trig,1,\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
     inf.do({ arg i;
@@ -407,12 +412,12 @@ t = Task({
 		curtick.postln;
 
 		// random lock in to the actual beat
-		if (64.rand>50,{
+		if (64.rand>60,{
 			"locking".postln;
 			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
 		},{});
 		// randomly break the beat
-		if (64.rand>58,{
+		if (64.rand>55,{
 			"breaking".postln;
 			x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
 		},{});
@@ -423,10 +428,10 @@ t = Task({
 			x.set(\rate,bpm/bpm_source*(2.rand*2-1));
 		},{});
 		// // randomly slow
-		// if (128.rand>125,{
-		// 	"slowdown".postln;
-		// 	x.set(\rate,bpm/bpm_source*(2.rand*2-1)*0.5);
-		// },{});
+		if (128.rand>125,{
+			"slowdown".postln;
+			x.set(\rate,bpm/bpm_source*(2.rand*2-1)*0.5);
+		},{});
 		// // randomly speed
 		// if (128.rand>125,{
 		// 	"speedup".postln;
