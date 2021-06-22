@@ -228,7 +228,7 @@ x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,1)
 // solution:
 // 7. crossfade loops
 (
-x=SynthDef("PlayBufPlayer", {
+SynthDef("PlayBufPlayer", {
     arg out=0, bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
     loops=1;
     var snd,snd2,pos,pos2,frames,duration,env;
@@ -288,9 +288,10 @@ x=SynthDef("PlayBufPlayer", {
     );
 
     Out.ar(out,(crossfade*snd)+((1-crossfade)*snd2) * env)
-}).play(s, [\out, 0, \bufnum, b]);
+}).add;
 )
 
+x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b]);
 x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,1)
 x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,-1)
 
@@ -298,8 +299,6 @@ x.set(\t_trig,1,\start,0.2,\end,0.6,\loops,1,\rate,-1)
 // COOL! now what do we do with all of this!
 // 8. bonus: detect onsets and make patterns
 (
-SynthDef.removeAt("OnsetDetection");
-
 o = OSCFunc({ arg msg, time;
 	[time, msg].postln;
 	if (msg[3]-~pos1.last>(0.15*s.sampleRate/b.numFrames),{
@@ -309,8 +308,8 @@ o = OSCFunc({ arg msg, time;
 },'/tr', s.addr);
 
 SynthDef("OnsetDetection", {
-    arg bufnum, out, threshold;
-    var sig, chain, onsets, pips, pos, env, speedup=1;
+    arg bufnum, out, threshold, mingap,speedup=1;
+    var sig, chain, onsets, pips, pos, env;
 
     env=EnvGen.ar(
         Env.new(
@@ -326,21 +325,21 @@ SynthDef("OnsetDetection", {
 
     chain = FFT(LocalBuf(512), sig[0]+sig[1]);
 
-    onsets = Onsets.kr(chain, threshold, \rcomplex,mingap:160);
+    onsets = Onsets.kr(chain, threshold, \rcomplex,mingap:mingap);
 
     // You'll hear percussive "ticks" whenever an onset is detected
     pips = WhiteNoise.ar(EnvGen.kr(Env.perc(0.001, 0.1, 0.2), onsets));
-    SendTrig.kr(onsets,0,Clip.kr((pos-300)/BufFrames.kr(bufnum),0,1));
-    Out.ar(out,Pan2.ar(sig, -0.75, 0.2) + Pan2.ar(pips, 0.75, 1));
+    SendTrig.kr(onsets,0,Clip.kr((pos-1000)/BufFrames.kr(bufnum),0,1));
+    Out.ar(out,Pan2.ar(sig, -0.75, 0.2) + Pan2.ar(pips, 0.75, 1*0));
 }).add;
 )
 
 (
-~pos1=List.new();
-~pos1.add(0);
-b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/pianochords.wav",
+b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/yelidek.wav",
     action:{
-        Synth("OnsetDetection",[\out,0,\bufnum,b.bufnum,\threshold,2.0]); // CHANGE THRESHOLD TO SOMETHING THAT WORKS
+		~pos1=List.new();
+		~pos1.add(0);
+        y=Synth("OnsetDetection",[\out,0,\speedup,1,\bufnum,b.bufnum,\threshold,0.1,\mingap,5]); // CHANGE THRESHOLD TO SOMETHING THAT WORKS
 });
 )
 
@@ -348,20 +347,27 @@ Server.default.record; // Start recording
  Server.default.stopRecording; // Stop recording.
 
 
+b.plot;
 
 // play back splices
-f = {arg i;x.set(\t_trig,1,\start,~pos1[i],\end,~pos1[i+1]);}
-f.value(0);
-f.value(1);
+x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b]);f = {arg i;x.set(\t_trig,1,\rate,1,\start,~pos1[i],\end,~pos1[i+1]);}
+f.(0);
+f.(1);
+f.(2);
+f.(3);
+f.(4);
+f.(5);
 
 // visualize splices
 g = {arg i; b.loadToFloatArray(~pos1[i]*b.numFrames,(~pos1[i+1]-~pos1[i])*b.numFrames,{arg array; a=array; {~temp=a.plot;~temp.setProperties(\gridOnX,false,\gridOnY,false)}.defer; })};
-g.value(0);
-g.value(1); // visualize it
+g.value(2);
+g.value(3); // visualize it
 
 // sequence the splices
 (
-~player=[1,0,2,0,2,0,0,0,3,3,3,3,4,0,3,0];
+x.free;
+x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b]);
+~player=[1,0,2,0,2,0,9,8,0,3,5,6,7,4,0,3,0,4,0,3,0,4,0,3,0,4,0,3,0];
 t = Task({
     inf.do({ arg i;
         var toPlay;
@@ -383,8 +389,11 @@ t.stop;
 b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm_4beats.wav");
 )
 
+b.plot;
+
 (
-t.stop;x.set(\rate,0);
+x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b,\rate,0]);
+t.stop;
 t = Task({
 	var bpm=140;
 	var bpm_source=160;
@@ -398,21 +407,21 @@ t = Task({
 		curtick.postln;
 
 		// random lock in to the actual beat
-		if (64.rand>60,{
+		if (64.rand>50,{
 			"locking".postln;
 			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
 		},{});
 		// randomly break the beat
 		if (64.rand>58,{
 			"breaking".postln;
-            x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
+			x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
 		},{});
 
         // // randomly reverse
-        if (128.rand>120,{
-            "reversing?".postln;
-            x.set(\rate,bpm/bpm_source*(2.rand*2-1));
-        },{});
+		if (128.rand>120,{
+			"reversing?".postln;
+			x.set(\rate,bpm/bpm_source*(2.rand*2-1));
+		},{});
 		// // randomly slow
 		// if (128.rand>125,{
 		// 	"slowdown".postln;
