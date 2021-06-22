@@ -42,6 +42,12 @@ Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.s
 This part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
 
 
+## Workshop 2: ample samples
+
+### TODO
+
+- supercollider code for lock-in multiple samples
+- norns code for lock-in of multiple samples
 
 ## Installing SuperCollider
 
