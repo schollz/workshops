@@ -51,11 +51,11 @@ This part will teach about using the non-tonal sounds of SuperCollider - envelop
 
 ## Installing SuperCollider
 
-### Windows
+<details><summary><strong>Windows</strong></summary>
 
 #### Downloading
 
-[Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But it will work just fine.
+[Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But 32-bit will work just fine!
 
 Then [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.11.1/sc3-plugins-3.11.1-Windows-32bit-VS.zip) to download the 32-bit sc3-plugins. Unzip these plugins and then copy and paste the `SC3plugins` folder into the following folder:
 
@@ -71,8 +71,9 @@ Share your screen, select the SuperCollider window, and then below click on the 
 
 That's it! There shouldn't be any other steps to share your SuperCollider audio over Zoom on Windows.
 
+</details>
 
-### Mac OS
+<details><summary><strong>Mac OS</strong></summary>
 
 #### Downloading
 
@@ -104,3 +105,5 @@ Once you are done sharing, you can run this line of code to get your default out
 // run this line when *not* sharing
 s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; s.reboot;
 ```
+ 
+</details>
