@@ -391,18 +391,27 @@ t.stop;
 // breakbeats
 (
 b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeat_165bpm.wav");
+c=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/piano_cm_70bpm_32beats.wav");
 )
 
+c.plot
 (b.numFrames/b.sampleRate/(60/165)).round
+(c.numFrames/c.sampleRate/(60/140)).round
 b.plot;
 
+x.set(\rate,-0.01);
+
 (
+//x=Synth("PlayBufPlayer", [\out, 0, \bufnum, c,\rate,0]);
 x=Synth("PlayBufPlayer", [\out, 0, \bufnum, b,\rate,0]);
 t.stop;
 t = Task({
-	var bpm=160;
+	var bpm=140;
 	var bpm_source=165;
 	var beats=(b.numFrames/b.sampleRate/(60/bpm_source)).round;
+	// var bpm=140;
+	// var bpm_source=140;
+	// var beats=(c.numFrames/c.sampleRate/(60/bpm_source)).round;
 	var subdivision=4;
 	x.set(\t_trig,1,\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
     inf.do({ arg i;
@@ -417,21 +426,21 @@ t = Task({
 			x.set(\t_trig,1,\reset,curtick/(beats*subdivision),\start,0,\end,1,\rate,bpm/bpm_source,\loops,1000);
 		},{});
 		// randomly break the beat
-		if (64.rand>55,{
-			"breaking".postln;
-			x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
-		},{});
+		// if (64.rand>61,{
+		// 	"breaking".postln;
+		// 	x.set(\t_trig,1,\start,curtick/(beats*subdivision),\reset,curtick/(beats*subdivision)+(100.rand/1000),\end,(curtick+((beats*subdivision)-curtick).rand)/(beats*subdivision)+(100.rand/1000),\loops,1000);
+		// },{});
 
         // // randomly reverse
-		if (128.rand>120,{
-			"reversing?".postln;
-			x.set(\rate,bpm/bpm_source*(2.rand*2-1));
-		},{});
+		// if (128.rand>121,{
+		// 	"reversing?".postln;
+		// 	x.set(\rate,bpm/bpm_source*(2.rand*2-1));
+		// },{});
 		// // randomly slow
-		if (128.rand>125,{
-			"slowdown".postln;
-			x.set(\rate,bpm/bpm_source*(2.rand*2-1)*0.5);
-		},{});
+		// if (128.rand>125,{
+		// 	"slowdown".postln;
+		// 	x.set(\rate,bpm/bpm_source*(2.rand*2-1)*0.5);
+		// },{});
 		// // randomly speed
 		// if (128.rand>125,{
 		// 	"speedup".postln;
