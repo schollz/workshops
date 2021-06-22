@@ -1,5 +1,9 @@
 //////// -- first steps + tones -- ////////
 
+s.boot;
+s.meter;
+s.plotTree;
+
 
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
