@@ -56,9 +56,9 @@ This part will teach about using the non-tonal components of SuperCollider - env
 
 [Install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
 
-### Part 1: building a playback engine
+### Part 1: adding fx to samples
 
-### Part 2: adding fx to playback engine
+### Part 2: building a sample engine from scratch
 
 ### Part 3: splicing samples in SuperCollider or  norns
 
@@ -68,6 +68,14 @@ This part will teach about using the non-tonal components of SuperCollider - env
 
 - supercollider code for lock-in multiple samples
 - norns code for lock-in of multiple samples
+
+## Other SuperCollider resources
+
+- [kid_sputnik's intro into norns+SuperCollider](https://medium.com/@kidsputnik/monome-norns-supercollider-and-lua-part-1-d97646306973)
+- [Professor Eli Fieldsteel's Youtube tutorials](https://www.youtube.com/c/elifieldsteel/videos)
+- [Michelle McKenzie's Youtube tutorials](https://www.youtube.com/c/SoundEngraver/search?query=SuperCollider)
+- [Many more...](https://github.com/madskjeldgaard/awesome-supercollider#learning-resources)
+
 
 ## Installing SuperCollider
 

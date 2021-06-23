@@ -87,7 +87,7 @@ a.value("your name");
 //////// 8 ////////
 // to play samples we first need to load a sample into a "buffer"
 // ~someBuffer=Buffer.read(s,<filename>) will read the file into the buffer ~someBuffer
-~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/pianochords.wav");
+~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/piano_cm_16beats_140bpm.wav");
 ~bufferPiano.plot; // we can visualize this buffer
 ~bufferPiano.numFrames/b.sampleRate; // length in time
 // lets load another buffer
@@ -114,6 +114,7 @@ SynthDef("samplePlayer1", {
     snd=PlayBuf.ar(                   // PlayBuf will play a sound in a buffer
 		numChannels:2,               // we are dealing with stereo samples, so 2 channels
 		bufnum:bufnum,               // bufnum is the buffer number from arguments
+		loop: 1,                     // loop forever
 		rate:BufRateScale.kr(bufnum) // BufRateScale will calculate the
 	);                               // difference between the server sampling
 
@@ -148,6 +149,7 @@ SynthDef("samplePlayer1", {
     snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
+		loop:1,
 		rate:BufRateScale.kr(bufnum)
 	);
 
@@ -157,6 +159,7 @@ SynthDef("samplePlayer1", {
 
 x=Synth("samplePlayer1", [\bufnum, ~bufferPiano]); // will start playing
 x.set(\amp,0); // this will turn it off
+x.set(\amp,1); // this will turn it on
 // you can add as many arguments as you want and toggle any/all of them
 // x.set(\arg1,val1,\arg2,val2,...)
 
@@ -174,7 +177,8 @@ SynthDef("samplePlayer1scratchy", {
     snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
-		rate:BufRateScale.kr(bufnum)*MouseX.kr(-1,2) // control rate with mouse
+		loop:1,
+		rate:BufRateScale.kr(bufnum)*MouseX.kr(-1,1) // control rate with mouse
 	);
 
 	// add filter to control with mouse
@@ -183,7 +187,8 @@ SynthDef("samplePlayer1scratchy", {
 	Out.ar(0,snd*amp);
 }).add;
 )
-x=Synth("samplePlayer1", [\bufnum, ~bufferDrums]);
+// put mmouse in top right-hand corner to hear!
+x=Synth("samplePlayer1scratchy", [\bufnum, ~bufferDrums]);
 
 
 
@@ -193,66 +198,124 @@ x=Synth("samplePlayer1", [\bufnum, ~bufferDrums]);
 // rate control -> scratch fx
 // we can "toggle" this fx by doing boolean logic
 (
-SynthDef("samplePlayer1scratchy", {
+SynthDef("samplePlayer1scratchy2", {
 	arg bufnum=0, amp=1, fx_filter=20000, fx_scratch=0; // add arguments
-    var snd;
+    var snd, rate; // add rate variable to make things look better
 
 	amp=Lag.kr(amp,1);
 	fx_filter=Lag.kr(fx_filter,1); // add lag to filter
 
+	rate=BufRateScale.kr(bufnum); // basic rate
+	// a mathematic toggle
+	// if fx_scratch<1 then we have (rate + 0)
+	// if fx_scratch>1 then we have (0 + SinOsc)
+	rate=((fx_scratch<1)*rate)+((fx_scratch>1)*SinOsc.kr(fx_scratch));
+
     snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
-		rate:BufRateScale.kr(bufnum)*((fx_scratch>0)*SinOsc.kr(10));
+		loop:1,
+		rate:rate;
 	);
 
-	// add filter to control with mouse
 	snd=MoogFF.ar(snd,fx_filter);
 
 	Out.ar(0,snd*amp);
 }).add;
 )
-x=Synth("samplePlayer1", [\bufnum, ~bufferDrums]);
-x.set(\fx_filter,1000,\fx_scratch,1);
+x=Synth("samplePlayer1scratchy2", [\bufnum, ~bufferDrums]);
+x.set(\fx_filter,10000,\fx_scratch,3.5);
 x.set(\fx_filter,15000,\fx_scratch,0);
 
 
+//////// 14 ////////
+// other fx!
 (
-SynthDef("samplePlayer1wDelay", {
-    arg out = 0, bufnum = 0, fx_delay=0;
-    var snd;
-    snd=PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum));
-	snd=snd+CombC.ar(snd,0.2,0.2,5,fx_delay);
-    Out.ar(out,snd)
+SynthDef("samplePlayer1morefx", {
+	arg bufnum=0, amp=1,
+	fx_filter=20000, fx_scratch=0, fx_delay;
+    var snd, rate;
+
+	amp=Lag.kr(amp,1);
+	fx_filter=Lag.kr(fx_filter,1);
+	fx_delay=Lag.kr(fx_delay,2); // lag the delay
+
+	rate=BufRateScale.kr(bufnum);
+	rate=((fx_scratch<1)*rate)+((fx_scratch>1)*SinOsc.kr(fx_scratch));
+
+    snd=PlayBuf.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		loop:1,
+		rate:rate;
+	);
+
+	// delay only works when  fx_delay > 0
+	snd=snd+CombC.ar(snd,0.2,0.2,2,fx_delay);
+
+	snd=MoogFF.ar(snd,fx_filter);
+
+	Out.ar(0,snd*amp);
 }).add;
 )
-x=Synth("samplePlayer1wDelay", [\bufnum, b]); // will start playing
-x.set(\fx_delay,1);
-x.set(\fx_delay,0);
-
-
-// sometimes you want "all on" or "all off", we can use > for that
-(
-SynthDef("samplePlayer1wDelayScratch", {
-    arg out = 0, bufnum = 0, fx_delay=0, fx_scratch=0;
-    var snd;
-	snd=PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum) * ((fx_scratch>0)*SinOsc.kr(10)));
-	snd=snd+CombC.ar(snd,0.2,0.2,5,fx_delay);
-    Out.ar(out,snd)
-}).add;
-)
-x=Synth("samplePlayer1wDelay", [\bufnum, b]); // will start playing
-x.set(\fx_delay,1);
-x.set(\fx_delay,0);
+x=Synth("samplePlayer1morefx", [\bufnum, ~bufferDrums]);
+x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
+x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
 
 
 
 
-
-//////// 19 ////////
+//////// 15 ////////
 // your turn!
-// take the synth in #18 and try changing things, including:
-// - try changing the oscillators (try VarSaw, SinOsc, Pulse, LFTri, Saw, ..)
-// - try changing the frequency
-// - try changing the number of oscillators (instead of 3, do 1, 2, ..)
+// there are four more fx added to this SynthDef
+// uncomment one of them (select and hit Ctl+/ )
+// and then add an argument for it (e.g. fx_reverb)
+// and use that argument to toggle it / change it somehow
+(
+SynthDef("samplePlayer1evenmorefx", {
+	arg bufnum=0, amp=1,
+	fx_filter=20000, fx_scratch=0, fx_delay;
+    var snd, rate,local;
+
+	amp=Lag.kr(amp,1);
+	fx_filter=Lag.kr(fx_filter,1);
+	fx_delay=Lag.kr(fx_delay,2); // lag the delay
+
+	rate=BufRateScale.kr(bufnum);
+	rate=((fx_scratch<1)*rate)+((fx_scratch>1)*SinOsc.kr(fx_scratch));
+
+    snd=PlayBuf.ar(
+		numChannels:2,
+		bufnum:bufnum,
+		loop:1,
+		rate:rate;
+	);
+
+	// delay only works when  fx_delay > 0
+	snd=snd+CombC.ar(snd,0.2,0.2,2,fx_delay);
+
+	// reverb - add a toggle for this!
+	// local = LocalIn.ar(2)+snd;
+	// 15.do({local=AllpassN.ar(local,0.06,Rand(0.001,0.06),3)});
+	// LocalOut.ar(local*MouseX.kr());
+	// snd = (snd+local)/2;
+
+	// distortion - add a toggle for this!
+	// snd=(snd*(1+LinExp.kr(MouseY.kr(),0,1,0.0001,10))).tanh*0.5;
+
+	// autopaning - add a toggle for this!
+	// snd=Balance2.ar(snd[0],snd[1],SinOsc.kr(1));
+
+	// tremeloy - add a toggle for this!
+	// snd=LFPar.ar(Phasor.kr(Impulse.kr(0.1),0.001,0.1,5))*snd;
+
+	snd=MoogFF.ar(snd,fx_filter);
+
+	Out.ar(0,snd*amp);
+}).add;
+)
+x=Synth("samplePlayer1evenmorefx", [\bufnum, ~bufferPiano]);
+x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
+x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
+
 
