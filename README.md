@@ -9,10 +9,15 @@ What can you do with SuperCollider? Really, the sky is the limit. I've used Supe
 
 Why this workshop on SuperCollider? This workshop is entirely goal-oriented. In workshop #1 the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2 the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that builds up understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, and you can [learn more about SuperCollider in other tutorials](https://supercollider.github.io/tutorials/).
 
+## SuperCollider / norns
+
+
 
 ## Workshop 1: tone to drone
 
-![img](https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg)
+<p align="center">
+  <img width=400 style="max-width:100%" src="https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg">
+</p>
 
 In this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
 
@@ -35,21 +40,42 @@ Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.s
 This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
 
 
-### Part 3: how to sculpt the sound
+### Part 3: how to sculpt the sound 
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd) in SuperCollider.
 
-This part will teach about using the non-tonal sounds of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+This part will teach about using the non-tonal components of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+
+### Part 4: how to manipulate sounds from norns
 
 
+
+## Workshop 2: ample samples
+
+### Part 0: before you begin
+
+[Install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
+
+### Part 1: building a playback engine
+
+### Part 2: adding fx to playback engine
+
+### Part 3: splicing samples in SuperCollider or  norns
+
+### Part 4: quantized playback in SuperCollider or norns
+
+### TODO
+
+- supercollider code for lock-in multiple samples
+- norns code for lock-in of multiple samples
 
 ## Installing SuperCollider
 
-### Windows
+<details><summary><strong>Windows</strong></summary>
 
 #### Downloading
 
-[Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But it will work just fine.
+[Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But 32-bit will work just fine!
 
 Then [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.11.1/sc3-plugins-3.11.1-Windows-32bit-VS.zip) to download the 32-bit sc3-plugins. Unzip these plugins and then copy and paste the `SC3plugins` folder into the following folder:
 
@@ -65,8 +91,9 @@ Share your screen, select the SuperCollider window, and then below click on the 
 
 That's it! There shouldn't be any other steps to share your SuperCollider audio over Zoom on Windows.
 
+</details>
 
-### Mac OS
+<details><summary><strong>Mac OS</strong></summary>
 
 #### Downloading
 
@@ -98,3 +125,5 @@ Once you are done sharing, you can run this line of code to get your default out
 // run this line when *not* sharing
 s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; s.reboot;
 ```
+ 
+</details>
