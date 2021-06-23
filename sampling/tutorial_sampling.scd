@@ -397,6 +397,10 @@ t.stop;
 "/ehoasd/ma/sdf/file_120.wav".splitext[0].split($_)[1].asInteger
 
 
+"/some/file/something_bpm120.wav".basename.split($b)[1].split($p)[1].split($m)[1].splitext[0].asInteger
+
+
+
 (
 x=Array.fill(4,{arg i;
 	Synth("PlayBufPlayer");
