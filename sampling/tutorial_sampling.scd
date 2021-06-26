@@ -387,6 +387,9 @@ g.value(3); // visualize it
 // here we go!!
 // sequence the splices
 (
+t.stop;
+x.free;
+y.free;
 b=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/piano_gmaj__beats32_bpm105.wav");
 ~bpmsource1=105;
 c=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeat_4beats_bpm120.wav");
@@ -394,18 +397,28 @@ c=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeat_4beats_bpm120.
 x=Synth("samplePlayer6", [\out, 0, \bufnum, b,\rate,~bpm/~bpmsource1]);
 y=Synth("samplePlayer6", [\out, 0, \bufnum, c,\rate,~bpm/~bpmsource2]);
 ~bpm=110;
-~sequence1=[1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,3,0,3,3,0,0,0,0,4,0,0,0,0,0,0,0,];
-~sequence2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+~sequence1=[
+	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+];
+~sequence2=[
+	1,2,3,4,5,0,0,8,9,10,11,12,13,14,15,16,
+	16,12,13,14,15,0,0,8,9,10,11,12,13,14,15,16,
+	1,2,1,2,3,4,1,2,9,10,11,12,13,14,15,16,
+	8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
+];
 t = Task({
 	inf.do({ arg iterator;
 		var toPlay;
 		toPlay = ~sequence1[iterator%~sequence1.size];
 		if (toPlay>0,{
-			x.set(\t_trig,1,\start,(toPlay-1)/8,\end,toPlay/8,\loops,1);
+			x.set(\t_trig,1,\start,(toPlay-1)/8,\end,1,\loops,1);
 		},{});
 		toPlay = ~sequence2[iterator%~sequence2.size];
 		if (toPlay>0,{
-			y.set(\t_trig,1,\start,(toPlay-1)/16,\end,toPlay/16,\loops,1);
+			y.set(\t_trig,1,\start,(toPlay-1)/16,\end,1,\loops,1);
 		},{});
 		(60/~bpm/4).wait;
 	});
@@ -413,9 +426,23 @@ t = Task({
 )
 //
 (
-~bpm=100;
-~sequence2=[1,2,1,1,0,6,7,8,9,10,11,12,13,13,13,13];
+~bpm=110;
+~sequence1=[
+	1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,
+	2,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,
+	3,0,0,0,0,0,0,0,0,0,3,0,3,0,0,0,
+	4,0,0,0,4,0,0,0,0,0,4,4,4,0,4,4,
+];
+~sequence2=[
+    rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),
+    rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),
+    rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),
+    rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),
+    rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),rrand(1,16),
+];
 )
+
+rrand(1,16)
 y.set(\rate,0,\rateLag,8);x.set(\rate,0,\rateLag,8);
 y.set(\rate,~bpm/~bpmsource2,\rateLag,0.1);x.set(\rate,~bpm/~bpmsource1,\rateLag,4);
 y.set(\rate,~bpm.neg/~bpmsource2,\rateLag,0.1);x.set(\rate,~bpm/~bpmsource1,\rateLag,4);
