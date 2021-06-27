@@ -37,12 +37,13 @@ function init()
     -- step size is 0.01 and it shows the word "amp" next to it
     controlspec=controlspec.new(-1,1,'lin',0,0.0,'amp',0.02/1),
     action=function(v)
+      -- equal power crossfade: the the squares of the two crossfade gains should add to 1
       if v > 0 then
-        engine.amp(2,0.5+v/2)
-        engine.amp(1,0.5-v/2)
+        engine.amp(2,math.sqrt(0.5+v/2))
+        engine.amp(1,math.sqrt(0.5-v/2))
       else
-        engine.amp(1,0.5+v/-2)
-        engine.amp(2,0.5-v/-2)
+        engine.amp(1,math.sqrt(0.5+v/-2))
+        engine.amp(2,math.sqrt(0.5-v/-2))
       end
     end
   }
