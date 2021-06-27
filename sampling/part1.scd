@@ -87,11 +87,16 @@ a.value("your name");
 //////// 8 ////////
 // to play samples we first need to load a sample into a "buffer"
 // ~someBuffer=Buffer.read(s,<filename>) will read the file into the buffer ~someBuffer
-~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/piano_cm_16beats_140bpm.wav");
+// load any one of these three! (Ctl+Enter on any line)
+~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_16beats_bpm90.wav");
+~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_24beats_bpm90.wav");
+~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_32beats_bpm90.wav");
 ~bufferPiano.plot; // we can visualize this buffer
 ~bufferPiano.numFrames/b.sampleRate; // length in time
 // lets load another buffer
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/breakbeats_160bpm.wav");
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav");
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav");
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav");
 ~bufferDrums.plot; // we can visualize this buffer
 ~bufferDrums.numFrames/b.sampleRate; // length in time
 
@@ -111,6 +116,7 @@ SynthDef("samplePlayer1", {
     var snd;
 
 	// now the cool stuff.
+	// PlayBuf is a "UGen" whose purpose is to play a sound
     snd=PlayBuf.ar(                   // PlayBuf will play a sound in a buffer
 		numChannels:2,               // we are dealing with stereo samples, so 2 channels
 		bufnum:bufnum,               // bufnum is the buffer number from arguments
@@ -127,12 +133,20 @@ SynthDef("samplePlayer1", {
 // now lets play our defined synth!
 // we can then create a synth that plays the sound!
 ~synthPiano=Synth("samplePlayer1",[\bufnum,~bufferPiano]); // will start playing piano
-~synthPiano.free; // will stop playing piano
 // we can create more at the same time!
 ~synthDrums=Synth("samplePlayer1",[\bufnum,~bufferDrums]); // will start playing drums
+// to stop them we ".free"
+~synthPiano.free; // will stop playing piano
 ~synthDrums.free; // will stop playing drums
 
 // you can also stop *everything* with <Ctl>+.
+
+// we can load in different drums
+(
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav",action:{
+	~synthDrums.set(\bufnum,~bufferDrums);
+});
+)
 
 
 
@@ -157,6 +171,7 @@ SynthDef("samplePlayer1", {
 }).add;
 )
 
+
 x=Synth("samplePlayer1", [\bufnum, ~bufferPiano]); // will start playing
 x.set(\amp,0); // this will turn it off
 x.set(\amp,1); // this will turn it on
@@ -165,8 +180,9 @@ x.set(\amp,1); // this will turn it on
 
 
 //////// 12 ////////
+// record scratch!!!
 // sometimes for testing, its useful to use the built-in MouseX/MouseY controls!
-// lets add a scratch fx and a filter with the mouse
+// lets add a scratch fx
 (
 SynthDef("samplePlayer1scratchy", {
 	arg bufnum=0, amp=1; // introduce a new argument called "amp"
@@ -181,29 +197,23 @@ SynthDef("samplePlayer1scratchy", {
 		rate:BufRateScale.kr(bufnum)*MouseX.kr(-1,1) // control rate with mouse
 	);
 
-	// add filter to control with mouse
-	snd=MoogFF.ar(snd,MouseY.kr(20,20000,1));
-
 	Out.ar(0,snd*amp);
 }).add;
 )
-// put mmouse in top right-hand corner to hear!
-x=Synth("samplePlayer1scratchy", [\bufnum, ~bufferDrums]);
+// put mouse all the way to the right, all the way left, and move it around fast!
+x=Synth("samplePlayer1scratchy", [\bufnum, ~bufferPiano]);
 
 
 
 
 //////// 13 ////////
-// now lets convert those Mouse controls into arguments
-// rate control -> scratch fx
-// we can "toggle" this fx by doing boolean logic
+// lets add a "argument" that can toggle a scratch fx
 (
 SynthDef("samplePlayer1scratchy2", {
-	arg bufnum=0, amp=1, fx_filter=20000, fx_scratch=0; // add arguments
+	arg bufnum=0, amp=1, fx_scratch=0; // add arguments
     var snd, rate; // add rate variable to make things look better
 
 	amp=Lag.kr(amp,1);
-	fx_filter=Lag.kr(fx_filter,1); // add lag to filter
 
 	rate=BufRateScale.kr(bufnum); // basic rate
 	// a mathematic toggle
@@ -218,14 +228,12 @@ SynthDef("samplePlayer1scratchy2", {
 		rate:rate;
 	);
 
-	snd=MoogFF.ar(snd,fx_filter);
-
 	Out.ar(0,snd*amp);
 }).add;
 )
-x=Synth("samplePlayer1scratchy2", [\bufnum, ~bufferDrums]);
-x.set(\fx_filter,10000,\fx_scratch,3.5);
-x.set(\fx_filter,15000,\fx_scratch,0);
+x=Synth("samplePlayer1scratchy2", [\bufnum, ~bufferPiano]);
+x.set(\fx_scratch,4.5);
+x.set(\fx_scratch,0);
 
 
 //////// 14 ////////
@@ -253,12 +261,13 @@ SynthDef("samplePlayer1morefx", {
 	// delay only works when  fx_delay > 0
 	snd=snd+CombC.ar(snd,0.2,0.2,2,fx_delay);
 
+	// a filter fx works with an argument too
 	snd=MoogFF.ar(snd,fx_filter);
 
 	Out.ar(0,snd*amp);
 }).add;
 )
-x=Synth("samplePlayer1morefx", [\bufnum, ~bufferDrums]);
+x=Synth("samplePlayer1morefx", [\bufnum, ~bufferPiano]);
 x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
 x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
 
@@ -306,8 +315,8 @@ SynthDef("samplePlayer1evenmorefx", {
 	// autopaning - add a toggle for this!
 	// snd=Balance2.ar(snd[0],snd[1],SinOsc.kr(1));
 
-	// tremeloy - add a toggle for this!
-	// snd=LFPar.ar(Phasor.kr(Impulse.kr(0.1),0.001,0.1,5))*snd;
+	// tremelo - add a toggle for this!
+	snd=LFPar.ar(4)*snd;
 
 	snd=MoogFF.ar(snd,fx_filter);
 
@@ -319,3 +328,30 @@ x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
 x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
 
 
+
+
+
+// bonus: granulation
+
+
+(
+~bufferPianoMono=Buffer.readChannel(s,thisProcess.nowExecutingPath.dirname++"/upright_16beats_bpm90.wav",channels:0);
+SynthDef("sampleGranulator1", {
+	arg bufnum=0;
+	var snd;
+
+    snd=GrainBuf.ar(
+		numChannels:2,
+		trigger:Dust.kr(30),
+		dur:1/30,
+		sndbuf:bufnum,
+		rate:LFNoise1.kr.range(1,1.01),
+		pos:MouseX.kr(0,1),
+	).poll;
+
+	snd = FreeVerb.ar(snd);
+	Out.ar(0,snd);
+}).add;
+)
+
+x=Synth("sampleGranulator1", [\bufnum, ~bufferPianoMono]); // will start playing
