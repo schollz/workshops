@@ -1,13 +1,4 @@
 //////// 0 ////////
-// again choose any buffer you want
-~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_16beats_bpm90.wav");
-~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_24beats_bpm90.wav");
-~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_32beats_bpm90.wav");
-// lets load another buffer
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav");
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav");
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav");
-
 // load the player from part 2
 (
 SynthDef("samplePlayer", {
@@ -72,6 +63,10 @@ SynthDef("samplePlayer", {
 
 	snd = (crossfade*snd1)+((1-crossfade)*snd2) * env * amp;
 
+	snd=Decimator.ar(snd,MouseX.kr(800,44100,1),MouseX.kr(8,32));
+
+	snd=LPF.ar(snd,MouseY.kr(20,20000,1));
+
 	Out.ar(out,snd)
 }).add;
 )
@@ -82,20 +77,26 @@ SynthDef("samplePlayer", {
 // lets play them in sync
 (
 s.makeBundle(nil,{
-	~bpm=90;
-	~files=["upright_16beats_bpm90.wav","drums1_8beats_bpm90.wav"];
-	~bpms=[90,90];
-	~beats=[16,8];
+	// set tempo
+	~bpm=120;
+	// load files and their bpms and their beate numbers
+	~files=["pad2_64beats_bpm100.wav","drums1_8beats_bpm90.wav"];
+	~bpms=[100,90];
+	~beats=[64,8];
+	// load the files into buffers
 	~buffers=Array.fill(2,{arg i;
 		Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/"++~files[i]);
 	});
+	// array to keep track of positions
 	~pos=Array.fill(2,{arg i; 0});
 	s.sync;
-	2.do({arg i; ~synths[i].free});
-	s.sync;
+
+	// make the synths
 	~synths=Array.fill(2,{arg i;
 		Synth("samplePlayer", [\out, 0, \bufnum, ~buffers[i].bufnum,\rate,~bpm/~bpms[i]]);
 	});
+
+	// rudimentary sequencer using "Task" and ().wat
 	~syncEvery=2; // beats
 	t = Task({
 		inf.do({ arg beat;
@@ -117,5 +118,5 @@ s.makeBundle(nil,{
 ~synths[1].set(\t_trig,1,\reset,~pos[1],\start,~pos[1],\end,~pos[1]+(0.125/~beats[1]),\loops,10)
 ~synths[0].set(\rate,~bpm.neg/~bpms[0]);
 ~synths[0].set(\rate,~bpm/~bpms[0]);
-~synths[1].set(\rate,~bpm.neg/~bpms[0]);
-~synths[1].set(\rate,~bpm/~bpms[0]);
+~synths[1].set(\rate,~bpm.neg/~bpms[1]);
+~synths[1].set(\rate,~bpm/~bpms[1]);
