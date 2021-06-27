@@ -18,8 +18,9 @@ Engine_Sampling : CroneEngine {
         //////// 2 ////////
         // define the drone here!
         SynthDef("sampler", {
+            // copy and pasted from SynthDef in part3.scd
             arg out=0, bufnum=0, rate=1, rateLag=0.2, start=0, end=1, reset=0, t_trig=1,
-            loops=1, amp=0.5;
+            loops=10, amp=0.0;
             var snd,snd1,snd2,pos,pos2,frames,duration,env;
             var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
 
@@ -33,11 +34,12 @@ Engine_Sampling : CroneEngine {
             resetB=Latch.kr(reset,1-aOrB);
             crossfade=Lag.ar(K2A.ar(aOrB),0.05);
 
+            amp = Lag.kr(amp,0.2);
             rate = Lag.kr(rate,rateLag);
             rate = rate*BufRateScale.kr(bufnum);
 
             frames = BufFrames.kr(bufnum);
-            duration = frames*(end-start)/rate.abs/s.sampleRate*loops;
+            duration = frames*(end-start)/rate.abs/context.server.sampleRate*loops;
 
             // envelope to clamp looping
             env=EnvGen.ar(
@@ -82,28 +84,34 @@ Engine_Sampling : CroneEngine {
             Out.ar(out,snd)
         }).add;
 
+        context.server.sync;
+
+
+
         //////// 3 ////////
-        // create the drone here!
-        // it will run forever :)
+        // create the the sound "synth"
         synthSampler = Array.fill(2,{arg i;
-            Synth("sampler",target:context.xg);
+            Synth("sampler",target:context.server);
         });
+
+
 
         //////// 4 ////////
         // define commands for the lua
-        // script here
 
         // a load function to load samples
-        this.addCommand("load","is", { arg msg;
-            Buffer.read(s,msg[2],action:{
+        this.addCommand("sample","is", { arg msg;
+            ("loading "++msg[2]).postln;
+            Buffer.read(context.server,msg[2],action:{
                 arg buffer;
-                synthSampler[msg[1]].set(\bufnum,buffer);
+                ("loaded "++msg[2]).postln;
+                synthSampler[msg[1]-1].set(\bufnum,buffer);
             });
         });
 
         // setting the position
         this.addCommand("pos","iff", { arg msg;
-            synthSampler[msg[1]].set(
+            synthSampler[msg[1]-1].set(
                 \t_trig,1,
                 \reset,msg[2],
                 \start,msg[2],
@@ -112,14 +120,14 @@ Engine_Sampling : CroneEngine {
         });
 
         this.addCommand("rate","if", { arg msg;
-            synthSampler[msg[1]].set(
+            synthSampler[msg[1]-1].set(
                 \rate,msg[2],
             );
         });
 
 
         this.addCommand("amp","if", { arg msg;
-            synthSampler[msg[1]].set(
+            synthSampler[msg[1]-1].set(
                 \amp,msg[2],
             );
         });
