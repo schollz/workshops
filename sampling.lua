@@ -1,4 +1,4 @@
--- sampling
+-- two turntables
 --
 -- play samples!
 
@@ -52,7 +52,7 @@ function init()
       -- controlspec is the control
       -- this one goes from -1-1, linearly, default is 1 and the
       -- step size is 0.01 and it shows the word "x" next to it
-      controlspec=controlspec.new(-1,1,'lin',0,1,'x',0.125/2),
+      controlspec=controlspec.new(-1,1,'lin',0,1,'x',0.05/1),
       action=function(v)
         print("new rate for sound "..i..": "..v)
         engine.rate(i,v*clock.get_tempo()/samples[i].bpm)
@@ -142,9 +142,9 @@ function redraw()
   screen.move(64,20)
   screen.text_center("fader: "..math.floor(params:get("fader")*100)/100)
   screen.move(64,30)
-  screen.text_center("rate 1: "..params:get("rate1"))
+  screen.text_center("rate 1: "..math.floor(params:get("rate1")*10)/10)
   screen.move(64,40)
-  screen.text_center("rate 2: "..params:get("rate2"))
+  screen.text_center("rate 2: "..math.floor(params:get("rate2")*10)/10)
   screen.update()
 end
 
