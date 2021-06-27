@@ -92,13 +92,13 @@ a.value("your name");
 ~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_24beats_bpm90.wav");
 ~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_32beats_bpm90.wav");
 ~bufferPiano.plot; // we can visualize this buffer
-~bufferPiano.numFrames/b.sampleRate; // length in time
+~bufferPiano.numFrames/~bufferPiano.sampleRate; // length in time
 // lets load another buffer
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav");
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav");
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav");
 ~bufferDrums.plot; // we can visualize this buffer
-~bufferDrums.numFrames/b.sampleRate; // length in time
+~bufferDrums.numFrames/~bufferPiano.sampleRate; // length in time
 
 
 

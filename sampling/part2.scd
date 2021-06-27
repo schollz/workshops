@@ -250,7 +250,7 @@ x.set(\t_trig,1,\start,0.5,\end,0.51,\loops,30,\rate,1)
 // we can crossfade between two buffers (which are playing the same buffer)
 (
 SynthDef("samplePlayer6", {
-	arg out=0, bufnum=0, rate=1, rateLag=0,start=0, end=1, reset=0, t_trig=0,
+	arg out=0, bufnum=0, rate=1, rateLag=0,start=0, end=1, reset=0, t_trig=1,
 	loops=1, amp=0.5;
 	var snd,snd2,pos,pos2,frames,duration,env;
 	var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
@@ -312,6 +312,7 @@ SynthDef("samplePlayer6", {
 	Out.ar(out,(crossfade*snd)+((1-crossfade)*snd2) * env * amp)
 }).add;
 )
+
 
 x=Synth("samplePlayer6", [\bufnum, ~bufferPiano]); // will start playing
 x.set(\t_trig,1,\start,0.5,\end,0.51,\loops,30,\rate,1) // no more clicking!
