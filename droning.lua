@@ -61,7 +61,8 @@ function init()
   clock.run(redrawer)
 end
 
-
+-- key(<key>,<off/on>) is a special function
+-- that listens to the norns keys
 function key(k,z)
   if z==1 then
     play_sound=not play_sound
@@ -75,6 +76,8 @@ function key(k,z)
   end
 end
 
+-- enc(<knob>,<turn>) is a special function
+-- that listens to the turn of the knob
 function enc(k,d)
   if k==2 then
     params:delta("midi",d)
@@ -83,14 +86,10 @@ function enc(k,d)
   end
 end
 
-function redrawer()
-  while true do
-    clock.sleep(1/15)
-    redraw()
-  end
-end
-
+-- redraw is a special function that will
+-- draw stuff on the screen
 function redraw()
+  -- https://monome.org/docs/norns/api/modules/screen.html
   screen.clear()
   screen.level(15)
   screen.font_size(8)
@@ -107,3 +106,15 @@ function redraw()
   screen.update()
 end
 
+
+--
+-- my functions
+--
+
+-- redrawer simply constantly redraws the screen
+function redrawer()
+  while true do
+    clock.sleep(1/15)
+    redraw()
+  end
+end
