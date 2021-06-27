@@ -1,3 +1,5 @@
+Scale.at(\ionian);
+
 (
 SynthDef("drone",{
 	arg amp=0.5,cFilter=1,cFreq=0,cAmp=0;
@@ -52,7 +54,7 @@ SynthDef("drone",{
 	// global moog filter
 	snd=MoogFF.ar(snd,LinExp.kr(cFilter.poll,0,1,20,10000).poll,Clip.kr(LinExp.kr(cAmp,1,0,0.1,1),0.1,1));
 
-	snd = (snd*LinExp.kr(cAmp,0,1,0.5,20)).tanh*0.5;
+	snd = (snd*LinExp.kr(cAmp,0,1,0.5,10)).tanh*0.5;
 
 	snd = FreeVerb2.ar(snd[0],snd[1],room:1);
 	Out.ar(0,snd);
@@ -67,7 +69,7 @@ x=Synth("drone");
 }, '/right');
 y=Synth("drone");
 ~o2 = OSCFunc({ arg msg, time, addr, recvPort; [msg, time, addr, recvPort].postln;
-	y.set(\cFreq,msg[1],\cAmp,msg[2],\cFilter,msg[3]);
+	y.set(\cFreq,msg[1],\cAmp,msg[2]*1.5,\cFilter,msg[3]);
 }, '/left');
 )
 
