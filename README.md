@@ -52,22 +52,39 @@ This part will teach about using the non-tonal components of SuperCollider - env
 
 ## Workshop 2: ample samples
 
+
+<p align="center">
+  <img width=400 style="max-width:100%" src="https://user-images.githubusercontent.com/6550035/118573658-da63f400-b737-11eb-9308-e3310a184b9b.jpg">
+</p>
+
+
+
+In this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
+
+We will start by learning how to load a buffer, and then play the buffer with a simple player. We will learn how to add effects to the sound and the sample playback and eventually work our way towards a really efficient sampler that can be placed [into the norns](https://vimeo.com/user126081217).
+
 ### Part 0: before you begin
 
 [Install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
 
-### Part 1: adding fx to samples
+### Part 1: how to use samples
 
-### Part 2: building a sample engine from scratch
+Open [part1.scd](https://github.com/schollz/ambulation/blob/main/sampling/part1.scd) in SuperCollider.
 
-### Part 3: splicing samples in SuperCollider or  norns
+This part will teach the basics of SuperCollider and loading and playing buffers. At the end of this tutorial different types of effects will be addressed.
 
-### Part 4: quantized playback in SuperCollider or norns
+### Part 2: developing a efficient sampler player
 
-### TODO
+Open [part2.scd](https://github.com/schollz/ambulation/blob/main/sampling/part2.scd) in SuperCollider.
 
-- supercollider code for lock-in multiple samples
-- norns code for lock-in of multiple samples
+This part will teach some SuperCollider tricks to do develop a sophisticated sample playback engine. We will iterate on the sample playback synth created in part 1.
+
+
+### Part 3: how to sequence samples
+
+Open [part3.scd](https://github.com/schollz/ambulation/blob/main/sampling/part3.scd) in SuperCollider.
+
+In this part we will take the final sampler player from part 2 and load multiple samples and sequence them so they stay in sync. We will look at effects based on sample rates, and perhaps add other effects.
 
 ## Other SuperCollider resources
 
@@ -76,6 +93,18 @@ This part will teach about using the non-tonal components of SuperCollider - env
 - [Michelle McKenzie's Youtube tutorials](https://www.youtube.com/c/SoundEngraver/search?query=SuperCollider)
 - [Many more...](https://github.com/madskjeldgaard/awesome-supercollider#learning-resources)
 
+## Connecting to norns
+
+### ssh
+
+By `ssh`-ing into norns, you will be able to easily restart the SuperCollider engine in the terminal without having to restart the norns each time.
+
+1. Open a terminal. For Mac OS: use "Terminal". For Windows: use "Powershell".
+2. Execute `ssh we@<ip_address_shown_in_norns>`. You'll need to enter a password - the password is "`sleep`".
+
+### Managing files
+
+You might find it easier to edit files on the norns as if they were on your computer. You can do this using *sftp*. Here are the instructions to connect to norns using sftp: https://monome.org/docs/norns/sftp/
 
 ## Installing SuperCollider
 
