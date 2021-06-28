@@ -9,8 +9,6 @@ What can you do with SuperCollider? Really, the sky is the limit. I've used Supe
 
 Why this workshop on SuperCollider? This workshop is entirely goal-oriented. In workshop #1 the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2 the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that builds up understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, and you can [learn more about SuperCollider in other tutorials](https://supercollider.github.io/tutorials/).
 
-## SuperCollider / norns
-
 
 
 ## Workshop 1: tone to drone
