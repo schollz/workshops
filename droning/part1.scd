@@ -76,6 +76,7 @@ a={
 };
 )
 
+// step 2: execute the function
 a.value("zack");
 
 
