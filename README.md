@@ -45,6 +45,13 @@ This part will teach about using the non-tonal components of SuperCollider - env
 
 ### Part 4: how to manipulate sounds from norns
 
+Turn on your norns device and open up [maiden](https://monome.org/docs/norns/maiden/) on your computer. Install the ambulation repository if you haven't already. In maiden type:
+
+```
+;install https://github.com/schollz/ambulation
+```
+
+Now refresh maiden. There is a new code repository in `code/ambulation`. We will edit two files: `droning.lua` and `lib/Engine_Droning.sc`. Start with `lib/Engine_Droning.sc`. Try adding your own engine to it and then run `droning.lua`. Open `droning.lua` to understand better how it works.
 
 
 ## Workshop 2: ample samples
