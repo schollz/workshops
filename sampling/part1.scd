@@ -339,14 +339,16 @@ x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
 SynthDef("sampleGranulator1", {
 	arg bufnum=0;
 	var snd;
+	var maxFreq=10;
+	var newGrain=Impulse.kr(maxFreq)+Dust.kr(maxFreq/2);
 
     snd=GrainBuf.ar(
 		numChannels:2,
-		trigger:Dust.kr(30),
-		dur:1/30,
+		trigger:newGrain,
+		dur:MouseY.kr(1,maxFreq)/maxFreq,
 		sndbuf:bufnum,
-		rate:LFNoise1.kr.range(1,1.01),
-		pos:MouseX.kr(0,1),
+		rate:TChoose.kr(newGrain,[1,1,1,1,1,1,1,1,2,2,4]),
+		pos:MouseX.kr(0,1)+LFNoise0.kr(newGrain).range(-0.05,0.05),
 	).poll;
 
 	snd = FreeVerb.ar(snd);
@@ -355,3 +357,5 @@ SynthDef("sampleGranulator1", {
 )
 
 x=Synth("sampleGranulator1", [\bufnum, ~bufferPianoMono]); // will start playing
+
+
