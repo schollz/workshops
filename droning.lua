@@ -5,7 +5,7 @@
 -- we will define the engine
 -- "engine" is a special variable
 -- engine.name="X" will look for Engine_X.scd in all the folders
-engine.name="Droning"
+engine.name="Droning" -- this will look for Engine_Droning.scd
 
 -- we will import the "musicutil" library
 -- https://monome.org/docs/norns/api/modules/lib.MusicUtil.html
@@ -15,7 +15,6 @@ musicutil=require "musicutil"
 -- this is a variable we will use
 -- to keep track if a drone is playing or not
 play_sound=false
-
 
 -- we will define the "init()" function, 
 -- a special function that runs when the script starts
@@ -30,7 +29,7 @@ function init()
     action=function(v)
       print("new amp: "..v)
       if play_sound then
-        engine.amp(v)
+        engine.amp(v) -- engine.amp comes from the Engine_Droning
       end
     end
   }
@@ -38,7 +37,7 @@ function init()
     controlspec=controlspec.new(0,100,'lin',0,60,'',1/100),
     action=function(v)
       print("new midi note: "..v)
-      engine.note(v)
+      engine.note(v) -- engine.note comes from the Engine_Droning
     end
   }
 
@@ -83,6 +82,8 @@ function enc(k,d)
     params:delta("midi",d)
   elseif k==3 then
     params:delta("amp",d)
+  else if k==1 then
+    -- TODO: add your own modulation
   end
 end
 
