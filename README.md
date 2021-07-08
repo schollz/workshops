@@ -90,25 +90,14 @@ Open [part3.scd](https://github.com/schollz/ambulation/blob/main/sampling/part3.
 
 In this part we will take the final sampler player from part 2, load multiple samples, and sequence them so they stay in sync. We will look at effects based on sample rates, and perhaps add other effects as well.
 
-## Other SuperCollider resources
+## Other SuperCollider resources/inspiration
 
 - [kid_sputnik's intro into norns+SuperCollider](https://medium.com/@kidsputnik/monome-norns-supercollider-and-lua-part-1-d97646306973)
 - [Professor Eli Fieldsteel's Youtube tutorials](https://www.youtube.com/c/elifieldsteel/videos)
 - [Michelle McKenzie's Youtube tutorials](https://www.youtube.com/c/SoundEngraver/search?query=SuperCollider)
+- [Yota Morimoto's amazing creations](https://www.youtube.com/c/yotamorimoto/search?query=SuperCollider)
 - [Many more...](https://github.com/madskjeldgaard/awesome-supercollider#learning-resources)
 
-## Connecting to norns
-
-### ssh
-
-By `ssh`-ing into norns, you will be able to easily restart the SuperCollider engine in the terminal without having to restart the norns each time.
-
-1. Open a terminal. For Mac OS: use "Terminal". For Windows: use "Powershell".
-2. Execute `ssh we@<ip_address_shown_in_norns>`. You'll need to enter a password - the password is "`sleep`".
-
-### Managing files
-
-You might find it easier to edit files on the norns as if they were on your computer. You can do this using *sftp*. Here are the instructions to connect to norns using sftp: https://monome.org/docs/norns/sftp/
 
 ## Installing SuperCollider
 
