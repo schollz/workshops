@@ -81,7 +81,8 @@
 }.plot(1))
 
 
-// when dealing with frequencies, its useful to deal with exponentials
+// when dealing with frequencies, its useful to use exponential mappings
+//
 // this spends a lot of time in inaudible ranges:
 (
 {
@@ -99,12 +100,14 @@
 
 //////// 6 ////////
 // lets modulate!
-// lets use the following as the starting synth
+// let's use the following as the starting synth
 // it is a Pulse waveform with 3 oscillators at frequencies
 // spaced across three octaves
 (
 x={
+	//set some arguments for frequency and amplitude
 	arg freq=110, amp=0.1;
+	//set a variable to hold the waveform
 	var snd;
 	snd=Array.fill(3,{arg i;
 		var snd2;
@@ -115,10 +118,14 @@ x={
 			width:0.5,
 		);
 	});
+	//add in a mixer
 	snd=Mix.ar(snd);
+	//spread the sound across the stereo field
 	snd=Splay.ar(snd);
-
+	//pass the sounds through a Moog-inspired VCF, using 
+	//the mouse's X position to modulate the cutoff frequency
 	snd=MoogFF.ar(snd,LinExp.kr(MouseX.kr(),0,1,100,12000));
+	//send the sound to a bus, applying amplification
 	Out.ar(0,snd*amp);
 }.play;
 )
