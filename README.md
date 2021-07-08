@@ -53,6 +53,9 @@ Turn on your norns device and open up [maiden](https://monome.org/docs/norns/mai
 
 Now refresh maiden. There is a new code repository in `code/ambulation`. We will edit two files: `droning.lua` and `lib/Engine_Droning.sc`. Start with `lib/Engine_Droning.sc`. Try adding your own engine to it and then run `droning.lua`. Open `droning.lua` to understand better how it works.
 
+### Bonus
+
+As a little bonus, you can use your drone and [control it with your hands](https://vimeo.com/567293081)! To get started with this, first [download the latest release of airsynth](https://github.com/schollz/airsynth/releases/latest). Then unzip that file and run it - it should open a browser that can detect your hands with your camera. Then open an run [bonus.scd](https://github.com/schollz/ambulation/blob/main/droning/bonus.scd). Use your new SuperCollider knowledge to change it to your own drone!
 
 ## Workshop 2: ample samples
 
