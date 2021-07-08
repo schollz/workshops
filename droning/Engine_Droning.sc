@@ -21,8 +21,8 @@ Engine_Droning : CroneEngine {
 		SynthDef("TheDrone", {
 		    arg freq=110.0,amp=0;
 		    var snd;
-		    snd=SinOsc.ar(freq);
-			Out.ar(0,snd);
+		    snd=SinOsc.ar([freq,freq+2]);
+			Out.ar(0,snd*amp);
 		}).add;
 
 		context.server.sync;
