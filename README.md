@@ -4,11 +4,10 @@ This repo is designed to teach SuperCollider to beginners through two self-style
 
 What is SuperCollider? SuperCollider is a free platform for audio synthesis and algorithm composition. It really excels at real-time analysis, synthesis, sampling, and processing and provides a framework for seamless combination of audio techniques like additive and subtractive synthesis. 
 
-What can you do with SuperCollider? Really, the sky is the limit. I've used SuperCollider to make [my own live-coding environment](https://www.instagram.com/p/CQCu9z3haBD/?utm_source=ig_web_copy_link), to make [new synths](https://www.instagram.com/p/CJTwGz8hxMR/?utm_source=ig_web_copy_link), to make [crazy drum beats](https://www.instagram.com/p/COqOS5lBGDL/?utm_source=ig_web_copy_link
-), to [make drum sets](https://www.instagram.com/p/CPghuJUB2Of/?utm_source=ig_web_copy_link), and I've barely scratched the surface.
+What can you do with SuperCollider? Really, the sky is the limit. I've used SuperCollider to make [my own live-coding environment](https://www.instagram.com/p/CQCu9z3haBD/?utm_source=ig_web_copy_link), [new synths](https://www.instagram.com/p/CJTwGz8hxMR/?utm_source=ig_web_copy_link), [crazy drum beats](https://www.instagram.com/p/COqOS5lBGDL/?utm_source=ig_web_copy_link
+), [make drum sets](https://www.instagram.com/p/CPghuJUB2Of/?utm_source=ig_web_copy_link), and I've barely scratched the surface.
 
-Why this workshop on SuperCollider? This workshop is entirely goal-oriented. In workshop #1 the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2 the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that builds up understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, and you can [learn more about SuperCollider in other tutorials](https://supercollider.github.io/tutorials/).
-
+The two workshops each have a primary goal. In workshop #1, the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2, the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that incrementally builds your skills and understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, but you'll be able to use these workshops as a jumping off point to learn more about SuperCollider, for example, [in these other tutorials](https://supercollider.github.io/tutorials/).
 
 
 ## Workshop 1: tone to drone
@@ -17,9 +16,9 @@ Why this workshop on SuperCollider? This workshop is entirely goal-oriented. In 
   <img width=400 style="max-width:100%" src="https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg">
 </p>
 
-In this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
+In this workshop we will start at the very beginning of SuperCollider, assuming you don't yet know anything about SuperCollider. 
 
-We will start by making simple sounds, then learn how to modulate those sounds, and then learn how to add effects to those sounds. we will go through all the basics of SuperCollider in a practical way, to build up from a single tone all the way to make a [space drone](https://raw.githubusercontent.com/schollz/ambulation/main/droning/55hz_spacedrone.mp3)!
+We will start by learning how to make simple sounds, then modulating those sounds, and finally adding effects to them. We will go through all the basics of SuperCollider in a practical way, building up from a single tone all the way to making a [space drone](https://raw.githubusercontent.com/schollz/ambulation/main/droning/55hz_spacedrone.mp3)!
 
 ### Part 0: before you begin
 
@@ -29,20 +28,20 @@ We will start by making simple sounds, then learn how to modulate those sounds, 
 
 Open [part1.scd](https://github.com/schollz/ambulation/blob/main/droning/part1.scd) in SuperCollider.
 
-This part will teach the basics of SuperCollider and making sounds. by the end of this part you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
+This part will teach the basics of SuperCollider and making sounds. By the end of this part, you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
 
 ### Part 2: how to modulate the sound
 
 Open [part2.scd](https://github.com/schollz/ambulation/blob/main/droning/part2.scd) in SuperCollider.
 
-This part will teach some SuperCollider tricks to do *modulation*, that is dynamically changing different parts of the sounds. by the end you will be able to modulate frequency, amplitude and get a neat dynamic sound.
+This part will teach some SuperCollider tricks to do *modulation*, that is, dynamically change different parts of the sounds. By the end you will be able to modulate frequency and amplitude to get a neat dynamic sound.
 
 
 ### Part 3: how to sculpt the sound 
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/droning/part3.scd) in SuperCollider.
 
-This part will teach about using the non-tonal components of SuperCollider - envelopes, effects, and filters! we will use these, in combination with the tones in part 1, and the modulation in part 2 to make the space drone.
+This part will teach about using the non-tonal components of SuperCollider - envelopes, effects, and filters! We will use these in combination with the tones in part 1 and the modulation in part 2 to make a space drone.
 
 ### Part 4: how to manipulate sounds from norns
 
@@ -69,20 +68,20 @@ We will start by learning how to load a buffer, and then play the buffer with a 
 
 Open [part1.scd](https://github.com/schollz/ambulation/blob/main/sampling/part1.scd) in SuperCollider.
 
-This part will teach the basics of SuperCollider and loading and playing buffers. At the end of this tutorial different types of effects will be addressed.
+This part will teach the basics of SuperCollider and how to load and play buffers. At the end of this tutorial, different types of effects will be explored.
 
 ### Part 2: developing a efficient sampler player
 
 Open [part2.scd](https://github.com/schollz/ambulation/blob/main/sampling/part2.scd) in SuperCollider.
 
-This part will teach some SuperCollider tricks to do develop a sophisticated sample playback engine. We will iterate on the sample playback synth created in part 1.
+This part will teach some SuperCollider tricks to develop a sophisticated sample playback engine. We will iterate on the sample playback synth created in part 1.
 
 
 ### Part 3: how to sequence samples
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/sampling/part3.scd) in SuperCollider.
 
-In this part we will take the final sampler player from part 2 and load multiple samples and sequence them so they stay in sync. We will look at effects based on sample rates, and perhaps add other effects.
+In this part we will take the final sampler player from part 2, load multiple samples, and sequence them so they stay in sync. We will look at effects based on sample rates, and perhaps add other effects as well.
 
 ## Other SuperCollider resources
 
@@ -139,7 +138,7 @@ Then, [click here](https://github.com/supercollider/sc3-plugins/releases/downloa
 
 <details><summary><strong>Windows</strong></summary>
 
-Share your screen, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
+Click the "Share Screen" button, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
 
 ![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
 
@@ -149,7 +148,7 @@ That's it! There shouldn't be any other steps to share your SuperCollider audio 
 
 <details><summary><strong>Mac OS</strong></summary>
 
-Share your screen, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
+Click the "Share Screen" button, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
 
 ![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
 
