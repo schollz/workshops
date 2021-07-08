@@ -99,19 +99,18 @@ Engine_Sampling : CroneEngine {
                 sndbuf:bufnum,
                 rate:TChoose.kr(newGrain,[1,1,1,1,1,1,1,1,2,2,4]),
                 pos:start+LFNoise0.kr(newGrain).range(-0.05,0.05),
-            ).poll;
+            );
 
-            Out.ar(0,snd);
+            Out.ar(0,snd*amp);
         }).add;
 
         context.server.sync;
 
 
-
         //////// 3 ////////
         // create the the sound "synth"
         synthSampler = Array.fill(2,{arg i;
-            Synth("sampler",target:context.server);
+            Synth("granulator",target:context.server);
         });
 
 
