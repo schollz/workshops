@@ -110,7 +110,7 @@ Engine_Sampling : CroneEngine {
         //////// 3 ////////
         // create the the sound "synth"
         synthSampler = Array.fill(2,{arg i;
-            Synth("granulator",target:context.server);
+            Synth("sampler",target:context.server);
         });
 
 
