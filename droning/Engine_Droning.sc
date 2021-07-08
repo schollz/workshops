@@ -25,10 +25,12 @@ Engine_Droning : CroneEngine {
 			Out.ar(0,snd);
 		}).add;
 
+		context.server.sync;
+
 		//////// 3 ////////
 		// create the drone here!
 		// it will run forever :)
-        synthDrone = Synth("TheDrone", target:context.xg);
+        synthDrone = Synth("TheDrone", target:context.server);
 
 		//////// 4 ////////
 		// define commands for the lua
