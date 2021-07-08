@@ -1,11 +1,11 @@
 //////// -- filters + fx -- ////////
-// lets take the oscillator from end of part 2 and give it more character
+// lets take the oscillator created at the end of part 2 and give it more character
 // there are many filters to choose from - HPF, LPF, BPF, RHPF, RLPF, MoogFF, ...
-// lets add one and modulate it
+// lets add one and modulate it:
 
 
 //////// 1 ////////
-// lets start from where we left off, with our modulated Pulse synth
+// starting from where we left off with our modulated Pulse synth:
 (
 x={
 	arg freq=110, amp=0.5;
@@ -59,6 +59,7 @@ x={
 			width:modWidth,
 		);
 
+		// adding the envelope here
 		// each voice comes in slowly, at different speeds using rrand(lo,hi)
 		snd2=snd2*EnvGen.kr(Env.asr(rrand(1,10)));
 	});
@@ -192,6 +193,9 @@ x={
 		snd2=Pan2.ar(snd2,modBank[6].range(-0.5,0.5));
 
 		// add delay!
+		// to learn more, look up CombC, VarLag, and LFNoise0 in the help browser 
+		// to read about the Comb delay line, Variable shaped lag, and Step noise
+		// used in the code below
 		snd2 = snd2 + CombC.ar(snd2,
 			maxdelaytime:0.5,
 			delaytime:rrand(0.2,0.5)+VarLag.kr(LFNoise0.kr(rrand(1/60,1/3)),1/2,warp:\sine).range(-0.2,0),
@@ -340,5 +344,5 @@ x={
 // - try making the "detune" parameter an argument and set it while its playing
 // - try making the "delaytime" and "decaytime" parameter in the delay
 // - change a modBank[x] into your own modulator (see previous)
-// - make into a SynthDef and play a chord (see #16 of part 1)
+// - turn one of the examples into a SynthDef and play a chord (see #16 of part 1)
 
