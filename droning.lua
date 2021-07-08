@@ -82,7 +82,7 @@ function enc(k,d)
     params:delta("midi",d)
   elseif k==3 then
     params:delta("amp",d)
-  else if k==1 then
+  elseif k==1 then
     -- TODO: add your own modulation
   end
 end
