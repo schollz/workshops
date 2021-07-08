@@ -1,5 +1,11 @@
-Scale.at(\ionian);
+// first goto https://github.com/schollz/airsynth/releases/latest
+// download the version for your computer
+// open and run "airsynth"
 
+s.boot;
+
+// this is the drone
+// replace with whatever you want
 (
 SynthDef("drone",{
 	arg amp=0.5,cFilter=1,cFreq=0,cAmp=0;
@@ -62,6 +68,11 @@ SynthDef("drone",{
 )
 
 
+// once "airsynth" is running you can run this code
+// and it will listen to your hands
+// open/close hands = filter open close
+// raise hand = increase volume
+// hand left/right = change pitch
 (
 x=Synth("drone");
 ~o1 = OSCFunc({ arg msg, time, addr, recvPort; [msg, time, addr, recvPort].postln;
