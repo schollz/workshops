@@ -7,7 +7,7 @@ What is SuperCollider? SuperCollider is a free platform for audio synthesis and 
 What can you do with SuperCollider? Really, the sky is the limit. I've used SuperCollider to make [my own live-coding environment](https://www.instagram.com/p/CQCu9z3haBD/?utm_source=ig_web_copy_link), [new synths](https://www.instagram.com/p/CJTwGz8hxMR/?utm_source=ig_web_copy_link), [crazy drum beats](https://www.instagram.com/p/COqOS5lBGDL/?utm_source=ig_web_copy_link
 ), [make drum sets](https://www.instagram.com/p/CPghuJUB2Of/?utm_source=ig_web_copy_link), and I've barely scratched the surface.
 
-The two workshops each have a primary goal. In workshop #1, the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2, the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that incrementally build your skills and understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, but you'll be able to use these workshops as a jumping off point to learn more about SuperCollider, for example, [in these other tutorials](https://supercollider.github.io/tutorials/).
+The two workshops each have a primary goal. In workshop #1, the goal is to make [a drone](https://en.wikipedia.org/wiki/Drone_music). In workshop #2, the goal is to make a sampler. In both workshops, SuperCollider will be taught in a way that incrementally builds your skills and understanding to reach these goals. Of course, SuperCollider is much deeper than either of these two goals, but you'll be able to use these workshops as a jumping off point to learn more about SuperCollider, for example, [in these other tutorials](https://supercollider.github.io/tutorials/).
 
 
 ## Workshop 1: tone to drone
