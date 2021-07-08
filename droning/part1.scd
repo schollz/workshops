@@ -45,22 +45,28 @@ s.plotTree;
 
 
 //////// 5 ////////
-// semicolons make functions
+// semicolons make functions 
 // you can assign variables using letters a-z or with ~variableName
+// execute each step, incrementally
+
+// step 1: create functions stored in a variable
 (
-// functions stored in a variable
 a={"I love SuperCollider".postln;};
 ~someVariable={"SuperCollider loves me".postln;};
-// run the functions
-a.value; // .value evaluates the function stored in "a"
-~someVariable.value;
 )
+// step 2a: run the first function
+a.value; // .value evaluates the function stored in "a"
+// step 2b: run the second function
+~someVariable.value;
+
 
 
 
 
 //////// 6 ////////
 // functions can have arguments and variables!
+// arguments and variables are similar, except that arguments can be passed into functions when the function is called.
+// step 1: create a function that contains arguments and variable
 (
 a={
 	arg name; // arguments must be defined first
@@ -68,8 +74,9 @@ a={
 	something="SuperCollider"; // variables can be assigned later
 	(name++", do you like "++something++"?").postln;
 };
-a.value("zack");
 )
+
+a.value("zack");
 
 
 
@@ -115,10 +122,10 @@ a.value("zack");
 
 //////// 10  ////////
 // lets have the synth make another sound
-// by adding an argument (see 5)
-// and also save it to a variable (see 4)
+// by adding an argument (see 6)
+// and also save it to a variable (see 5)
 (
-// save it to the "x" variable
+// save a variable and a Sine UGen to the "x" variable
 x={
 	arg freq=220;
 	SinOsc.ar(freq:freq);
@@ -144,7 +151,7 @@ x={
 }.play;
 )
 // lowers the volume
-x.set(\amp,0.25);
+x.set(\amp,0.1);
 // raise the volume and set the frequency (you can do multiple things)
 x.set(\amp,0.7,\freq,440);
 // free the synths!
@@ -156,13 +163,14 @@ x.free;
 //////// 12 ////////
 // UGens have all sorts of parameters
 // SinOsc happens to have one that gets multiplied, call "mul".
-// highlight "SinOsc" and press <Ctl>+D to see the parameters
+// highlight "SinOsc" and press <Ctl>+D [win] or command+D [mac] to see the parameters
 (
 x={
 	arg freq=220, amp=0.5;
 	SinOsc.ar(freq:freq,mul:amp);
 }.play; // .play will play it
 )
+x.free;
 // note: this is exactly the same as in 11
 // in SuperCollider there are always many ways to do the same thing
 
@@ -192,8 +200,8 @@ x.free;
 //////// 14 ////////
 // "multichannel expansion" is SuperCollider's secret sauce.
 // "multichannel expansion" also sounds cool to drop in conversation.
-// "multichannel expansion" means that SuperCollider automatically
-// will generate multiple UGens for you when a parameter has an array
+// "multichannel expansion" means that SuperCollider will automatically
+// generate multiple UGens for you when a parameter has an array
 // and assign each UGen to an audio channel (e.g. left and right speakers).
 (
 x={
@@ -226,6 +234,7 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+x.free;
 
 
 
