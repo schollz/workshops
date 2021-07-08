@@ -164,7 +164,7 @@ x.free;
 //////// 12 ////////
 // UGens have all sorts of parameters
 // SinOsc happens to have one that gets multiplied, call "mul".
-// highlight "SinOsc" and press <Ctl>+D [win] or command+D [mac] to see the parameters
+// highlight "SinOsc" and press <Ctl>+D [win] or <command>+D [mac] to see the parameters
 (
 x={
 	arg freq=220, amp=0.5;
