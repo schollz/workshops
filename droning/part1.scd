@@ -3,7 +3,7 @@
 s.boot;
 s.meter;
 s.plotTree;
-
+s.freqscope;
 
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
@@ -45,7 +45,7 @@ s.plotTree;
 
 
 //////// 5 ////////
-// semicolons make functions 
+// semicolons make functions
 // you can assign variables using letters a-z or with ~variableName
 // execute each step, incrementally
 
