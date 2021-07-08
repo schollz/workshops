@@ -133,6 +133,22 @@ Then, [click here](https://github.com/supercollider/sc3-plugins/releases/downloa
 </details>
 
 
+### Testing SuperCollider
+
+Once you install SuperCollider, you can test that it works with the following steps to play a simple tone.
+
+1. Open SuperCollider
+2. Copy-and paste this into the main window: 
+
+```
+{ [SinOsc.ar(440, 0, 0.2), SinOsc.ar(442, 0, 0.2)] }.play;
+```
+
+3. Goto `Server` -> `Boot Server`
+
+4. Goto `Language` -> `Evaluate File`
+
+5. You should hear a sound - you are all set. If you do not hear a sound, please let me know via the Music Hackspace discord (https://discord.gg/RQERWTAk) or via the lines forum (https://llllllll.co/t/supercollider-norns-workshops-july-11th-and-july-25th) and I'll help you troubleshoot!
 
 ## Sharing SuperCollider over Zoom
 
