@@ -122,6 +122,27 @@ Then [click here](https://github.com/supercollider/sc3-plugins/releases/download
 C:\Users\<yourname>\AppData\Local\SuperCollider\Extensions\
 ```
 
+Finally, I recommend you install a special SuperCollider package called "Safety" that will automatically prevent loud noises that can be caused by mistakes in coding. To install, firs t[click here](https://github.com/adcxyz/SafetyNet/archive/refs/heads/main.zip) to download the "SafetyNet" SuperCollider quark. Then unzip that downloaded file and move the folder to the following location:
+
+```
+C:\Users\zacks\AppData\Local\SuperCollider\downloaded-quarks
+```
+
+After moving the folder, rename the folder so it says simply "SafetyNet".
+
+Now start up SuperCollider and type into the main screen:
+
+```
+Quarks.install("SafetyNet")
+```
+
+Then goto `Language -> Evaluate File`. You should see some output that says "Installing SafetyNet / SafetyNet installed." To test to make sure its working you can do `Server -> Boot Server` and you should see something like:
+
+```
+Safety('localhost') is running, using 'safeClip_2'.
+```
+
+This will run automatically and will serve to automatically limit problematic sounds.
 
 </details>
 
