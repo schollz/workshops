@@ -104,6 +104,8 @@ In this part we will take the final sampler player from part 2, load multiple sa
 
 ## Installing SuperCollider
 
+### Downloading SuperCollider
+
 <details><summary><strong>Windows</strong></summary>
 
 [Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But 32-bit will work just fine!
