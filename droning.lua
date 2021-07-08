@@ -19,6 +19,7 @@ play_sound=false
 -- we will define the "init()" function, 
 -- a special function that runs when the script starts
 function init()
+  engine.amp(0) -- default is off
 
   -- lets add some parameters
   params:add{type="control",id="amp",name="amp",
