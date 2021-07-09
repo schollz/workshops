@@ -1,4 +1,7 @@
 //////// -- modulation -- ////////
+// This part will teach some SuperCollider tricks to do *modulation*, that is, 
+// dynamically change different parts of the sounds. By the end you will be 
+// able to modulate frequency and amplitude to get a neat dynamic sound.
 
 
 //////// 1 ////////

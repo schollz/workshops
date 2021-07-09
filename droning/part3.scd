@@ -1,7 +1,8 @@
 //////// -- filters + fx -- ////////
-// lets take the oscillator created at the end of part 2 and give it more character
-// there are many filters to choose from - HPF, LPF, BPF, RHPF, RLPF, MoogFF, ...
-// lets add one and modulate it:
+// This part will teach about using the non-tonal components of SuperCollider -
+// envelopes, effects, and filters! We will use these in combination with the
+// tones in part 1 and the modulation in part 2 to make a space drone.
+
 
 
 //////// 1 ////////
@@ -193,7 +194,7 @@ x={
 		snd2=Pan2.ar(snd2,modBank[6].range(-0.5,0.5));
 
 		// add delay!
-		// to learn more, look up CombC, VarLag, and LFNoise0 in the help browser 
+		// to learn more, look up CombC, VarLag, and LFNoise0 in the help browser
 		// to read about the Comb delay line, Variable shaped lag, and Step noise
 		// used in the code below
 		snd2 = snd2 + CombC.ar(snd2,
@@ -201,7 +202,7 @@ x={
 			delaytime:rrand(0.2,0.5)+VarLag.kr(LFNoise0.kr(rrand(1/60,1/3)),1/2,warp:\sine).range(-0.2,0),
 			decaytime:rrand(5,15),
 		);
-		snd2=LeakDC.ar(snd2); // remove DC bias JIC
+		snd2=LeakDC.ar(snd2); // remove DC bias to prevent damage to speakers
 	});
 	snd=Mix.ar(snd);
 	snd=Splay.ar(snd);
