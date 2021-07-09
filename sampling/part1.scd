@@ -45,23 +45,28 @@ s.plotTree;
 
 
 //////// 5 ////////
-// semicolons make functions -> { <stuff> } = function
+// semicolons make functions
 // you can assign variables using letters a-z or with ~variableName
-// you can assign functions to variables!
+// execute each step, incrementally
+
+// step 1: create functions stored in a variable
 (
-// functions stored in a variable
 a={"I love SuperCollider".postln;};
 ~someVariable={"SuperCollider loves me".postln;};
-// run the functions
-a.value; // .value evaluates the function stored in "a"
-~someVariable.value;
 )
+// step 2a: run the first function
+a.value; // .value evaluates the function stored in "a"
+// step 2b: run the second function
+~someVariable.value;
+
 
 
 
 
 //////// 6 ////////
 // functions can have arguments and variables!
+// arguments and variables are similar, except that arguments can be passed into functions when the function is called.
+// step 1: create a function that contains arguments and variable
 (
 a={
 	arg name; // arguments must be defined first
@@ -69,8 +74,11 @@ a={
 	something="SuperCollider"; // variables can be assigned later
 	(name++", do you like "++something++"?").postln;
 };
-a.value("your name");
 )
+
+// step 2: replace '<your name>' with your name and execute the function
+a.value("<your name>");
+
 
 
 
@@ -91,13 +99,22 @@ a.value("your name");
 ~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_16beats_bpm90.wav");
 ~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_24beats_bpm90.wav");
 ~bufferPiano=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/upright_32beats_bpm90.wav");
+
+// plot the buffer
 ~bufferPiano.plot; // we can visualize this buffer
+
+// check the buffer length
 ~bufferPiano.numFrames/~bufferPiano.sampleRate; // length in time
-// lets load another buffer
+
+// lets load another buffer: pick one of the three buffers below and load it
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav");
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav");
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav");
+
+// visualize the buffer
 ~bufferDrums.plot; // we can visualize this buffer
+
+// check the buffer length
 ~bufferDrums.numFrames/~bufferPiano.sampleRate; // length in time
 
 
@@ -130,7 +147,7 @@ SynthDef("samplePlayer1", {
 
 
 //////// 10  ////////
-// now lets play our defined synth!
+// now let''s play our defined synth!
 // we can then create a synth that plays the sound!
 ~synthPiano=Synth("samplePlayer1",[\bufnum,~bufferPiano]); // will start playing piano
 // we can create more at the same time!
@@ -175,6 +192,8 @@ SynthDef("samplePlayer1", {
 x=Synth("samplePlayer1", [\bufnum, ~bufferPiano]); // will start playing
 x.set(\amp,0); // this will turn it off
 x.set(\amp,1); // this will turn it on
+x.set(\amp,0.5); // this will reduce the volume in half
+
 // you can add as many arguments as you want and toggle any/all of them
 // x.set(\arg1,val1,\arg2,val2,...)
 
@@ -234,7 +253,9 @@ SynthDef("samplePlayer1scratchy2", {
 x=Synth("samplePlayer1scratchy2", [\bufnum, ~bufferPiano]);
 x.set(\fx_scratch,4.5);
 x.set(\fx_scratch,0);
+x.free();
 
+// discussion point: what is the SinOsc UGen doing to the rate?
 
 //////// 14 ////////
 // other fx!
@@ -270,7 +291,7 @@ SynthDef("samplePlayer1morefx", {
 x=Synth("samplePlayer1morefx", [\bufnum, ~bufferPiano]);
 x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
 x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
-
+x.free();
 
 
 
@@ -303,20 +324,24 @@ SynthDef("samplePlayer1evenmorefx", {
 	// delay only works when  fx_delay > 0
 	snd=snd+CombC.ar(snd,0.2,0.2,2,fx_delay);
 
+	///////////////////////////////////////
 	// reverb - add a toggle for this!
 	// local = LocalIn.ar(2)+snd;
 	// 15.do({local=AllpassN.ar(local,0.06,Rand(0.001,0.06),3)});
 	// LocalOut.ar(local*MouseX.kr());
 	// snd = (snd+local)/2;
 
+	///////////////////////////////////////
 	// distortion - add a toggle for this!
 	// snd=(snd*(1+LinExp.kr(MouseY.kr(),0,1,0.0001,10))).tanh*0.5;
 
+	///////////////////////////////////////
 	// autopaning - add a toggle for this!
 	// snd=Balance2.ar(snd[0],snd[1],SinOsc.kr(1));
 
+	///////////////////////////////////////
 	// tremelo - add a toggle for this!
-	snd=LFPar.ar(4)*snd;
+	// snd=LFPar.ar(4)*snd;
 
 	snd=MoogFF.ar(snd,fx_filter);
 
@@ -326,14 +351,12 @@ SynthDef("samplePlayer1evenmorefx", {
 x=Synth("samplePlayer1evenmorefx", [\bufnum, ~bufferPiano]);
 x.set(\fx_filter,10000,\fx_scratch,3.5,\fx_delay,1);
 x.set(\fx_filter,15000,\fx_scratch,0,\fx_delay,0);
-
+x.free();
 
 
 
 
 // bonus: granulation
-
-
 (
 ~bufferPianoMono=Buffer.readChannel(s,thisProcess.nowExecutingPath.dirname++"/upright_16beats_bpm90.wav",channels:0);
 SynthDef("sampleGranulator1", {
@@ -357,5 +380,5 @@ SynthDef("sampleGranulator1", {
 )
 
 x=Synth("sampleGranulator1", [\bufnum, ~bufferPianoMono]); // will start playing
-
+x.free();
 

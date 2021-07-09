@@ -138,6 +138,8 @@ x.set(\t_trig,1,\start,0,\end,1) // play this many times!
 	);
 }.plot(0.3)
 )
+
+// adding an envelope to the sample player:
 (
 x=SynthDef("samplePlayer4", {
 	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
@@ -186,6 +188,8 @@ x.set(\t_trig,1,\start,0.5,\end,0.51,\loops,12)
 // new problem:
 // now this won't play if we set the rate to be negative...
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
+
+// solution to the new problem:
 // we have to change start and positions manually when the rate is negative...
 x.set(\t_trig,1,\start,0.6,\end,0.5,\loops,3,\rate,-1)
 
