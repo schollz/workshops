@@ -84,36 +84,15 @@ Engine_Sampling : CroneEngine {
             Out.ar(out,snd)
         }).add;
 
-        SynthDef("granulator", {
-            // copy and pasted from SynthDef in part3.scd
-            arg out=0, bufnum=0, rate=1, rateLag=0.2, start=0, end=1, reset=0, t_trig=1,
-            loops=10, amp=0.0;
-            var snd;
-            var maxFreq=10;
-            var newGrain=Impulse.kr(maxFreq)+Dust.kr(maxFreq/2);
-
-            snd=GrainBuf.ar(
-                numChannels:2,
-                trigger:newGrain,
-                dur:1.5*maxFreq/maxFreq,
-                sndbuf:bufnum,
-                rate:TChoose.kr(newGrain,[1,1,1,1,1,1,1,1,2,2,4]),
-                pos:start+LFNoise0.kr(newGrain).range(-0.05,0.05),
-            );
-
-            Out.ar(0,snd*amp);
-        }).add;
-
         context.server.sync;
 
 
         //////// 3 ////////
-        // create the the sound "synth"
+		// create the the sound "synth", we'll create two instances of the synth
+		// so two samples can be played simultaneously
         synthSampler = Array.fill(2,{arg i;
             Synth("sampler",target:context.server);
         });
-
-
 
         //////// 4 ////////
         // define commands for the lua
