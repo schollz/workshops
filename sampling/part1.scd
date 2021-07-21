@@ -181,6 +181,23 @@ x.set(\volume,0.1);
 
 
 
+
+//////// 11 ////////
+// we can easily create multiple oscillators with
+// -- multichannel expansion --
+// (i.e. we put an array in one of the arguments and
+// it automatically creates multiple oscillators)
+(
+x={
+	arg volume=0.1;
+	SinOsc.ar(freq:[MouseX.kr(100,400,1),MouseX.kr(100,400,1)/2],mul:volume);
+}.play; // .plot(x) will plot it for x seconds
+)
+x.set(\volume,0.1);
+
+
+
+
 //////// part 1 recap ////////
 // SuperCollider has functions, arguments, variables, lists
 // UGens are SuperCollider functions that stream numbers (audio or modulation)
