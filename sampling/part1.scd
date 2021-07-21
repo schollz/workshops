@@ -1,4 +1,8 @@
-//////// -- first steps in SuperCollider -- ////////
+// Part 1
+// This part will teach the basics of SuperCollider
+// and making sounds. By the end of this part, you
+// should be able to mix different sounds together and
+// use additive synthesis to make tones and overtones.
 
 s.boot;
 s.meter;

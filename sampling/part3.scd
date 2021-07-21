@@ -1,4 +1,8 @@
-// lets make a really nice sample player
+// Part 3
+// This part will teach some SuperCollider tricks to develop a
+// sophisticated sample playback engine. We will iterate
+// on the sample playback synth created in part 2.
+
 
 //////// 0 ////////
 // again choose any buffer you want

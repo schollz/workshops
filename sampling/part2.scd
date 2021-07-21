@@ -1,3 +1,8 @@
+// Part 2
+// This part will teach the basics of SuperCollider
+// and how to load and play buffers. At the end of this
+// tutorial, different types of effects will be explored.
+
 //////// 1 ////////
 // let's get into samples
 // we need to boot the server (if not already booted) to start:
