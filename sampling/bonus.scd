@@ -1,4 +1,6 @@
 //////// 0 ////////
+// setup a very rudimentary sequencer in SuperCollider
+
 // load the player from end of part 3
 (
 SynthDef("samplePlayer", {
