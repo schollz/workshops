@@ -74,24 +74,36 @@ We will start by learning how to load a buffer, and then play the buffer with a 
 
 [Install SuperCollider](https://github.com/schollz/ambulation#installing-supercollider) and then you are ready to start this workshop. 
 
-### Part 1: how to use samples
+### Part 1: basics
 
 Open [part1.scd](https://github.com/schollz/ambulation/blob/main/sampling/part1.scd) in SuperCollider.
 
-This part will teach the basics of SuperCollider and how to load and play buffers. At the end of this tutorial, different types of effects will be explored.
 
-### Part 2: developing a efficient sampler player
+This part will teach the basics of SuperCollider and making sounds. By the end of this part, you should be able to mix different sounds together and use additive synthesis to make tones and overtones.
+
+### Part 2: using samples + fx
 
 Open [part2.scd](https://github.com/schollz/ambulation/blob/main/sampling/part2.scd) in SuperCollider.
 
-This part will teach some SuperCollider tricks to develop a sophisticated sample playback engine. We will iterate on the sample playback synth created in part 1.
 
+This part will teach how to load and play buffers. At the end of this tutorial, different types of effects will be explored.
 
-### Part 3: how to sequence samples
+### Part 3: an efficient sampler
 
 Open [part3.scd](https://github.com/schollz/ambulation/blob/main/sampling/part3.scd) in SuperCollider.
 
-In this part we will take the final sampler player from part 2, load multiple samples, and sequence them so they stay in sync. We will look at effects based on sample rates, and perhaps add other effects as well.
+This part will teach some SuperCollider tricks to develop a sophisticated sample playback engine. We will iterate on the sample playback synth created in part 2.
+
+### Part 4: how to manipulate sounds from norns
+
+Turn on your norns device and open up [maiden](https://monome.org/docs/norns/maiden/) on your computer. Install the ambulation repository if you haven't already. In maiden type:
+
+```
+;install https://github.com/schollz/ambulation
+```
+
+Now refresh maiden. There is a new code repository in `code/ambulation`. We will edit two files: `sampling.lua` and `sampling/Engine_Sampling.sc`. Start with `sampling/Engine_Sampling.sc`. Try adding your own fx to it and then run `sampling.lua`. Try changing the key 2 or key 3 to activate yoru sample [in these lines of code](https://github.com/schollz/ambulation/blob/main/sampling.lua#L114-L120).
+
 
 ## Other SuperCollider resources/inspiration
 
