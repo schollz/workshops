@@ -206,3 +206,9 @@ x.set(\volume,0.1);
 // SuperCollider has functions, arguments, variables, lists
 // UGens are SuperCollider functions that stream numbers (audio or modulation)
 // UGens are basically treated like numbers (can be added, used as arguments, etc)
+
+// you try..
+
+// change SinOsc to a different oscillator (LFTri, Saw, Pulse, ...)
+// change one MouseX to MouseY
+// add MouseX to a volume instead of frequency
