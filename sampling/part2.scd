@@ -97,14 +97,7 @@ SynthDef("samplePlayer1", {
 // step 1: create an instance of the samplePlayer SynthDef called '~synthDrums'
 ~synthDrums=Synth("samplePlayer1",[\bufnum,~bufferDrums]); // will start playing drums
 
-// step 2: start playing the player
-(
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav",action:{
-	~synthDrums.set(\bufnum,~bufferDrums);
-});
-)
-
-// step 3: change the drum sample by redefining ~bufferDrums and sending the new sample to the SynthDef instance
+// step 2: change the drum sample by redefining ~bufferDrums and sending the new sample to the SynthDef instance
 (
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav",action:{
 	~synthDrums.set(\bufnum,~bufferDrums);

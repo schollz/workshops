@@ -23,7 +23,7 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
    // snd=BufRd.ar(2,bufnum,Phasor.ar(aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum)));
 
 	// effects
-	snd=LPF.ar(snd,MouseY>.kr(20,20000,1));
+	//snd=LPF.ar(snd,MouseY.kr(20,20000,1));
     Out.ar(0,snd);
 }).add;
 )

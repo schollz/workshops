@@ -102,8 +102,7 @@ a[0].postln;
 
 
 //////// 8 ////////
-// "multichannel expansion" is the secret sauce of SuperCollider
-// which lets you make lists (or multichannel audio) very easily
+// creating lists / arrays
 (
 a=1!10; // creates a list with 10 1's
 )
@@ -137,7 +136,7 @@ a=Array.fill(10,{arg i; i*2}); // creates a list with 10 even numbers
 (
 {
 	SinOsc.ar(freq:220);
-}.plot(0.02); // .plot(x) will plot it for x seconds
+}.plot(10); // .plot(x) will plot it after x seconds
 )
 
 // lets hear it
