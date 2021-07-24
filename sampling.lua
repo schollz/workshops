@@ -14,17 +14,17 @@ lattice=require "lattice"
 sample_data={
   {file="upright_16beats_bpm90.wav",bpm=90,beats=16},
   {file="upright_24beats_bpm90.wav",bpm=90,beats=24},
-  {file="upright_32beats_bpm90.wav",bpm=90,beats=32},    
-  {file="pad1_32beats_bpm140.wav",bpm=140,beats=32},    
-  {file="pad2_64beats_bpm100.wav",bpm=100,beats=64},    
+  {file="upright_32beats_bpm90.wav",bpm=90,beats=32},
+  {file="pad1_32beats_bpm140.wav",bpm=140,beats=32},
+  {file="pad2_64beats_bpm100.wav",bpm=100,beats=64},
   {file="drums1_8beats_bpm90.wav",bpm=90,beats=8},
   {file="drums2_8beats_bpm90.wav",bpm=90,beats=8},
   {file="drums3_8beats_bpm90.wav",bpm=90,beats=8},
-  {file="drums4_16beats_bpm150.wav",bpm=150,beats=16},    
+  {file="drums4_16beats_bpm150.wav",bpm=150,beats=16},
 }
 samples={sample_data[1],sample_data[2]}
 
--- we will define the "init()" function, 
+-- we will define the "init()" function,
 -- a special function that runs when the script starts
 function init()
 
@@ -38,7 +38,7 @@ function init()
     controlspec=controlspec.new(-1,1,'lin',0,0.0,'amp',0.02/1),
     action=function(v)
       -- equal power crossfade: the the squares of the two crossfade gains should add to 1
-      if v > 0 then
+      if v>0 then
         engine.amp(2,math.sqrt(0.5+v/2))
         engine.amp(1,math.sqrt(0.5-v/2))
       else
@@ -67,7 +67,6 @@ function init()
       end
     }
   end
-
 
   -- the lattice
   -- this keeps track of every beat
@@ -105,17 +104,13 @@ end
 -- key(<key>,<off/on>) is a special function
 -- that listens to the norns keys
 function key(k,z)
-  if k==1 and z==1 then 
-    for i=1,2 do
-      params:set("rate"..i,0)
-      params:set("rate"..i,1)
-    end
-    latticeclock:hard_restart()
+  if k==1 and z==1 then
+    -- ANY FX YOU WANT!
   elseif k==2 and z==1 then
-    local values={0.125,0.25,0.1,0.05}
-    local val=values[math.random(#values)]
-    engine.pos(1,samples[1].pos,samples[1].pos+(val/samples[1].beats))
+    -- ANY FX YOU WANT!
   elseif k==3 and z==1 then
+    -- ANY FX YOU WANT!
+    -- stutter using the position
     engine.pos(2,samples[2].pos,samples[2].pos+(0.125/samples[2].beats))
   end
 end
@@ -148,11 +143,9 @@ function redraw()
   screen.update()
 end
 
-
 --
 -- my functions
 --
-
 
 -- redrawer simply constantly redraws the screen
 function redrawer()
