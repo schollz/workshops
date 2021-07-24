@@ -102,7 +102,7 @@ Turn on your norns device and open up [maiden](https://monome.org/docs/norns/mai
 ;install https://github.com/schollz/ambulation
 ```
 
-Now refresh maiden. There is a new code repository in `code/ambulation`. We will edit two files: `sampling.lua` and `sampling/Engine_Sampling.sc`. Start with `sampling/Engine_Sampling.sc`. Try adding your own fx to it and then run `sampling.lua`. Try changing the key 2 or key 3 to activate yoru sample [in these lines of code](https://github.com/schollz/ambulation/blob/main/sampling.lua#L114-L120).
+Now refresh maiden. There is a new code repository in `code/ambulation`. We will edit two files: `sampling.lua` and `sampling/Engine_Sampling.sc`. Start with `sampling/Engine_Sampling.sc`. Try adding your own fx to it and then run `sampling.lua`. Try changing the key 2 or key 3 to activate your sample [in these lines of code](https://github.com/schollz/ambulation/blob/main/sampling.lua#L114-L120).
 
 
 ## Other SuperCollider resources/inspiration

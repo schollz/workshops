@@ -1,6 +1,6 @@
 // Part 3
 // This part will teach some SuperCollider tricks to develop a
-// sophisticated sample playback engine. We will iterate
+// more sophisticated sample playback engine. We will iterate
 // on the sample playback synth created in part 2.
 
 
@@ -33,7 +33,7 @@ x=Synth("samplePlayer1", [\bufnum, ~bufferPiano]);
 
 //////// 2 ////////
 // lets improve it!
-// we can choose an end point if we use two UGens:
+// we can choose an end point if we use the Phasor and BufRd UGens:
 // Phasor is a ramp that we can control accurately and
 // BufRd is a player that plays at any position you want
 (
@@ -115,8 +115,8 @@ x=SynthDef("samplePlayer3", {
 }).add;
 )
 
-// this will abruptly restart it!
 x=Synth("samplePlayer3", [\bufnum, ~bufferPiano]); // will start playing
+// this will abruptly restart it!
 x.set(\t_trig,1,\start,0,\end,1) // play this many times!
 
 // the problem with above is that it won't let you change the number of loops
@@ -202,6 +202,11 @@ x.set(\t_trig,1,\start,0.6,\end,0.5,\loops,3,\rate,-1)
 //////// 5 ////////
 // lets improve it!
 // we can automatically detect reversing and swap start/end points
+// a little bit of math and logic will swap the start and end points
+// depending on whether the 'rate' argument is positive or negative
+// in the code below, 'rate>0' and 'rate<0' act like if/then statements,
+// returning 1 if true and 0 if false
+
 (
 x=SynthDef("samplePlayer5", {
 	arg out=0, bufnum=0, rate=1, start=0, end=1, t_trig=1,
@@ -224,7 +229,7 @@ x=SynthDef("samplePlayer5", {
 	pos=Phasor.ar(
 		trig:t_trig,
 		rate:rate,
-		// a little bit of math will swap the start and end points
+		// swap the start and end points
 		start:(((rate>0)*start)+((rate<0)*end))*frames,
 		end:(((rate>0)*end)+((rate<0)*start))*frames,
 		resetPos:(((rate>0)*start)+((rate<0)*end))*frames,
