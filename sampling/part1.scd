@@ -73,7 +73,9 @@ a.value; // .value evaluates the function stored in "a"
 //////// 6 ////////
 // functions can have arguments and variables!
 // arguments and variables are similar, except that arguments can be passed into functions when the function is called.
-// step 1: create a function that contains arguments and variable
+// step 1: create a function that contains arguments and variables
+// note: the '++' characters are SuperCollider's operater for concatenation. To see SuperCollider's other operators, search for 'Symbolic Notations' in the Help Browser.
+
 (
 a={
 	arg name; // arguments must be defined first
@@ -139,6 +141,8 @@ a=Array.fill(10,{arg i; i*2}); // creates a list with 10 even numbers
 )
 
 // lets hear it
+// stop the sound using <Ctl>+. [win] or <Cmd>+. [mac]
+
 (
 {
 	SinOsc.ar(freq:220);
@@ -181,7 +185,7 @@ x={
 	SinOsc.ar(freq:MouseX.kr(100,400,1),mul:volume);
 }.play; // .plot(x) will plot it for x seconds
 )
-x.set(\volume,0.1);
+x.set(\volume,0.5);
 
 
 
@@ -197,7 +201,7 @@ x={
 	SinOsc.ar(freq:[MouseX.kr(100,400,1),MouseX.kr(100,400,1)/2],mul:volume);
 }.play; // .plot(x) will plot it for x seconds
 )
-x.set(\volume,0.1);
+x.set(\volume,0.5);
 
 
 
@@ -211,4 +215,4 @@ x.set(\volume,0.1);
 
 // change SinOsc to a different oscillator (LFTri, Saw, Pulse, ...)
 // change one MouseX to MouseY
-// add MouseX to a volume instead of frequency
+// use MouseX to change volume instead of frequency

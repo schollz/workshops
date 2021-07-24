@@ -24,7 +24,7 @@
 // plot the buffer
 ~bufferPiano.plot; // we can visualize this buffer
 // check the buffer length
-~bufferPiano.numFrames/~bufferPiano.sampleRate; // length in time
+~bufferPiano.numFrames/~bufferPiano.sampleRate; // length in seconds
 
 
 // lets load another buffer: pick one of the three buffers below and load it
@@ -32,10 +32,10 @@
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav");
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav");
 
-// visualize the buffer
+// plot the buffer
 ~bufferDrums.plot; // we can visualize this buffer
 // check the buffer length
-~bufferDrums.numFrames/~bufferPiano.sampleRate; // length in time
+~bufferDrums.numFrames/~bufferPiano.sampleRate; // length in seconds
 
 
 
@@ -92,12 +92,26 @@ SynthDef("samplePlayer1", {
 
 // you can also stop *everything* with <Ctl>+.
 
-// we can load in different drums
+// we can load in different drums by redefining the value of the variable ~bufferDrums
+
+// step 1: create an instance of the samplePlayer SynthDef called '~synthDrums'
+~synthDrums=Synth("samplePlayer1",[\bufnum,~bufferDrums]); // will start playing drums
+
+// step 2: start playing the player
 (
 ~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums2_8beats_bpm90.wav",action:{
 	~synthDrums.set(\bufnum,~bufferDrums);
 });
 )
+
+// step 3: change the drum sample by redefining ~bufferDrums and sending the new sample to the SynthDef instance
+(
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav",action:{
+	~synthDrums.set(\bufnum,~bufferDrums);
+});
+
+)
+
 
 
 
@@ -358,8 +372,8 @@ x.free();
 
 
 // your turn!
-// try playing with #11 or #12
-// try uncommenting those fx and making arguments for them
+// try playing with #11 or #12 (for example, in #12, try changing the value of the variable 'maxFreq')
+// try making arguments for the fx in #11 them
 // try adding your own fx
 
 
