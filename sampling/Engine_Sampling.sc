@@ -81,6 +81,8 @@ Engine_Sampling : CroneEngine {
 
             snd = (crossfade*snd1)+((1-crossfade)*snd2) * env * amp;
 
+            // ADD FX HERE!
+
             Out.ar(out,snd)
         }).add;
 
@@ -129,7 +131,6 @@ Engine_Sampling : CroneEngine {
                 \amp,msg[2],
             );
         });
-
     }
 
 

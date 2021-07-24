@@ -104,14 +104,12 @@ end
 -- key(<key>,<off/on>) is a special function
 -- that listens to the norns keys
 function key(k,z)
-  if k==1 and z==1 then
+  if k==1 then
     -- ANY FX YOU WANT!
-  elseif k==2 and z==1 then
+  elseif k==2 then
     -- ANY FX YOU WANT!
-  elseif k==3 and z==1 then
+  elseif k==3 then
     -- ANY FX YOU WANT!
-    -- stutter using the position
-    engine.pos(2,samples[2].pos,samples[2].pos+(0.125/samples[2].beats))
   end
 end
 
