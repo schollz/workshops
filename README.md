@@ -1,6 +1,6 @@
-# SuperCollider workshops
+# SuperCollider tutorials
 
-This repo is designed to teach SuperCollider to beginners through two self-styled workshops. The theme of these workshops is *ambulation* - getting you to take your first steps to walk on your own with SuperCollider. Both are offered as workshops at [Music Hackspace](https://musichackspace.org/events/tone-to-drone-introduction-to-supercollider-for-monome-norns-live-session/) but all the materials are included here and can be used as a self-guided workshop as well.
+This repo is designed to teach SuperCollider to beginners through two self-styled tutorials that I've designed. The theme of these workshops is *ambulation* - getting you to take your first steps to walk on your own with SuperCollider. Both are offered as workshops at [Music Hackspace](https://musichackspace.org/events/tone-to-drone-introduction-to-supercollider-for-monome-norns-live-session/) but all the materials are included here and can be used as a self-guided workshop as well.
 
 What is SuperCollider? SuperCollider is a free platform for audio synthesis and algorithm composition. It really excels at real-time analysis, synthesis, sampling, and processing and provides a framework for seamless combination of audio techniques like additive and subtractive synthesis. 
 
@@ -15,6 +15,8 @@ The two workshops each have a primary goal. In workshop #1, the goal is to make 
 <p align="center">
   <img width=400 style="max-width:100%" src="https://user-images.githubusercontent.com/6550035/118573663-db952100-b737-11eb-9a34-560e38778fcb.jpg">
 </p>
+
+### Note: this workshop is available as a video series at [Music Hackspace](https://musichackspace.org/events/tone-to-drone-introduction-to-supercollider-for-monome-norns-live-session/).
 
 In this workshop we will start at the very beginning of SuperCollider, assuming you don't yet know anything about SuperCollider. 
 
@@ -65,6 +67,7 @@ As a little bonus, you can use your drone and [control it with your hands](https
 </p>
 
 
+### Note: this workshop is available as a video series at [Music Hackspace](https://musichackspace.org/events/ample-samples-introduction-to-supercollider-for-monome-norns-live-session/).
 
 In this workshop we will start at the very beginning of SuperCollider. I will assume you don't now anything about SuperCollider. 
 
