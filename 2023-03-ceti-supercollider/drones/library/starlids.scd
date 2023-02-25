@@ -1,9 +1,6 @@
-// @infinitedigits
-// Starlids
-// Symphonic, meek, radiant.
-
-{
-    arg hz,amp;
+(
+SynthDef("starlids",{
+    arg hz=440,amp=1.0;
 	var snd,fx;
 	// convert hertz into midi notes
 	var note=hz.cpsmidi;
@@ -30,5 +27,8 @@
 	// cut out low frequencies
 	snd=HPF.ar(snd,20);
 
-}
+	Out.ar(0,snd*EnvGen.ar(Env.adsr(3,3,1,3,curve:4),\gate.kr(1),doneAction:2));
+
+}).add;
+)
 

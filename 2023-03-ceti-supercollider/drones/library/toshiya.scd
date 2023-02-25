@@ -1,8 +1,5 @@
-// @infinitedigits                                                                                   
-// Toshiya
-// Object-bound resonate space
-
-{
+(
+SynthDef("toshiya",{
 	arg hz=440,amp=1.0;
 	var snd,fx,y,z;
 	var note=hz.cpsmidi;
@@ -31,4 +28,7 @@
 
 	snd=LPF.ar(snd,15000);
 	snd=HPF.ar(snd.tanh/2,20);
-}
+	
+	Out.ar(0,snd*EnvGen.ar(Env.adsr(3,3,1,3,curve:4),\gate.kr(1),doneAction:2));
+}).add;
+)
