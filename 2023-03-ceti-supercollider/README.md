@@ -123,15 +123,21 @@ Now refresh maiden. There is a new code repository in `code/ambulation`. We will
 
 <details><summary><strong>Windows</strong></summary>
 
-[Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.11.2/SuperCollider-3.11.2-Windows-32bit-VS.exe) to download the latest Windows release. This is the *32-bit* release, rather than the 64-bit release, because [the most recent Windows Update prevents the 64-bit version from starting](https://github.com/supercollider/supercollider/issues/4368#issuecomment-832050665). But 32-bit will work just fine!
+1. [Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.13.0/SuperCollider-3.13.0_Release-x64-VS-3188503.exe) to download the latest Windows release. 
 
-Then [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.11.1/sc3-plugins-3.11.1-Windows-32bit-VS.zip) to download the 32-bit sc3-plugins. Unzip these plugins and then copy and paste the `SC3plugins` folder into the following folder:
+2. Then [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.13.0/sc3-plugins-3.13.0-Windows-64bit.zip) to download sc3-plugins. Unzip these plugins and then copy and paste the `SC3plugins` folder into the following folder:
 
 ```
 C:\Users\<yourname>\AppData\Local\SuperCollider\Extensions\
 ```
 
-Finally, I recommend you install a special SuperCollider package called "Safety" that will automatically prevent loud noises that can be caused by mistakes in coding. To install, [click here](https://github.com/adcxyz/SafetyNet/archive/refs/heads/main.zip) to download the "SafetyNet" SuperCollider quark. Then unzip that downloaded file and move the folder to the following location:
+3. Then [click here](https://github.com/schollz/portedplugins/releases/download/v0.4.4/PortedPlugins-Windows.zip) to download the portedplugins. Unzip these plugins and then copy  into the same folder:
+
+```
+C:\Users\<yourname>\AppData\Local\SuperCollider\Extensions\
+```
+
+4. Finally, I recommend you install a special SuperCollider package called "Safety" that will automatically prevent loud noises that can be caused by mistakes in coding. To install, [click here](https://github.com/adcxyz/SafetyNet/archive/refs/heads/main.zip) to download the "SafetyNet" SuperCollider quark. Then unzip that downloaded file and move the folder to the following location:
 
 ```
 C:\Users\<yourname>\AppData\Local\SuperCollider\downloaded-quarks
@@ -158,15 +164,21 @@ This will run automatically and will serve to automatically limit problematic so
 <details><summary><strong>Mac OS</strong></summary>
 
 
-[Click here](https://supercollider.github.io/download) to go to the website to download SuperCollider. *Make sure to check your version* of Mac OS and install the correct version of SuperCollider.
+1. [Click here](https://github.com/supercollider/supercollider/releases/download/Version-3.13.0/SuperCollider-3.13.0-macOS-universal.dmg) to download th latest version.
 
-Then, [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.11.1/sc3-plugins-3.11.1-macOS-signed.zip) to download the plugins for Mac OS. Unzip this archive. Then copy the `SC3plugins` folder to your Extensions folder:
+2. Then, [click here](https://github.com/supercollider/sc3-plugins/releases/download/Version-3.13.0/sc3-plugins-3.13.0-macOS.zip) to download the plugins for Mac OS. Unzip this archive and copy into your Extensions folder:
 
 ```
 /Users/<yourname>/Library/Application Support/SuperCollider/Extensions
 ```
 
-Finally, I recommend you install a special SuperCollider package called "Safety" that will automatically prevent loud noises that can be caused by mistakes in coding. To install, [click here](https://github.com/adcxyz/SafetyNet/archive/refs/heads/main.zip) to download the "SafetyNet" SuperCollider quark. Then unzip that downloaded file and move the folder `SafetyNet-main`to the following location:
+3. Then, [click here](https://github.com/schollz/portedplugins/releases/download/v0.4.4/PortedPlugins-macOS.zip) to download the ported plugins for Mac OS. Unzip this archive and copy into the same directory:
+
+```
+/Users/<yourname>/Library/Application Support/SuperCollider/Extensions
+```
+
+4. Finally, I recommend you install a special SuperCollider package called "Safety" that will automatically prevent loud noises that can be caused by mistakes in coding. To install, [click here](https://github.com/adcxyz/SafetyNet/archive/refs/heads/main.zip) to download the "SafetyNet" SuperCollider quark. Then unzip that downloaded file and move the folder `SafetyNet-main`to the following location:
 
 ```
 /Users/<yourname>/Library/Application Support/SuperCollider/downloaded-quarks
@@ -208,39 +220,24 @@ Once you install SuperCollider, you can test that it works with the following st
 
 4. Goto `Language` -> `Evaluate File`
 
-5. You should hear a sound - you are all set. If you do not hear a sound, please let me know via the Music Hackspace discord (https://discord.gg/RQERWTAk) or via the lines forum (https://llllllll.co/t/supercollider-norns-workshops-july-11th-and-july-25th) and I'll help you troubleshoot!
+5. You should hear a sound - you are all set.
 
-## Sharing SuperCollider over Zoom
+## Changing input/output devices
 
-<details><summary><strong>Windows</strong></summary>
-
-Click the "Share Screen" button, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
-
-![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
-
-That's it! There shouldn't be any other steps to share your SuperCollider audio over Zoom on Windows.
-
-</details>
-
-<details><summary><strong>Mac OS</strong></summary>
-
-Click the "Share Screen" button, select the SuperCollider window, and then below click on the carrot symbol next to "Share sound" to select "Stereo (High-fidelity)".
-
-![Screen+Shot+2021-06-13+at+10.25.26+AM.png](https://user-images.githubusercontent.com/6550035/121835422-20a06a80-cc86-11eb-902a-1cd13f741b8c.png)
-
-
-In Mac OS it seems there is an extra step to share audio in Zoom. Once you are sharing your screen, you need to restart the SuperCollider audio server to use the Zoom playback. Simply run this line of code and then restart your synthdefs:
+Audio device:
 
 ```
-// run this line *after* you start sharing
-s.options.outDevice = "ZoomAudioD"; s.options.inDevice = "ZoomAudioD"; s.reboot;
+s.options.outDevice = "ZoomAudioD"; 
+s.options.inDevice = "ZoomAudioD"; 
+s.reboot;
 ```
 
-Once you are done sharing, you can run this line of code to get your default output and input back:
+Default:
 
 ```
 // run this line when *not* sharing
-s.options.outDevice = "Built-in Output"; s.options.inDevice = "Built-in Input"; s.reboot;
+s.options.outDevice = "Built-in Output"; 
+s.options.inDevice = "Built-in Input"; 
+s.reboot;
 ```
- 
-</details>
+
