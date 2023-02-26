@@ -20,7 +20,6 @@ SynthDef("ducks",{
 			LinExp.kr(LFNoise2.kr(1/4).range(0.01,1),0.01,1,2000,10000)),
 		LPF.ar(snd[1],LinExp.kr(LFNoise2.kr(1/4).range(0.01,1),0.01,1,2000,10000))];
 
-		snd = SelectX.ar(MouseY.kr(),[snd,Fverb.ar(snd[0],snd[1],decay:70)]);
 		snd = snd * SelectX.ar(MouseX.kr(),[DC.ar(1),SinOsc.ar(MouseX.kr(0.1,12)).range(0,1.5)]);
 		snd=snd*amp/10;
 		Out.ar(0,snd*EnvGen.ar(Env.adsr(3,3,1,3,curve:4),\gate.kr(1),doneAction:2));
