@@ -386,6 +386,8 @@ SynthDef("coolsynth",{
 
 //////// 20 ////////
 // filtering
+// LPF, RLPF, HPF, RHPF, BPF
+// MoogLadder, MoogVCF, MoogFF
 (
 {
 	var snd;
@@ -438,11 +440,13 @@ SynthDef("coolsynth",{
 // more synths!
 (
 {
-	arg freq=220;
+	arg note=40;
+	var detune=0.1;
 	var snd;
 	var lpf, res;
 	snd = {
-		var snd_ = Saw.ar(freq+LFNoise0.kr(1).range(-1,1)); // create a saw wave
+		var freq = (note+LFNoise0.kr(1).range(detune.neg,detune)).midicps; // add detuning to note and then convert to midi
+		var snd_ = Saw.ar(freq); // create a saw wave
 		snd_ = snd_ * -12.dbamp; // reduce volume by 12 dB 
 		lpf = LFNoise2.kr(1).range(100,4000);
 		res = LFNoise2.kr(1).range(0.1,1);
@@ -464,7 +468,6 @@ SynthDef("coolsynth",{
 // before running this you must first save `Sun.sc` to the extensions directory.
 // open `Sun.sc` in SuperCollider. 
 // now save it by doing `File -> Save As Extension...` and type `Sun.sc`.
-// that's it!
 (
 s.waitForBoot({
 	var scale;
