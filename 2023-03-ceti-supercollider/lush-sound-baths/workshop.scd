@@ -43,8 +43,8 @@
 // beware beware beware beware
 
 (
- (100+2/2).postln; // what does this equal?
- (100+(2/2)).postln; // force order of operations using parentheses
+(100+2/2).postln; // what does this equal?
+(100+(2/2)).postln; // force order of operations using parentheses
 )
 
 
@@ -329,17 +329,17 @@ z.free;
 // SinOsc, LFSaw, Tri
 (
 SynthDef("coolsynth",{
-	arg freq=110, amp=0.1;
+	arg freq=110, amp=0.5;
 	var snd;
-     // you can directly Mix
+	// you can directly Mix
 	snd=Mix.ar(
 		SinOsc.ar(freq:[freq,freq*2,freq*4],mul:[amp,amp/2,amp/4])
 	);
-    // lets add some harmonic from a saw wave
+	// lets add some harmonic from a saw wave
 	snd=snd+(0.1*Mix.ar(
 		Saw.ar(freq:[freq,freq*2,freq*3,freq*4],mul:[amp,amp/2,amp/3,amp/4]))
 	);
-     // note: the following doesn't work, why not?
+	// note: the following doesn't work, why not?
 	// snd=snd+0.5*Mix.ar(Saw.ar(freq:[freq,freq*2],mul:[amp,amp/2]));
 	snd=Splay.ar(snd);
 	Out.ar(0,snd);
@@ -355,13 +355,13 @@ SynthDef("coolsynth",{
 // this is same as 17
 (
 SynthDef("coolsynth",{
-	arg freq=110, amp=0.1;
+	arg freq=110, amp=0.5;
 	var snd;
-     // you can directly Mix
+	// you can directly Mix
 	snd=Mix.ar(
 		Array.fill(2,{arg i; SinOsc.ar(freq:freq*(2**i),mul:amp/(2**i))})
 	);
-    // lets add some harmonic from a saw wave
+	// lets add some harmonic from a saw wave
 	snd=snd+(0.1*Mix.ar(
 		Array.fill(4,{arg i; Saw.ar(freq:freq*(i+1),mul:amp/(i+1))}))
 	);
@@ -369,6 +369,7 @@ SynthDef("coolsynth",{
 	Out.ar(0,snd);
 }).play;
 )
+
 
 
 
@@ -390,16 +391,15 @@ SynthDef("coolsynth",{
 // MoogLadder, MoogVCF, MoogFF
 (
 {
+	arg freq=220;
 	var snd;
 	var lpf, res;
-	snd = Saw.ar(220); // create a saw wave
-
-	snd = snd * -12.dbamp; // reduce volume by 12 dB 
-
-	lpf = MouseX.kr(10,20000,1);
-	res = MouseY.kr(0.1,1);
+	snd = Saw.ar([freq,freq+2]); // create a saw wave
+	snd = snd * (-6.dbamp); // decrease volume by 6 dB
+	
+	lpf = Clip.kr(MouseX.kr(20,20000,1),20,20000); // add mouse modulation to lpf
+	res = Clip.kr(MouseY.kr(0.02,1),0.1,1); // add mouse modulation to resonance
 	snd = RLPF.ar(snd,lpf,res); // resonant low-pass filter 
-
 	Out.ar(0,snd); // output the send
 }.play; // .play will play it
 )
@@ -410,7 +410,7 @@ SynthDef("coolsynth",{
 // modulation
 (
 {
-	[LFNoise0.kr(10),LFNoise1.kr(10),LFNoise2.kr(10)]
+	[LFNoise0.kr(100),LFNoise1.kr(100),LFNoise2.kr(100)]
 }.plot(0.1)
 )
 
@@ -420,16 +420,17 @@ SynthDef("coolsynth",{
 // combining modulation + filter
 (
 {
+	arg freq = 220;
 	var snd;
 	var lpf, res;
-	snd = Saw.ar(220); // create a saw wave
-
+	snd = Saw.ar([freq,freq-3]); // create a saw wave
+	
 	snd = snd * -12.dbamp; // reduce volume by 12 dB 
-
-	lpf = LFNoise2.kr(1).range(100,4000);
-	res = LFNoise2.kr(1).range(0.1,1);
+	
+	lpf = LFNoise2.kr(1).range(freq,4000);
+	res = LFNoise2.kr(1).range(0.05,1);
 	snd = RLPF.ar(snd,lpf, res); // resonant low-pass filter 
-
+	
 	Out.ar(0,snd); // output the send
 }.play; // .play will play it
 )
@@ -447,15 +448,15 @@ SynthDef("coolsynth",{
 	snd = {
 		var freq = (note+LFNoise0.kr(1).range(detune.neg,detune)).midicps; // add detuning to note and then convert to midi
 		var snd_ = Saw.ar(freq); // create a saw wave
-		snd_ = snd_ * -12.dbamp; // reduce volume by 12 dB 
+		snd_ = snd_ * -6.dbamp; // reduce volume by 12 dB 
 		lpf = LFNoise2.kr(1).range(100,4000);
 		res = LFNoise2.kr(1).range(0.1,1);
 		snd_ = RLPF.ar(snd_,lpf, res); // resonant low-pass filter 
 		snd_ // return sound
 	}!8;
-
+	
 	snd = Splay.ar(snd); // make a stereo field out of all the channels
-
+	
 	Out.ar(0,snd); // output the send
 }.play; // .play will play it
 )
@@ -471,7 +472,7 @@ SynthDef("coolsynth",{
 (
 s.waitForBoot({
 	var scale;
-
+	
 	SynthDef("padVoice",{
 		// ARGUMENTS (leave this as is)
 		arg note=60,amp=0.5,out=0,attack=1,decay=1;
@@ -480,46 +481,46 @@ s.waitForBoot({
 		var env = EnvGen.ar(Env.perc(attack,decay,amp,[4,4]),doneAction:2); // envelope
 		var pan = LFNoise2.kr(1/Rand(3,6)).range(-0.5,0.5); // random modulation for panning
 		var detune = LFNoise2.kr(1/Rand(1,5)).range(-0.1,0.1); // random modulation for detuning or anything
-
-
-
+		
+		
+		
 		//////////////////////////////////////////
 		// ----- MAKE YOUR OWN SYNTH HERE ----- //
 		//////////////////////////////////////////
-
+		
 		// note contains the midi note 
 		// freq contains the frequency
-
+		
 		// simple sine wave
 		snd = SinOsc.ar(freq);
-
+		
 		// filtered detuned saw wave
 		// with opening filter
 		// snd = Saw.ar([note-detune,note+detune].midicps);
 		// snd = MoogFF.ar(snd,
 		// 	LinExp.kr(0.01+EnvGen.kr(Env.perc(attack,decay)),0.01,1.01,freq,ExpRand(freq*2,20000)));
-
+		
 		// simple filtered saw wave
 		// snd = Saw.ar(freq);
 		// snd = LPF.ar(snd, freq*8);
-
+		
 		// sine with phase modulation feedack
 		// feedback is randomly modulated
 		// snd = SinOscFB.ar(freq, LFNoise2.kr(1/3).range(0,1));
-
+		
 		// a switch can randomly switch between
 		// snd = SelectX.ar(LFNoise2.kr(1).range(0,1),[
 		// 	LFTri.ar(freq),
 		// 	SinOsc.ar(freq),
 		// ]);
-
-
+		
+		
 		//////////////////////////////////////////
 		// ------------------------------------ //
 		//////////////////////////////////////////
-
-
-
+		
+		
+		
 		// panning
 		snd=snd!2;
 		snd = Balance2.ar(snd[0],snd[1],pan);
@@ -528,7 +529,7 @@ s.waitForBoot({
 		// final output
 		Out.ar(out,snd*env/12);
 	}).send(s);
-
+	
 	// // effects
 	SynthDef("padOutput",{
 		arg amp=1.0;
@@ -538,17 +539,17 @@ s.waitForBoot({
 		snd=SelectX.ar(LFNoise2.kr(1/4).range(0.5,0.9),[snd,Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/4).range(70,90))]);
 		ReplaceOut.ar(0,snd*Lag.kr(amp));
 	}).send(s);
-
-
+	
+	
 	// CHANGE THIS!
 	// set the scale
 	scale = Scale.major;
 	// scale = Scale.minor;
 	// scale = Scale.dorian;
 	// ... see more at ScaleLP
-
+	
 	// set the four
-
+	
 	// the Sun plays random notes from the scale
 	b=Sun.new(s,
 		argSynName:"padVoice",
