@@ -6,10 +6,7 @@
 // together and use additive synthesis to make tones and overtones.
 
 
-s.boot;
-s.meter;
-s.plotTree;
-s.freqscope;
+
 
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
@@ -22,6 +19,7 @@ s.freqscope;
 // this line prints something in the window over there ->
 // run any line of code by putting your cursor on it and then
 // press <Ctl>+<Enter>
+
 "I love SuperCollider".postln; // <- make sure to always have a ";" after code
 
 
@@ -30,6 +28,7 @@ s.freqscope;
 //////// 3 ////////
 // parentheses make it easy to
 // run multiple lines of code with <Ctl>+<Enter>
+
 (
 "I love SuperCollider".postln;
 "SuperCollider loves me".postln;
@@ -42,6 +41,7 @@ s.freqscope;
 // disorder of operations!
 // there is no order of operations in SuperCollider!
 // beware beware beware beware
+
 (
  (100+2/2).postln; // what does this equal?
  (100+(2/2)).postln; // force order of operations using parentheses
@@ -56,13 +56,19 @@ s.freqscope;
 // execute each step, incrementally
 
 // step 1: create functions stored in a variable
+
 (
 a={"I love SuperCollider".postln;};
+
 ~someVariable={"SuperCollider loves me".postln;};
 )
+
 // step 2a: run the first function
+
 a.value; // .value evaluates the function stored in "a"
+
 // step 2b: run the second function
+
 ~someVariable.value;
 
 
@@ -83,7 +89,7 @@ a={
 )
 
 // step 2: execute the function
-a.value("zack");
+a.value("hello");
 
 
 
@@ -102,10 +108,11 @@ a.value("zack");
 // lets make a function that generates a Sine wave
 // SuperCollider generates things with a "UGen"
 // the UGen for Sine waves is called "SinOsc"
+
 (
 {
 	SinOsc.ar(freq:220);
-}.plot(0.02); // .plot(x) will plot it for x seconds
+}.plot(10/220); // .plot(x) will plot it for x seconds
 )
 
 
@@ -114,15 +121,17 @@ a.value("zack");
 //////// 9 ////////
 // finally lets make a sound!
 // just add .play to our function
+// instead of .plot
+// play with <Ctrl>+Enter
+// stop it using <Ctl>+.
 (
 {
 	SinOsc.ar(freq:220);
 }.play; // .play will play it
 )
-// stop it using <Ctl>+.
-// you just made a synth!
-// it makes one sound and only one sound,
-// but who cares!? you did it!
+
+
+
 
 
 
@@ -131,16 +140,21 @@ a.value("zack");
 // lets have the synth make another sound
 // by adding an argument (see 6)
 // and also save it to a variable (see 5)
-(
+
 // save a variable and a Sine UGen to the "x" variable
+(
 x={
 	arg freq=220;
 	SinOsc.ar(freq:freq);
 }.play; // .play will play it
 )
+
 // now you can run each of these lines to change it!
 x.set(\freq,440);
+
 x.set(\freq,60.midicps); // .midicps converts midi note to frequency (cycles per second)
+
+// free it when done or press <Ctrl>+.
 x.free; // we can stop the synth running this line
 
 
@@ -149,19 +163,23 @@ x.free; // we can stop the synth running this line
 //////// 11 ////////
 // UGens constantly generate numbers
 // but they can also be treated like numbers,
-// you can add and subtract them.
-// for instance, we can add volume:
+// you can multiply them (or add or subtract...)
+// for instance, we can increase volume:
+
 (
 x={
 	arg freq=220, amp=0.5;
 	SinOsc.ar(freq:freq)*amp;
 }.play;
 )
+
 // lowers the volume
 x.set(\amp,0.1);
+
 // raise the volume and set the frequency (you can do multiple things)
 x.set(\amp,0.7,\freq,440);
-// free the synths!
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -171,13 +189,17 @@ x.free;
 // UGens have all sorts of parameters
 // SinOsc happens to have one that gets multiplied, call "mul".
 // highlight "SinOsc" and press <Ctl>+D [win] or <command>+D [mac] to see the parameters
+
 (
 x={
 	arg freq=220, amp=0.5;
 	SinOsc.ar(freq:freq,mul:amp);
 }.play; // .play will play it
 )
+
+// free it when done or press <Ctrl>+.
 x.free;
+
 // note: this is exactly the same as in 11
 // in SuperCollider there are always many ways to do the same thing
 
@@ -196,6 +218,8 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
+// free it when done or press <Ctrl>+.
 x.free;
 // note: this is exactly the same as 11 and 12
 // in 11 and 12, SuperCollider assumed this is what
@@ -210,6 +234,7 @@ x.free;
 // "multichannel expansion" means that SuperCollider will automatically
 // generate multiple UGens for you when a parameter has an array
 // and assign each UGen to an audio channel (e.g. left and right speakers).
+
 (
 x={
 	arg freq=220, amp=0.5;
@@ -218,9 +243,12 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
 // you should hear
 // lower frequency at higher volume in left ear
 // higher frequency at lower volume in right ear
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -231,6 +259,7 @@ x.free;
 // so you can mix it down to a single channel using the
 // Mix.ar UGen
 // then you can split it across the left/right using Splay
+
 (
 x={
 	arg freq=220, amp=0.5;
@@ -241,6 +270,9 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -249,6 +281,7 @@ x.free;
 //////// 16 ////////
 // lets define a synth to use multiple times
 // using a "SynthDef"
+
 (
 SynthDef("coolsynth",{ // add SynthDef here, with a name
 	arg freq=220, amp=0.1;
@@ -345,6 +378,84 @@ SynthDef("coolsynth",{
 // - try changing the oscillators (try VarSaw, SinOsc, Pulse, LFTri, Saw, ..)
 // - try changing the frequency
 // - try changing the number of oscillators (instead of 3, do 1, 2, ..)
+
+
+
+
+
+
+//////// 20 ////////
+// filtering
+(
+{
+	var snd;
+	var lpf, res;
+	snd = Saw.ar(220); // create a saw wave
+
+	snd = snd * -12.dbamp; // reduce volume by 12 dB 
+
+	lpf = MouseX.kr(10,20000,1);
+	res = MouseY.kr(0.1,1);
+	snd = RLPF.ar(snd,lpf,res); // resonant low-pass filter 
+
+	Out.ar(0,snd); // output the send
+}.play; // .play will play it
+)
+
+
+
+//////// 21 ////////
+// modulation
+(
+{
+	[LFNoise0.kr(10),LFNoise1.kr(10),LFNoise2.kr(10)]
+}.plot(0.1)
+)
+
+
+
+//////// 22 ////////
+// combining modulation + filter
+(
+{
+	var snd;
+	var lpf, res;
+	snd = Saw.ar(220); // create a saw wave
+
+	snd = snd * -12.dbamp; // reduce volume by 12 dB 
+
+	lpf = LFNoise2.kr(1).range(100,4000);
+	res = LFNoise2.kr(1).range(0.1,1);
+	snd = RLPF.ar(snd,lpf, res); // resonant low-pass filter 
+
+	Out.ar(0,snd); // output the send
+}.play; // .play will play it
+)
+
+
+
+//////// 23 ////////
+// more synths!
+(
+{
+	arg freq=220;
+	var snd;
+	var lpf, res;
+	snd = {
+		var snd_ = Saw.ar(freq+LFNoise0.kr(1).range(-1,1)); // create a saw wave
+		snd_ = snd_ * -12.dbamp; // reduce volume by 12 dB 
+		lpf = LFNoise2.kr(1).range(100,4000);
+		res = LFNoise2.kr(1).range(0.1,1);
+		snd_ = RLPF.ar(snd_,lpf, res); // resonant low-pass filter 
+		snd_ // return sound
+	}!8;
+
+	snd = Splay.ar(snd); // make a stereo field out of all the channels
+
+	Out.ar(0,snd); // output the send
+}.play; // .play will play it
+)
+
 
 
 
