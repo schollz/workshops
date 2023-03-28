@@ -481,28 +481,30 @@ s.waitForBoot({
 		var pan = LFNoise2.kr(1/Rand(3,6)).range(-0.5,0.5); // random modulation for panning
 		var detune = LFNoise2.kr(1/Rand(1,5)).range(-0.1,0.1); // random modulation for detuning or anything
 
+
+
+		//////////////////////////////////////////
 		// ----- MAKE YOUR OWN SYNTH HERE ----- //
+		//////////////////////////////////////////
+
+		// note contains the midi note 
+		// freq contains the frequency
 
 		// simple sine wave
-		//
-		// snd = SinOsc.ar(freq);
-
-		// simple filtered saw wave
-		//
-		// snd = Saw.ar(freq);
-		// snd = LPF.ar(snd, freq*8);
-
+		snd = SinOsc.ar(freq);
 
 		// filtered detuned saw wave
 		// with opening filter
-		//
-		snd = Saw.ar([note-detune,note+detune].midicps);
-		snd = MoogFF.ar(snd,
-			LinExp.kr(0.01+EnvGen.kr(Env.perc(attack,decay)),0.01,1.01,freq,ExpRand(freq*2,20000)));
+		// snd = Saw.ar([note-detune,note+detune].midicps);
+		// snd = MoogFF.ar(snd,
+		// 	LinExp.kr(0.01+EnvGen.kr(Env.perc(attack,decay)),0.01,1.01,freq,ExpRand(freq*2,20000)));
+
+		// simple filtered saw wave
+		// snd = Saw.ar(freq);
+		// snd = LPF.ar(snd, freq*8);
 
 		// sine with phase modulation feedack
 		// feedback is randomly modulated
-		//
 		// snd = SinOscFB.ar(freq, LFNoise2.kr(1/3).range(0,1));
 
 		// a switch can randomly switch between
@@ -512,7 +514,9 @@ s.waitForBoot({
 		// ]);
 
 
-		// ----- ------------------------ ----- //
+		//////////////////////////////////////////
+		// ------------------------------------ //
+		//////////////////////////////////////////
 
 
 
