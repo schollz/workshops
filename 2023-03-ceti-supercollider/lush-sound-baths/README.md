@@ -7,6 +7,10 @@ In this workshop we will
 - develop a personalized sound pad
 
 
+## Slides
+
+Download the slides [here](https://docs.google.com/presentation/d/1O3bxRUxgUh74-HYxpOA3cblAVFEAjmFF7cgtg4bgjUM/edit?usp=sharing).
+
 ## Installation
 
 To get started we will need to install SuperCollider and then install the nessecary libraries.
