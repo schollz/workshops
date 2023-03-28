@@ -11,6 +11,8 @@ In this workshop we will
 
 Download the slides [here](https://docs.google.com/presentation/d/1O3bxRUxgUh74-HYxpOA3cblAVFEAjmFF7cgtg4bgjUM/edit?usp=sharing).
 
+The slides will cover the introduction and the installation which is also covered here:
+
 ## Installation
 
 To get started we will need to install SuperCollider and then install the nessecary libraries.
