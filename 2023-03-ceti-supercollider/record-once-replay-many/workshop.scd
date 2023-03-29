@@ -5,11 +5,8 @@
 // This part will teach the basics of SuperCollider, using modulation
 // and making samples
 
-// boots the server
-s.boot;
-s.meter;
-s.plotTree;
-s.freqscope;
+
+
 
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
@@ -22,6 +19,7 @@ s.freqscope;
 // this line prints something in the window over there ->
 // run any line of code by putting your cursor on it and then
 // press <Ctl>+<Enter>
+
 "I love SuperCollider".postln; // <- make sure to always have a ";" after code
 
 
@@ -30,6 +28,7 @@ s.freqscope;
 //////// 3 ////////
 // parentheses make it easy to
 // run multiple lines of code with <Ctl>+<Enter>
+
 (
 "I love SuperCollider".postln;
 "SuperCollider loves me".postln;
@@ -42,6 +41,7 @@ s.freqscope;
 // disorder of operations!
 // there is no order of operations in SuperCollider!
 // beware beware beware beware
+
 (
 (100+2/2).postln; // what does this equal?
 (100+(2/2)).postln; // force order of operations using parentheses
@@ -52,17 +52,23 @@ s.freqscope;
 
 //////// 5 ////////
 // semicolons make functions
-// you can assign global variables using letters a-z or with ~variableName
+// you can assign variables using letters a-z or with ~variableName
 // execute each step, incrementally
 
 // step 1: create functions stored in a variable
+
 (
 a={"I love SuperCollider".postln;};
+
 ~someVariable={"SuperCollider loves me".postln;};
 )
+
 // step 2a: run the first function
+
 a.value; // .value evaluates the function stored in "a"
+
 // step 2b: run the second function
+
 ~someVariable.value;
 
 
@@ -83,7 +89,7 @@ a={
 )
 
 // step 2: execute the function
-a.value("zack");
+a.value("hello");
 
 
 
@@ -102,10 +108,11 @@ a.value("zack");
 // lets make a function that generates a Sine wave
 // SuperCollider generates things with a "UGen"
 // the UGen for Sine waves is called "SinOsc"
+
 (
 {
 	SinOsc.ar(freq:220);
-}.plot(0.02); // .plot(x) will plot it for x seconds
+}.plot(10/220); // .plot(x) will plot it for x seconds
 )
 
 
@@ -114,15 +121,17 @@ a.value("zack");
 //////// 9 ////////
 // finally lets make a sound!
 // just add .play to our function
+// instead of .plot
+// play with <Ctrl>+Enter
+// stop it using <Ctl>+.
 (
 {
 	SinOsc.ar(freq:220);
 }.play; // .play will play it
 )
-// stop it using <Ctl>+.
-// you just made a synth!
-// it makes one sound and only one sound,
-// but who cares!? you did it!
+
+
+
 
 
 
@@ -131,16 +140,21 @@ a.value("zack");
 // lets have the synth make another sound
 // by adding an argument (see 6)
 // and also save it to a variable (see 5)
-(
+
 // save a variable and a Sine UGen to the "x" variable
+(
 x={
 	arg freq=220;
 	SinOsc.ar(freq:freq);
 }.play; // .play will play it
 )
+
 // now you can run each of these lines to change it!
 x.set(\freq,440);
+
 x.set(\freq,60.midicps); // .midicps converts midi note to frequency (cycles per second)
+
+// free it when done or press <Ctrl>+.
 x.free; // we can stop the synth running this line
 
 
@@ -149,19 +163,23 @@ x.free; // we can stop the synth running this line
 //////// 11 ////////
 // UGens constantly generate numbers
 // but they can also be treated like numbers,
-// you can add and subtract them.
-// for instance, we can add volume:
+// you can multiply them (or add or subtract...)
+// for instance, we can increase volume:
+
 (
 x={
 	arg freq=220, amp=0.5;
 	SinOsc.ar(freq:freq)*amp;
 }.play;
 )
+
 // lowers the volume
 x.set(\amp,0.1);
+
 // raise the volume and set the frequency (you can do multiple things)
 x.set(\amp,0.7,\freq,440);
-// free the synths!
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -171,13 +189,17 @@ x.free;
 // UGens have all sorts of parameters
 // SinOsc happens to have one that gets multiplied, call "mul".
 // highlight "SinOsc" and press <Ctl>+D [win] or <command>+D [mac] to see the parameters
+
 (
 x={
 	arg freq=220, amp=0.5;
 	SinOsc.ar(freq:freq,mul:amp);
 }.play; // .play will play it
 )
+
+// free it when done or press <Ctrl>+.
 x.free;
+
 // note: this is exactly the same as in 11
 // in SuperCollider there are always many ways to do the same thing
 
@@ -196,6 +218,8 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
+// free it when done or press <Ctrl>+.
 x.free;
 // note: this is exactly the same as 11 and 12
 // in 11 and 12, SuperCollider assumed this is what
@@ -210,6 +234,7 @@ x.free;
 // "multichannel expansion" means that SuperCollider will automatically
 // generate multiple UGens for you when a parameter has an array
 // and assign each UGen to an audio channel (e.g. left and right speakers).
+
 (
 x={
 	arg freq=220, amp=0.5;
@@ -218,9 +243,12 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
 // you should hear
 // lower frequency at higher volume in left ear
 // higher frequency at lower volume in right ear
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -231,6 +259,7 @@ x.free;
 // so you can mix it down to a single channel using the
 // Mix.ar UGen
 // then you can split it across the left/right using Splay
+
 (
 x={
 	arg freq=220, amp=0.5;
@@ -241,6 +270,9 @@ x={
 	Out.ar(0,snd);
 }.play;
 )
+
+
+// free it when done or press <Ctrl>+.
 x.free;
 
 
@@ -249,6 +281,7 @@ x.free;
 //////// 16 ////////
 // lets define a synth to use multiple times
 // using a "SynthDef"
+
 (
 SynthDef("coolsynth",{ // add SynthDef here, with a name
 	arg freq=220, amp=0.1;
@@ -296,7 +329,7 @@ z.free;
 // SinOsc, LFSaw, Tri
 (
 SynthDef("coolsynth",{
-	arg freq=110, amp=0.1;
+	arg freq=110, amp=0.5;
 	var snd;
 	// you can directly Mix
 	snd=Mix.ar(
@@ -322,7 +355,7 @@ SynthDef("coolsynth",{
 // this is same as 17
 (
 SynthDef("coolsynth",{
-	arg freq=110, amp=0.1;
+	arg freq=110, amp=0.5;
 	var snd;
 	// you can directly Mix
 	snd=Mix.ar(
@@ -336,6 +369,7 @@ SynthDef("coolsynth",{
 	Out.ar(0,snd);
 }).play;
 )
+
 
 
 
@@ -526,7 +560,12 @@ x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 
 
 
-// requires "Ube.sc" to be put into the Extensions directory
+// before running this you must first save `Ube.sc` to the extensions directory.
+// open `Ube.sc` in SuperCollider.
+// now save it by doing `File -> Save As Extension...` and type `Ube.sc`.
+
+// to run this code, but a cursor anywhere in the code block (a code block is enclosed in parentheses)
+// and hit <Ctrl>+Enter
 (
 s.waitForBoot({
 	var pairs;
@@ -542,19 +581,40 @@ s.waitForBoot({
 		// store the number of frames and the duraiton
 		var frames=BufFrames.kr(buf);
 		var duration=BufDur.kr(buf);
-		// LFO for the start point <-- tinker
+
+
+
+		///////////////////////////////////////////////////////
+		// ----- START ADDING YOUR OWN MODULATION HERE ----- //
+		///////////////////////////////////////////////////////
+
+
+		// LFO for the start point
 		var lfoStart=SinOsc.kr(timescale/Rand(30,60),Rand(hi:2*pi)).range(1024,frames-10240);
-		// LFO for the window lenth <-- tinker
+
+		// LFO for the window lenth
 		var lfoWindow=SinOsc.kr(timescale/Rand(60,120),Rand(hi:2*pi)).range(4096,frames/2);
+
 		// LFO for the rate (right now its not an LFO)
-		var lfoRate=baseRate;//*Select.kr(SinOsc.kr(1/Rand(10,30)).range(0,4.9),[1,0.25,0.5,1,2]);
-		// LFO for switching between forward and reverse <-- tinker
+		var lfoRate=baseRate;
+
+		// LFO for switching between forward and reverse 
 		var lfoForward=Demand.kr(Impulse.kr(timescale/Rand(5,15)),0,Drand([0,1],inf));
-		// LFO for the volume <-- tinker
+
+		// LFO for the volume
 		var lfoAmp=SinOsc.kr(timescale/Rand(10,30),Rand(hi:2*pi)).range(0.05,0.5);
-		// LFO for the panning <-- tinker
+
+		// LFO for the panning 
 		var lfoPan=SinOsc.kr(timescale/Rand(10,30),Rand(hi:2*pi)).range(-1,1);
-		
+
+
+		///////////////////////////////////////////////////////
+		// ----- DONE ADDING YOUR OWN MODULATION HERE ------ //
+		///////////////////////////////////////////////////////
+
+
+
+
 		// calculate the final rate
 		var rate=Lag.kr(lfoRate*(2*lfoForward-1),1)*BufRateScale.kr(buf);
 		
@@ -603,21 +663,33 @@ s.waitForBoot({
 	// effects
 	SynthDef("effects",{
 		arg amp=1.0;
+
+		// collect the sound coming from the bus "0" on 2 channels (stereo)
 		var snd=In.ar(0,2);
-		snd=HPF.ar(snd,80);
+
+		///////////////////////////////////////////////////////
+		// ----- START ADDING YOUR GLOBAL EFFECTS HERE ----- //
+		///////////////////////////////////////////////////////
+
 		// add some nice tape compression
 		snd = AnalogTape.ar(snd,0.9,0.8,0.9,2);
+
 		// add some reverb
-		snd=SelectX.ar(LFNoise2.kr(1/3).range(0.1,0.5),[
+		snd = SelectX.ar(LFNoise2.kr(1/3).range(0.1,0.5),[
 			snd,
 			Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/3).range(70,90))
 		]);
+
 		// add some analog chewing
-		snd=SelectX.ar(LFNoise2.kr(1/3).range(0,1),[
+		snd = SelectX.ar(LFNoise2.kr(1/3).range(0,1),[
 			snd,
 			AnalogChew.ar(snd);
 		]);
 		
+		///////////////////////////////////////////////////////
+		// ----- DONE ADDING YOUR GLOBAL EFFECTS HERE ------ //
+		///////////////////////////////////////////////////////
+
 		// replace the output with the effected output
 		ReplaceOut.ar(0,snd*Lag.kr(amp));
 	}).send(s);

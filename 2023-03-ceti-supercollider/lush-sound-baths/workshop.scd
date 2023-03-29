@@ -469,6 +469,9 @@ SynthDef("coolsynth",{
 // before running this you must first save `Sun.sc` to the extensions directory.
 // open `Sun.sc` in SuperCollider.
 // now save it by doing `File -> Save As Extension...` and type `Sun.sc`.
+
+// to run this code, but a cursor anywhere in the code block (a code block is enclosed in parentheses)
+// and hit <Ctrl>+Enter
 (
 s.waitForBoot({
 	var scale;
@@ -484,9 +487,9 @@ s.waitForBoot({
 
 
 
-		//////////////////////////////////////////
-		// ----- MAKE YOUR OWN SYNTH HERE ----- //
-		//////////////////////////////////////////
+		//////////////////////////////////////////////////
+		// ----- START ADDING YOUR OWN SYNTH HERE ----- //
+		//////////////////////////////////////////////////
 
 		// note contains the midi note
 		// freq contains the frequency
@@ -515,28 +518,48 @@ s.waitForBoot({
 		// ]);
 
 
-		//////////////////////////////////////////
-		// ------------------------------------ //
-		//////////////////////////////////////////
+		//////////////////////////////////////////////////
+		// ------ DONE ADDING YOUR OWN SYNTH HERE ----- //
+		//////////////////////////////////////////////////
 
 
 
 		// panning
 		snd=snd!2;
 		snd = Balance2.ar(snd[0],snd[1],pan);
-		// for drawing
+
+		// send data to the GUI
 		SendReply.kr(Impulse.kr(25),"/sunposition",[\sector.kr(0),note,env,pan,detune.abs]);
+
 		// final output
 		Out.ar(out,snd*env/12);
 	}).send(s);
 
-	// // effects
+	// effects
 	SynthDef("padOutput",{
 		arg amp=1.0;
+
+		// collect the sound coming from the bus "0" on 2 channels (stereo)
 		var snd=In.ar(0,2);
-		snd=HPF.ar(snd,30);
-		snd=AnalogTape.ar(snd,0.9,0.9,0.8,2);
-		snd=SelectX.ar(LFNoise2.kr(1/4).range(0.5,0.9),[snd,Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/4).range(70,90))]);
+
+		///////////////////////////////////////////////////////
+		// ----- START ADDING YOUR GLOBAL EFFECTS HERE ----- //
+		///////////////////////////////////////////////////////
+
+		// add some nice tape compression
+		snd = AnalogTape.ar(snd,0.9,0.8,0.9,2);
+
+		// add some reverb
+		snd = SelectX.ar(LFNoise2.kr(1/3).range(0.1,0.5),[
+			snd,
+			Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/3).range(70,90))
+		]);
+		
+		///////////////////////////////////////////////////////
+		// ----- DONE ADDING YOUR GLOBAL EFFECTS HERE ------ //
+		///////////////////////////////////////////////////////
+
+		// replace the output with the effected output
 		ReplaceOut.ar(0,snd*Lag.kr(amp));
 	}).send(s);
 
