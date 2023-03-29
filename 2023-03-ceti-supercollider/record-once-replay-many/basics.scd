@@ -52,7 +52,7 @@ s.freqscope;
 
 //////// 5 ////////
 // semicolons make functions
-// you can assign variables using letters a-z or with ~variableName
+// you can assign global variables using letters a-z or with ~variableName
 // execute each step, incrementally
 
 // step 1: create functions stored in a variable
