@@ -13,8 +13,10 @@
 
 
 
+
 //////// 1 ////////
 // this is a comment! it is valid code but doesn't do anything
+
 
 
 
@@ -26,6 +28,7 @@
 // press <Ctl>+<Enter>
 
 "I love SuperCollider".postln; // <- make sure to always have a ";" after code
+
 
 
 
@@ -42,6 +45,7 @@
 
 
 
+
 //////// 4 ////////
 // disorder of operations!
 // there is no order of operations in SuperCollider!
@@ -51,6 +55,7 @@
 (100+2/2).postln; // what does this equal?
 (100+(2/2)).postln; // force order of operations using parentheses
 )
+
 
 
 
@@ -85,7 +90,7 @@ a.value; // .value evaluates the function stored in "a"
 //////// 6 ////////
 // functions can have arguments and variables!
 // arguments and variables are similar, except that arguments can be passed into functions when the function is called.
-// step 1: create a function that contains arguments and variable
+// create a function that contains arguments and variable
 (
 a={
 	arg name; // arguments must be defined first
@@ -95,8 +100,9 @@ a={
 };
 )
 
-// step 2: execute the function
+// execute the function
 a.value("hello");
+
 
 
 
@@ -107,6 +113,9 @@ a.value("hello");
 // goto Server -> Boot Server
 // or press <Ctl>+B (windows)
 // to restart EVERYTHING you can do <Ctrl>+<Shift>+L and then <Ctrl>+B
+// when in doubt, turn it off and on.
+
+
 
 
 
@@ -122,6 +131,9 @@ a.value("hello");
 
 // play the buffer
 ~buffer.play;
+
+
+
 
 
 //////// 9 ////////
@@ -140,23 +152,35 @@ a.value("hello");
 )
 
 
+
+
+
 //////// 10 ////////
 // lets record into a buffer
 // define a new buffer that is 3 seconds long
 ~buffer=Buffer.alloc(s,s.sampleRate*3,2);
+// then define a function to record into that buffer
 (
 {
-	RecordBuf.ar(SoundIn.ar([0,1]), ~buffer, loop:0,doneAction:2)
+	RecordBuf.ar(SoundIn.ar([0,1]), ~buffer, loop:0, doneAction:2)
 }.play; // .play will play this synth that records from the input audio
 )
+// lets see if it worked!
 ~buffer.plot;
 ~buffer.play;
+
+// TRY! try recording and plotting/playing your recording
+
+
+
+
+
 //////// 11 ////////
-// lets define how our sound will work
+// lets define how our sample will playback
 // first we will define what is called a "SynthDef", a synth definition
 // SynthDef(<name>,<function>).add
 (
-SynthDef("samplePlayer1", {
+SynthDef("musicbox", {
 	// buffers have an index, and the buffer index will be supplied later using
 	// an argument, "arg":
 	arg bufnum = 0;
@@ -177,31 +201,55 @@ SynthDef("samplePlayer1", {
 
 
 
-//////// 5  ////////
+
+//////// 12  ////////
 // now let's play our defined synth using the "Synth" function
 // we can then create a synth that plays the sound!
-~syn=Synth("samplePlayer1",[\bufnum,~buffer]);
+~syn=Synth("musicbox",[\bufnum,~buffer]);
 ~syn.free; // will stop playing
 
 // you can also stop *everything* with <Ctl>+.
+// (this will stop ANY and ALL synths)
 
 
 
 
 
-//////// 6 ////////
-// lets modify our synth with some MODULATION and panning
-
-// an aside about modulation - you can use many different Ugens for modulation!
+//////// 13 ////////
+// aside: lets learn some modulation to mangle the musicbox
+// you can use many different Ugens for modulation!
 (
 {
 	[LorenzL.ar(5000), LFTri.ar(100), LFNoise0.kr(100),LFNoise1.kr(100),LFNoise2.kr(100)]
 }.plot(0.1)
 )
 
-// lets create a synthdef with modulation
+// modulation ranges from -1 to 1, but you can set any range you want with `.range`
+// btw, you can notice a difference between .ar and .kr at this fast speed (100 hz)
+// .ar is needed if you are in audio rate (>~30 hz)
 (
-SynthDef("samplePlayer1", {
+{	[SinOsc.ar(100).range(3,4),SinOsc.kr(100).range(3,4),Saw.ar(100).range(5,6),Saw.kr(100).range(5,6)]
+}.plot(0.1)
+)
+
+// TRY! try making some different modulation and plotting it
+// you can use <Ctrl>+D to search for modulation
+// and you can add / multiply to your hearts content
+// for example:
+(
+{
+	SinOscFB.kr(30,LFNoise0.kr(300)) + WhiteNoise.ar(0.1)
+}.plot(0.5);
+)
+
+
+
+
+
+//////// 14 ////////
+// note lets create a synthdef with some modulation
+(
+SynthDef("musicbox", {
 	// buffers have an index, and the buffer index will be supplied later using
 	// an argument, "arg":
 	arg bufnum = 0;
@@ -218,26 +266,33 @@ SynthDef("samplePlayer1", {
 		rate: rate,
 	);
 
-	snd = Pan2.ar(snd,LFNoise2.kr(1)); // use "LFNoise2" to modulate randomly
+	snd = Pan2.ar(snd,LFNoise2.kr(1)); // use "LFNoise2" to modulate panning randomly
+
+	snd[0] = snd[0] * LFPar.ar(5).range(0,1); // use "LFPar" to modulate the amplitude
+	snd[1] = snd[1] * LFPar.ar(5.1).range(0,1); // use "LFPar" to modulate the amplitude slightly differently
 
 	Out.ar(0,snd);
 }).add; // .add will add it to our server to be used anytime we want!
 )
 
+~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 
-x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
+x=Synth("musicbox", [\bufnum, ~buffer]); // will start playing
+
+// TRY! try putting the modulation you created into this synthdef and playing
 
 
 
 
-//////// 7 ////////
+
+//////// 15 ////////
 // lets modify our synth with some EFFECTS!
 // there are many effects
 // filters: RLPF, LPF, HPF, BPF
 // delays: CombC, DelayC
 // distortion: .tanh, .softclip, .distort
 (
-SynthDef("samplePlayer1", {
+SynthDef("musicbox", {
 	// buffers have an index, and the buffer index will be supplied later using
 	// an argument, "arg":
 	arg bufnum = 0;
@@ -257,20 +312,30 @@ SynthDef("samplePlayer1", {
 
 	snd = CombC.ar(snd,0.5,MouseY.kr(0.05,0.5)); // add delay
 
+	snd = (snd * SinOsc.kr(0.1).range(1,10)).tanh * 0.1; // add distortion
+
 	Out.ar(0,snd);
 }).add; // .add will add it to our server to be used anytime we want!
 )
 
 ~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 
-x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
+x=Synth("musicbox", [\bufnum, ~buffer]); // will start playing
+
+// TRY! change up the effects, the filters, the distortion, the modulation
 
 
 
-//////// 7 ////////
-// moving beyond "PlayBuf", to give more control over the playback/recording
-// we can use "phasors" for playback/recording
-// define a synthdef to do the recording
+
+
+//////// 16 ////////
+// PlayBuf is missing an important feature sometimes needed:
+// it is designed to always play to the end of a buffer.
+// there are multiple ways around this, but to generally get
+// more control over playback/recording position we can use
+// the "Phasor" Ugen
+// here is a little looper using a Phasor for recording and
+// two Phasors for reading (two-head playback)
 (
 SynthDef("recorder",{ arg rate=1,bufnum=0;
 	var in;
@@ -284,11 +349,11 @@ SynthDef("recorder",{ arg rate=1,bufnum=0;
 	// free after specified time
 	FreeSelf.kr(TDelay.kr(Trig.kr(1),BufDur.kr(bufnum)));
 	// disable output to resist feedback
-	Out.ar(0,in*0);
+	Out.ar(0,in*0); // could also use Silent.ar()
 }).add;
 
 // define a player to do the playback (with crossfades!) using
-// two headed feedback
+// two headed playback
 SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 	var snd;
 	var phase1,phase2;
@@ -305,8 +370,9 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 	rate = BufRateScale.kr(bufnum) * rate;
 
 	// setup phasors for two-head reader
-	phase1=Phasor.ar(aOn, rate, 0, totalFrames);
-	phase2=Phasor.ar(1-aOn, rate, 0, totalFrames);
+	// phasors have a start AND end position
+	phase1=Phasor.ar(trig:aOn, rate:rate, start:0, end:totalFrames);
+	phase2=Phasor.ar(trig:1-aOn, rate:rate, start:0, end:totalFrames);
 
 	// remove clips using fadeout/fadein (buffer must be total time + fade out)
 	snd = Lag.kr(aOn,fadeOut*0.9)*BufRd.ar(2,bufnum,phase1);
@@ -318,20 +384,23 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 }).add;
 )
 
-
+// lets define a codeblock to initialize some synths and buffers
 (
 var fadeOut=0.1; // cross-fade time
 var syns=List.new(); // synths we will make
 var bufs=List.new(); // buffers we will make
-var loopTimes=[1,2,3,4,5,6];
+var loopTimes=[1,2,3,4,5,6]; // in seconds
 loopTimes.do({ arg v,i;
 	Buffer.alloc(s,(s.sampleRate*(v+fadeOut)).postln,2,{
-		// once buffer is created, create a synth for it
+		// this function runs once the buffer is allocated
 		arg b;
+		// create a new buffer
 		bufs.add(b);
+		// create a new synth with this buffer
 		syns.add(Synth("player",[\bufnum,b,\fadeOut,fadeOut]));
 	});
 });
+// define a function to do the recording
 r= {arg i; Synth("recorder",[\bufnum,bufs[i]])};
 )
 
@@ -344,18 +413,39 @@ r.(4); // ..
 r.(5); // ..
 r.(6); // ..
 
+// TRY it! try changing to different loop times
+// or try adding effects modulation to the "player" SynthDef
+
+
+
+
+
+//////// 17 ////////
+// __   __  _______  _______
+// |  | |  ||  _    ||       |
+// |  | |  || |_|   ||    ___|
+// |  |_|  ||       ||   |___
+// |       ||  _   | |    ___|
+// |       || |_|   ||   |___
+// |_______||_______||_______|
+//
+// ube is a little tool I made to play with all these ideas:
+// it is a "macrogranulator" that modulates all sorts of things of buffers
+// and does recording/playback with the buffers
+//
 // before running this you must first save `Ube.sc` to the extensions directory.
 // open `Ube.sc` in SuperCollider.
 // now save it by doing `File -> Save As Extension...` and type `Ube.sc`.
 
 // to run this code, but a cursor anywhere in the code block (a code block is enclosed in parentheses)
 // and hit <Ctrl>+Enter
+
+// if you run into trouble, restart everything <Ctrl>+<Shift>+L and then <Ctrl>+Enter
 (
 s.waitForBoot({
 	var pairs;
 
 	// define the "looper"
-
 	SynthDef("looper",{
 		// main arguments
 		arg buf,tape,player,baseRate=1.0,amp=1.0,timescale=0.2;
@@ -395,7 +485,6 @@ s.waitForBoot({
 		///////////////////////////////////////////////////////
 		// ----- DONE ADDING YOUR OWN MODULATION HERE ------ //
 		///////////////////////////////////////////////////////
-
 
 
 
@@ -439,6 +528,19 @@ s.waitForBoot({
 		// do the panning
 		snd=Balance2.ar(snd[0],snd[1],lfoPan);
 
+		///////////////////////////////////////////////////////
+		// --------- START ADDING ANY EFFECTS HERE --------- //
+		///////////////////////////////////////////////////////
+
+		snd = CombC.ar(snd,0.5,Rand(0.05,0.5),2); // random delay
+		// snd = LPF.ar(snd,SinOsc.kr(0.1).exprange(20,2000)); // modulated filter
+		// snd = (snd * MouseX.kr(1,10)).tanh / 2; // mouse-controlled distortion
+		// ?????
+
+		///////////////////////////////////////////////////////
+		// -------=-- DONE ADDING ANY EFFECTS HERE --------- //
+		///////////////////////////////////////////////////////
+
 		// final output
 		Out.ar(0,snd*volume/5);
 	}).send(s);
@@ -461,19 +563,23 @@ s.waitForBoot({
 		///////////////////////////////////////////////////////
 
 		// add some nice tape compression
-		snd = AnalogTape.ar(snd,0.9,0.8,0.9,2);
+		// snd = AnalogTape.ar(snd,0.9,0.8,0.9,2);
+
+		// add some delay
+		snd = CombC.ar(snd,0.5,delaytime:0.25,decaytime:1.1);
 
 		// add some reverb
 		snd = SelectX.ar(LFNoise2.kr(1/3).range(0.1,0.5),[
 			snd,
-			Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/3).range(70,90))
+			FreeVerb2.ar(snd[0],snd[1],50)
+			//Fverb.ar(snd[0],snd[1],50,decay:LFNoise2.kr(1/3).range(70,90))
 		]);
 
-		// add some analog chewing
-		snd = SelectX.ar(LFNoise2.kr(1/3).range(0,1),[
-			snd,
-			AnalogChew.ar(snd);
-		]);
+		// // add some analog chewing (PortedPlugins needed)
+		// snd = SelectX.ar(LFNoise2.kr(1/3).range(0,1),[
+		// 	snd,
+		// 	AnalogChew.ar(snd);
+		// ]);
 
 		///////////////////////////////////////////////////////
 		// ----- DONE ADDING YOUR GLOBAL EFFECTS HERE ------ //
@@ -485,38 +591,31 @@ s.waitForBoot({
 
 	// load the ube class
 	u=Ube.new(Server.default);
+
+	Routine {
+		// either load a file into the tape
+		u.loadTape(tape:1,filename:thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
+		// OR record another tape and play it
+		// u.recordTape(tape:1,seconds:3,recLevel:2); 3.5.wait;
+
+		0.5.wait; // give time for buffer to load
+		// create players to play the tape
+		u.playTape(tape:1,player:0,rate:1,db:0,timescale:1);
+		u.playTape(tape:1,player:1,rate:0.5,db:3,timescale:1.0);
+		u.playTape(tape:1,player:2,rate:0.25,db:6,timescale:1.0);
+		u.playTape(tape:1,player:3,rate:0.125,db:9,timescale:1.0);
+		u.playTape(tape:1,player:4,rate:2,db:-6,timescale:1.0);
+		u.playTape(tape:1,player:5,rate:4,db:-12,timescale:1.0);
+		// show gui
+		u.gui;
+
+	}.play;
+
+
+
 });
 )
 
-
-// either load a tape
-(
-// load a file into the tape
-u.loadTape(tape:1,filename:thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
-)
-// OR record a tape
-(
-// record another tape and play it
-u.recordTape(tape:1,seconds:3,recLevel:1);
-)
-
-
-// play as many as you want
-(
-// create players to play the tape
-u.playTape(tape:1,player:0,rate:1,db:0,timescale:1);
-u.playTape(tape:1,player:1,rate:0.5,db:3,timescale:1.0);
-u.playTape(tape:1,player:2,rate:0.25,db:6,timescale:1.0);
-u.playTape(tape:1,player:3,rate:0.125,db:9,timescale:1.0);
-u.playTape(tape:1,player:4,rate:2,db:-6,timescale:1.0);
-u.playTape(tape:1,player:5,rate:4,db:-12,timescale:1.0);
-)
-
-
-// when you're ready, run the gui
-(
-// show gui
-u.gui;
-)
-
+// TRY IT! load your own sounds, record your own sounds
+// change the modulation, change the effects
 
