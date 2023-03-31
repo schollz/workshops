@@ -133,6 +133,7 @@ a.value("hello");
 	snd=PlayBuf.ar( // PlayBuf will play a sound in a buffer
 		numChannels:2, // we are dealing with stereo samples, so 2 channels
 		bufnum:~buffer, // the buffer
+		loop: 1,
 	);
 	Out.ar(0,snd); // send to Out UGen to channel 0 (default speakers)
 }.play; // .play will play the sound immediately!
@@ -148,8 +149,8 @@ a.value("hello");
 	RecordBuf.ar(SoundIn.ar([0,1]), ~buffer, loop:0,doneAction:2)
 }.play; // .play will play this synth that records from the input audio
 )
-
-
+~buffer.plot;
+~buffer.play;
 //////// 11 ////////
 // lets define how our sound will work
 // first we will define what is called a "SynthDef", a synth definition
@@ -194,7 +195,7 @@ SynthDef("samplePlayer1", {
 // an aside about modulation - you can use many different Ugens for modulation!
 (
 {
-	[SinOsc.kr(100), LFTri.kr(100), LFNoise0.kr(100),LFNoise1.kr(100),LFNoise2.kr(100)]
+	[LorenzL.ar(5000), LFTri.ar(100), LFNoise0.kr(100),LFNoise1.kr(100),LFNoise2.kr(100)]
 }.plot(0.1)
 )
 
@@ -213,9 +214,9 @@ SynthDef("samplePlayer1", {
 	snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
-		loop: 1, 
+		loop: 1,
 		rate: rate,
-	);                             
+	);
 
 	snd = Pan2.ar(snd,LFNoise2.kr(1)); // use "LFNoise2" to modulate randomly
 
@@ -254,12 +255,13 @@ SynthDef("samplePlayer1", {
 
 	snd = RLPF.ar(snd, MouseX.kr(10,20000,1),0.5); // effects controlled by mouse!
 
-	snd = CombC.ar(snd,0.2,0.2); // add delay
+	snd = CombC.ar(snd,0.5,MouseY.kr(0.05,0.5)); // add delay
 
 	Out.ar(0,snd);
 }).add; // .add will add it to our server to be used anytime we want!
 )
 
+~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 
 x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 
@@ -268,7 +270,7 @@ x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 //////// 7 ////////
 // moving beyond "PlayBuf", to give more control over the playback/recording
 // we can use "phasors" for playback/recording
-// define a synthdef to do the recording 
+// define a synthdef to do the recording
 (
 SynthDef("recorder",{ arg rate=1,bufnum=0;
 	var in;
@@ -299,7 +301,7 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 	// define total frames
 	var totalFrames = BufFrames.kr(bufnum);
 
-	// define rate	
+	// define rate
 	rate = BufRateScale.kr(bufnum) * rate;
 
 	// setup phasors for two-head reader
@@ -312,39 +314,35 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 
 	// effects
 	snd=LPF.ar(snd,MouseX.kr(20,20000,1));
-	Out.ar(0,snd);
+	Out.ar(0,snd*Line.ar());
 }).add;
 )
 
-// set some global constants for the cross-fade time and the loopsize
-(
-~fadeOut=0.1; // seconds
-)
 
-// clear buffers
 (
-~bufs=Array.fill(6,{ arg i;
-	Buffer.alloc(s,s.sampleRate*(((i+1))+~fadeOut),2)
+var fadeOut=0.1; // cross-fade time
+var syns=List.new(); // synths we will make
+var bufs=List.new(); // buffers we will make
+var loopTimes=[1,2,3,4,5,6];
+loopTimes.do({ arg v,i;
+	Buffer.alloc(s,(s.sampleRate*(v+fadeOut)).postln,2,{
+		// once buffer is created, create a synth for it
+		arg b;
+		bufs.add(b);
+		syns.add(Synth("player",[\bufnum,b,\fadeOut,fadeOut]));
+	});
 });
-)
-
-// play all players (with empty buffers)
-(
-~syns=Array.fill(6,{arg i;
-	Synth("player",[\bufnum,~bufs[i],\fadeOut,~fadeOut]);
-});
+r= {arg i; Synth("recorder",[\bufnum,bufs[i]])};
 )
 
 // .. and record one at a time
-r= {arg i; Synth("recorder",[\bufnum,~bufs[i]])};
-r.(0); // record into 1-second loop
-r.(2); // record into 3-second loop
-r.(1); // record into 2-second loop
-r.(3); // etc
-r.(4);
-r.(5);
-r.(6);
-
+r.(0); // record into first loop (0-index)
+r.(1); // record into second loop
+r.(2); // ..
+r.(3); // ..
+r.(4); // ..
+r.(5); // ..
+r.(6); // ..
 
 // before running this you must first save `Ube.sc` to the extensions directory.
 // open `Ube.sc` in SuperCollider.
@@ -499,7 +497,7 @@ u.loadTape(tape:1,filename:thisProcess.nowExecutingPath.dirname++"/kalimba.wav")
 // OR record a tape
 (
 // record another tape and play it
-u.recordTape(tape:1,seconds:3,recLevel:0.5);
+u.recordTape(tape:1,seconds:3,recLevel:1);
 )
 
 
@@ -515,7 +513,7 @@ u.playTape(tape:1,player:5,rate:4,db:-12,timescale:1.0);
 )
 
 
-
+// when you're ready, run the gui
 (
 // show gui
 u.gui;
