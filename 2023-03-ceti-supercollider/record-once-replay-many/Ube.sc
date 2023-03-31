@@ -1,5 +1,5 @@
 Ube {
-	
+
 	var server;
 	var bufs;
 	var oscs;
@@ -7,33 +7,33 @@ Ube {
 	var win;
 	var recording;
 	var windata;
-	
+
 	*new {
 		arg argServer;
 		^super.new.init(argServer);
 	}
-	
+
 	init {
 		arg argServer;
-		
+
 		server=argServer;
-		
+
 		// initialize variables
 		bufs = Dictionary.new();
 		syns = Dictionary.new();
 		oscs = Dictionary.new();
 		windata = Array.newClear(128);
 		recording = false;
-		
-		
-		
+
+
+
 		// basic players
 		SynthDef("recorder",{
 			arg buf,recLevel=1.0,preLevel=0.0;
 			RecordBuf.ar(SoundIn.ar([0,1]),buf,0.0,recLevel,preLevel,loop:0,doneAction:2);
 		}).send(server);
-		
-		
+
+
 		oscs.put("position",OSCFunc({ |msg|
 			var oscRoute=msg[0];
 			var synNum=msg[1];
@@ -47,32 +47,32 @@ Ube {
 			var pan=msg[9];
 			windata.put(player,[tape,posStart,posEnd,pos,volume,pan]);
 		}, '/position'));
-		
+
 		server.sync;
-		
+
 		syns.put("fx",Synth.tail(server,"effects"));
-		
+
 		"done loading.".postln;
 	}
-	
+
 	playTape {
 		arg tape=1,player=1,rate=1.0,db=0.0,timescale=1;
 		var amp=db.dbamp;
 		var tapeid="tape"++tape;
 		var playid="player"++player++tapeid;
-		
+
 		if (bufs.at(tapeid).isNil,{
 			("[ube] cannot play empty tape"+tape).postln;
 			^0
 		});
 		("[ube] player"+player+"playing tape"+tape).postln;
-		
+
 		syns.put(playid,Synth.head(server,"looper",[\tape,tape,\player,player,\buf,bufs.at(tapeid),\baseRate,rate,\amp,amp,\timescale,timescale]).onFree({
 			("[ube] player"+player+"finished.").postln;
 		}));
 		NodeWatcher.register(syns.at(playid));
 	}
-	
+
 	loadTape {
 		arg tape=1,filename="";
 		var tapeid="tape"++tape;
@@ -83,9 +83,8 @@ Ube {
 		bufs.put(tapeid,Buffer.read(server,filename,action:{ arg buf;
 			("[ube] loaded"+tape+filename).postln;
 		}));
-		server.sync;
 	}
-	
+
 	recordTape {
 		arg tape=1,seconds=30,recLevel=1.0;
 		var tapeid="tape"++tape;
@@ -93,7 +92,7 @@ Ube {
 			// silence all output to prevent feedback?
 			syns.at("fx").set(\amp,0);
 			recording=true;
-			
+
 			// initiate recorder
 			("[ube] record"+buf.bufnum+tape+seconds+recLevel).postln;
 			syns.put("record"++tape,Synth.head(server,"recorder",[\buf,buf,\recLevel,recLevel,\preLevel,0]).onFree({
@@ -115,11 +114,11 @@ Ube {
 				bufs.put(tapeid,buf);
 			}));
 			NodeWatcher.register(syns.at("record"++tape));
-			
+
 		});
-		
+
 	}
-	
+
 	gui {
 		arg height=400,width=600,spacing=20,padding=20;
 		var w,a;
@@ -189,7 +188,7 @@ Ube {
 						a.rmsColor=Color.new255(99,89,133,60);
 						a.background_(Color.new255(236,242,255,0));
 					});
-					
+
 				},{
 					if (debounce>0,{
 						debounce=debounce-1;
@@ -208,33 +207,33 @@ Ube {
 						var volume01=volume.ampdb.linlin(-96,12,0,1)+0.001;
 						var cc=Color.new255(99,89,133,255*volume01);
 						// var cc=Color.new255(96,150,180,255*volume01);
-						
+
 						// draw waveform area
 						Pen.color = cc;
 						Pen.addRect(
 							Rect.new(posStart*x+(padding),y,posWidth*x, h)
 						);
 						Pen.perform(\fill);
-						
+
 						// draw playhead
 						Pen.color = Color.white(0.5,0.5);
 						Pen.addRect(
 							Rect(pos*x+(padding)-2, y, 4, h)
 						);
 						Pen.perform(\fill);
-						
+
 						// draw pan symbol
 						Pen.color = cc;
 						Pen.addRect(
 							Rect(pan*x+(padding)-8,y,16,h)
 						);
 						Pen.perform(\fill);
-						
+
 					});
 				}
 			};
 		});
-		
+
 		AppClock.sched(0,{
 			if (w.notNil,{
 				if (w.isClosed.not,{
@@ -243,9 +242,9 @@ Ube {
 			});
 			0.04
 		});
-		
+
 	}
-	
+
 	free {
 		oscs.keysValuesDo({ arg k, val;
 			val.free;
