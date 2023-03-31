@@ -1,5 +1,9 @@
 //////// PART I ////////
 
+// changing default audio interface
+// o = Server.default.options;
+// o.outDevice_("MME : PT-RZ570 (Intel(R) Display Audi");
+// Server.default.reboot;
 
 //////// -- first steps + samples -- ////////
 // This part will teach the basics of SuperCollider, using modulation
