@@ -52,12 +52,14 @@
 
 //////// 5 ////////
 // semicolons make functions
-// you can assign variables using letters a-z or with ~variableName
+// you can assign global  variables using letters a-z or with ~variableName
 // execute each step, incrementally
-
+// local variables are setup by writing "var" before the word (GOTCHA: local variables need to be set first)
 // step 1: create functions stored in a variable
 
 (
+var localVariable=123;
+
 a={"I love SuperCollider".postln;};
 
 ~someVariable={"SuperCollider loves me".postln;};
@@ -94,7 +96,7 @@ a.value("hello");
 
 
 
-//////// 1 ////////
+//////// 7 ////////
 // let's get into the music now!
 // we need to boot the server to start music making:
 // goto Server -> Boot Server
@@ -102,13 +104,11 @@ a.value("hello");
 
 
 
-//////// 2 ////////
-// to play samples we first need to load a sample into a "buffer"
-// ~someBuffer=Buffer.read(s,<filename>) will read the file into the buffer ~someBuffer
-// load any one of these three! (Ctl+Enter on any line)
+//////// 8 ////////
+// to play samples we first need to load a sample into a "buffer" using a file or recording
 
-// pick one of the three buffers below and load it
-~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/windchimes.wav");
+// ~someBuffer=Buffer.read(s,<filename>) will read the file into the buffer ~someBuffer
+~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 
 // plot the buffer
 ~buffer.plot; // we can visualize this buffer
@@ -117,8 +117,9 @@ a.value("hello");
 ~buffer.play;
 
 
-//////// 3 ////////
+//////// 9 ////////
 // lets play the buffer using the PlayBuf "UGen"
+// "UGen" stands for "unit generator" is the main mode of processing/generating streams of numbers
 (
 {
 	var snd; // define a variable to hold our sound
@@ -131,20 +132,18 @@ a.value("hello");
 )
 
 
+//////// 10 ////////
 // lets record into a buffer
-// define a buffer
-Buffer.alloc(s,s.sampleRate*3,1(l
+// define a new buffer that is 3 seconds long
+~buffer=Buffer.alloc(s,s.sampleRate*3,2);
 (
 {
-	var snd; // define a variable to hold our sound
-	snd=PlayBuf.ar( // PlayBuf will play a sound in a buffer
-		numChannels:2, // we are dealing with stereo samples, so 2 channels
-		bufnum:~buffer, // the buffer
-	);
-	Out.ar(0,snd); // send to Out UGen to channel 0 (default speakers)
-}.play; // .play will play the sound immediately!
+	RecordBuf.ar(SoundIn.ar([0,1]), ~buffer, loop:0,doneAction:2)
+}.play; // .play will play this synth that records from the input audio
 )
-//////// 4 ////////
+
+
+//////// 11 ////////
 // lets define how our sound will work
 // first we will define what is called a "SynthDef", a synth definition
 // SynthDef(<name>,<function>).add
@@ -161,7 +160,7 @@ SynthDef("samplePlayer1", {
 		bufnum:bufnum,
 		loop: 1,                     // loop forever
 		rate:BufRateScale.kr(bufnum) // BufRateScale will calculate the
-	);                               // difference between the server sampling
+	);                               // difference between the server sampling and the audio file
 
 	Out.ar(0,snd);
 }).add; // .add will add it to our server to be used anytime we want!
@@ -184,6 +183,15 @@ SynthDef("samplePlayer1", {
 
 //////// 6 ////////
 // lets modify our synth with some MODULATION and panning
+
+// an aside about modulation - you can use many different Ugens for modulation!
+(
+{
+	[SinOsc.kr(100), LFTri.kr(100), LFNoise0.kr(100),LFNoise1.kr(100),LFNoise2.kr(100)]
+}.plot(0.1)
+)
+
+// lets create a synthdef with modulation
 (
 SynthDef("samplePlayer1", {
 	// buffers have an index, and the buffer index will be supplied later using
@@ -191,13 +199,16 @@ SynthDef("samplePlayer1", {
 	arg bufnum = 0;
 	// after arguments, we will declare variables that we will use with "var":
 	var snd;
+	var rate;
+
+	rate = BufRateScale.kr(bufnum)*MouseX.kr(0.9,1.1); // use the mouse to modulate the rate
 
 	snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
 		loop: 1,                     // loop forever
-		rate:BufRateScale.kr(bufnum) // BufRateScale will calculate the
-	);                               // difference between the server sampling
+		rate: rate,
+	);                             
 
 	snd = Pan2.ar(snd,LFNoise2.kr(1)); // pans randomly left and right
 
@@ -213,6 +224,10 @@ x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 
 //////// 7 ////////
 // lets modify our synth with some EFFECTS!
+// there are many effects
+// filters: RLPF, LPF, HPF, BPF
+// delays: CombC, DelayC
+// distortion: .tanh, .softclip, .distort
 (
 SynthDef("samplePlayer1", {
 	// buffers have an index, and the buffer index will be supplied later using
@@ -243,9 +258,10 @@ x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 
 
 
-// a little bit of sampling
-
-//write into the buffer with a BufWr
+//////// 7 ////////
+// lets combine sampling and playback
+// and use "phasors" for playback/recording
+// define a synthdef to do the recording 
 (
 SynthDef("recorder",{ arg rate=1,bufnum=0;
 	var in;
@@ -257,23 +273,29 @@ SynthDef("recorder",{ arg rate=1,bufnum=0;
 	Out.ar(0,in*0);
 }).add;
 
+// define a player to do the playback (with crossfades!)
 SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 	var playDur = BufDur.kr(bufnum)-fadeOut;
 	var trig1 = Impulse.kr(1/(playDur/rate));
 	var aOn = ToggleFF.kr(trig1);
 	var snd;
-	var phase;
-	phase=Phasor.ar(aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
+	var phase1,phase2;
+
+	// setup phasors for two-head reader
+	phase1=Phasor.ar(aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
+	phase2=Phasor.ar(1-aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
+
 	// remove clips using fadeout/fadein (buffer must be total time + fade out)
-	snd = VarLag.kr(aOn,fadeOut*0.9)*BufRd.ar(2,bufnum,phase);
-	snd = snd+(VarLag.kr(1-aOn,fadeOut*0.9)*BufRd.ar(2, bufnum, Phasor.ar(1-aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum))));
+	snd = VarLag.kr(aOn,fadeOut*0.9)*BufRd.ar(2,bufnum,phase1);
+	snd = snd+(VarLag.kr(1-aOn,fadeOut*0.9)*BufRd.ar(2, bufnum, phsae2));
+
 	// effects
 	snd=LPF.ar(snd,MouseX.kr(20,20000,1));
 	Out.ar(0,snd);
 }).add;
 )
 
-// set some global constants
+// set some global constants for the cross-fade time and the loopsize
 (
 ~loopSize=60/124*2; // seconds
 ~fadeOut=0.1; // seconds
@@ -451,7 +473,7 @@ s.waitForBoot({
 // either load a tape
 (
 // load a file into the tape
-u.loadTape(tape:1,filename:thisProcess.nowExecutingPath.dirname++"/windchimes.wav");
+u.loadTape(tape:1,filename:thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 )
 // OR record a tape
 (
