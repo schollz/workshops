@@ -3,6 +3,7 @@
 // changing default audio interface
 // o = Server.default.options;
 // o.outDevice_("MME : PT-RZ570 (Intel(R) Display Audi");
+// o.inDevice_("MME : PT-RZ570 (Intel(R) Display Audi");
 // Server.default.reboot;
 
 //////// -- first steps + samples -- ////////
@@ -105,6 +106,7 @@ a.value("hello");
 // we need to boot the server to start music making:
 // goto Server -> Boot Server
 // or press <Ctl>+B (windows)
+// to restart EVERYTHING you can do <Ctrl>+<Shift>+L and then <Ctrl>+B
 
 
 
@@ -112,10 +114,11 @@ a.value("hello");
 // to play samples we first need to load a sample into a "buffer" using a file or recording
 
 // ~someBuffer=Buffer.read(s,<filename>) will read the file into the buffer ~someBuffer
+// on server "s"
 ~buffer=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/kalimba.wav");
 
 // plot the buffer
-~buffer.plot; // we can visualize this buffer
+~buffer.plot;
 
 // play the buffer
 ~buffer.play;
@@ -176,7 +179,7 @@ SynthDef("samplePlayer1", {
 //////// 5  ////////
 // now let's play our defined synth using the "Synth" function
 // we can then create a synth that plays the sound!
-~syn=Synth("samplePlayer1",[\bufnum,~buffer]); // will start playing piano
+~syn=Synth("samplePlayer1",[\bufnum,~buffer]);
 ~syn.free; // will stop playing
 
 // you can also stop *everything* with <Ctl>+.
@@ -210,11 +213,11 @@ SynthDef("samplePlayer1", {
 	snd=PlayBuf.ar(
 		numChannels:2,
 		bufnum:bufnum,
-		loop: 1,                     // loop forever
+		loop: 1, 
 		rate: rate,
 	);                             
 
-	snd = Pan2.ar(snd,LFNoise2.kr(1)); // pans randomly left and right
+	snd = Pan2.ar(snd,LFNoise2.kr(1)); // use "LFNoise2" to modulate randomly
 
 	Out.ar(0,snd);
 }).add; // .add will add it to our server to be used anytime we want!
@@ -263,35 +266,49 @@ x=Synth("samplePlayer1", [\bufnum, ~buffer]); // will start playing
 
 
 //////// 7 ////////
-// lets combine sampling and playback
-// and use "phasors" for playback/recording
+// moving beyond "PlayBuf", to give more control over the playback/recording
+// we can use "phasors" for playback/recording
 // define a synthdef to do the recording 
 (
 SynthDef("recorder",{ arg rate=1,bufnum=0;
 	var in;
 	var phase;
+	// setup phase, which sample of the buffer to play
 	phase = Phasor.ar(0, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
+	// collect input from microphone
 	in=SoundIn.ar([0,1]);
+	// write the input to the buffer, at the phase location
 	BufWr.ar(in, bufnum, phase,loop:0);
+	// free after specified time
 	FreeSelf.kr(TDelay.kr(Trig.kr(1),BufDur.kr(bufnum)));
+	// disable output to resist feedback
 	Out.ar(0,in*0);
 }).add;
 
-// define a player to do the playback (with crossfades!)
+// define a player to do the playback (with crossfades!) using
+// two headed feedback
 SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
-	var playDur = BufDur.kr(bufnum)-fadeOut;
-	var trig1 = Impulse.kr(1/(playDur/rate));
-	var aOn = ToggleFF.kr(trig1);
 	var snd;
 	var phase1,phase2;
+	// define play duration to the duration, minus the fadeout
+	var playDur = BufDur.kr(bufnum)-fadeOut;
+	// trigger the start every play duration
+	var trig1 = Impulse.kr(1/(playDur/rate));
+	// trigger a toggle to switch between two-headed playback
+	var aOn = ToggleFF.kr(trig1);
+	// define total frames
+	var totalFrames = BufFrames.kr(bufnum);
+
+	// define rate	
+	rate = BufRateScale.kr(bufnum) * rate;
 
 	// setup phasors for two-head reader
-	phase1=Phasor.ar(aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
-	phase2=Phasor.ar(1-aOn, BufRateScale.kr(bufnum) * rate, 0, BufFrames.kr(bufnum));
+	phase1=Phasor.ar(aOn, rate, 0, totalFrames);
+	phase2=Phasor.ar(1-aOn, rate, 0, totalFrames);
 
 	// remove clips using fadeout/fadein (buffer must be total time + fade out)
-	snd = VarLag.kr(aOn,fadeOut*0.9)*BufRd.ar(2,bufnum,phase1);
-	snd = snd+(VarLag.kr(1-aOn,fadeOut*0.9)*BufRd.ar(2, bufnum, phsae2));
+	snd = Lag.kr(aOn,fadeOut*0.9)*BufRd.ar(2,bufnum,phase1);
+	snd = snd+(Lag.kr(1-aOn,fadeOut*0.9)*BufRd.ar(2, bufnum, phase2));
 
 	// effects
 	snd=LPF.ar(snd,MouseX.kr(20,20000,1));
@@ -301,23 +318,23 @@ SynthDef("player",{ arg rate=1,bufnum=0,fadeOut=0.0;
 
 // set some global constants for the cross-fade time and the loopsize
 (
-~loopSize=60/124*2; // seconds
 ~fadeOut=0.1; // seconds
 )
 
 // clear buffers
 (
 ~bufs=Array.fill(6,{ arg i;
-	Buffer.alloc(s,s.sampleRate*(((i+1)*~loopSize)+~fadeOut),2)
+	Buffer.alloc(s,s.sampleRate*(((i+1))+~fadeOut),2)
 });
 )
 
-// play all
+// play all players (with empty buffers)
 (
 ~syns=Array.fill(6,{arg i;
 	Synth("player",[\bufnum,~bufs[i],\fadeOut,~fadeOut]);
 });
 )
+
 // .. and record one at a time
 r= {arg i; Synth("recorder",[\bufnum,~bufs[i]])};
 r.(0); // record into 1-second loop
