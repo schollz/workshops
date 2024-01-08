@@ -20,7 +20,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -54,7 +54,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -87,7 +87,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -127,7 +127,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -174,7 +174,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -229,7 +229,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -288,7 +288,7 @@ x={
 		var midinote=freq2.cpsmidi;
 		var detune=0.5;
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,

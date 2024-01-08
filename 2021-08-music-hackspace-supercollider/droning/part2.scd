@@ -115,7 +115,7 @@ x={
 	snd=Array.fill(3,{arg i;
 		var snd2;
 		var freq2=freq*(2**i);
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:freq2,
 			mul:1/(2**i),
 			width:0.5,
@@ -158,7 +158,7 @@ x={
 		var modBank={LFTri.kr(LFNoise0.kr(rrand(1/10,1)).range(1/10,1))}!8;
 		var modAmp=modBank[0].range(0.2,0.5); // convert to correct range
 		var modWidth=modBank[1].range(0.2,0.8);
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:freq2,
 			mul:modAmp/(2**i),
 			width:modWidth,
@@ -190,7 +190,7 @@ x={
 		var detune=0.5;
 		// convert the range of one of the modulators in the bank
 		var modFreq=modBank[2].range(midinote-detune,midinote+detune).midicps;
-		snd2=PulseDPW.ar(
+		snd2=Pulse.ar(
 			freq:modFreq,
 			mul:modAmp/(2**i),
 			width:modWidth,
