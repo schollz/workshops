@@ -187,7 +187,7 @@ x=SynthDef("samplePlayer4", {
 
 x=Synth("samplePlayer4", [\bufnum, ~bufferPiano]); // will start playing
 x.set(\t_trig,1,\start,0.0,\end,0.16,\loops,1)
-x.set(\t_trig,1,\start,0.5,\end,0.51,\loops,12)
+x.set(\t_trig,1,\start,0.5,\end,0.51,\loops,12,\rate,1)
 
 // new problem:
 // now this won't play if we set the rate to be negative...
@@ -248,7 +248,7 @@ x=SynthDef("samplePlayer5", {
 }).add;
 )
 x=Synth("samplePlayer5", [\bufnum, ~bufferPiano]); // will start playing
-x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,-1)
+x.set(\t_trig,1,\start,0.55,\end,0.6,\loops,3,\rate,-1)
 x.set(\t_trig,1,\start,0.5,\end,0.6,\loops,3,\rate,1)
 
 // one more problem...
@@ -329,7 +329,7 @@ SynthDef("samplePlayer6", {
 
 
 x=Synth("samplePlayer6", [\bufnum, ~bufferPiano]); // will start playing
-x.set(\t_trig,1,\start,0.5,\end,1,\loops,1,\rate,1) // no more clicking if you run this a bunch in a row
+x.set(\t_trig,1,\start,0.5,\end,0.8,\loops,4,\rate,1) // no more clicking if you run this a bunch in a row
 
 
 

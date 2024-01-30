@@ -99,7 +99,7 @@ SynthDef("samplePlayer1", {
 
 // step 2: change the drum sample by redefining ~bufferDrums and sending the new sample to the SynthDef instance
 (
-~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums1_8beats_bpm90.wav",action:{
+~bufferDrums=Buffer.read(s,thisProcess.nowExecutingPath.dirname++"/drums3_8beats_bpm90.wav",action:{
 	~synthDrums.set(\bufnum,~bufferDrums);
 });
 
@@ -164,6 +164,7 @@ SynthDef("samplePlayer1scratchy", {
 )
 // put mouse all the way to the right, all the way left, and move it around fast!
 x=Synth("samplePlayer1scratchy", [\bufnum, ~bufferPiano]);
+x=Synth("samplePlayer1scratchy", [\bufnum, ~bufferDrums]);
 
 
 
@@ -199,8 +200,20 @@ x.set(\fx_scratch,3.5);
 x.set(\fx_scratch,0);
 x.free;
 
+
 // discussion point: what is the SinOsc UGen doing to the rate?
 
+
+
+// TANGENT- OSC definitions //
+(
+n = NetAddr("127.0.0.1", 57120); // local machine
+o.free;
+o=OSCFunc({ |msg,time,addr,recvPort|
+	[msg,time,addr,recvPort].postln;
+	x.set(\fx_scratch,msg[1]);
+}, '/hello');
+)
 
 
 
